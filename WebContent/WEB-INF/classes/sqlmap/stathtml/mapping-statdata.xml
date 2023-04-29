@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="statdata">
+
+	<select id="selectDimensionInfo" parameterClass="map" resultClass="hmap">
+		<![CDATA[
+		SELECT
+				CASE CMMT_AT
+             		WHEN 'Y' THEN
+                		CASE
+                    		WHEN (
+                    				SELECT 	COUNT(1) FROM $dbUser$TN_CMMT_INFO
+                            		WHERE 	ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID
+                                			AND CMMT_SE = '1210612' AND LNG_SE = '1211910' AND OBJ_VAR_ID = A.OBJ_VAR_ID) > 0 THEN
+                        		'Y'
+                    		ELSE
+                        		'N'
+                		END
+            		ELSE
+                		'N'
+          		END AS CMMT_AT_KOR,
+          		CASE CMMT_AT
+             		WHEN 'Y' THEN
+                		CASE
+                    		WHEN (
+                    				SELECT 	COUNT(1) FROM $dbUser$TN_CMMT_INFO
+                            		WHERE 	ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID
+                                			AND CMMT_SE = '1210612' AND LNG_SE = '1211911' AND OBJ_VAR_ID = A.OBJ_VAR_ID) > 0 THEN
+                        		'Y'
+                   			 ELSE
+                        		'N'
+                		END
+            		ELSE
+                		'N'
+          		END AS CMMT_AT_ENG
+				, NVL(SCR_KOR, ' ') SCR_KOR
+				, NVL(SCR_ENG, ' ') SCR_ENG
+				, VAR_ORD_SN
+				, OBJ_VAR_ID
+				, TOT_IGNR_AT
+		FROM 	$dbUser$TN_OBJ_ITM_CLS A
+		WHERE	ORG_ID = #orgId# AND TBL_ID = #tblId#
+				AND OBJ_VAR_ID = #objVarId#
+		]]>
+	</select>
+
+	<select id="selectClassDimensionList" parameterClass="map" resultClass="hmap">
+		<![CDATA[
+		WITH TMP AS
+		(
+     		SELECT *
+     		FROM 	$dbUser$TN_ITM_LIST
+    		WHERE  	ORG_ID = #orgId#
+                    AND TBL_ID = #tblId#
+                    AND OBJ_VAR_ID = #objVarId#
+		)
+		, ITM_LIST AS
+		(
+			SELECT 	LEVEL LVL
+                    , ORG_ID
+                    , TBL_ID
+                    , OBJ_VAR_ID
+                    , ITM_ID
+                    , LPAD(' ',(LEVEL-1)*3, ' ')|| ITM_ID AS  VIEW_ITM_ID
+                    , LPAD(' ',(LEVEL-1)*3, ' ')|| SCR_KOR AS  VIEW_SCR_KOR
+                    , LPAD(' ',(LEVEL-1)*3, ' ')|| SCR_ENG AS  VIEW_SCR_ENG
+                    , SYS_CONNECT_BY_PATH (ITM_ID, '@') AS PARENT_CODE
+                    , NVL (SYS_CONNECT_BY_PATH (NVL(SCR_KOR, ' '), '@'), ' ') AS PARENT_NAME_KOR
+                    , NVL (SYS_CONNECT_BY_PATH (NVL(SCR_ENG, ' '), '@'), ' ') AS PARENT_NAME_ENG
+                    , ROWNUM AS RNUM
+            FROM	TMP
+            START WITH UP_ITM_ID IS NULL
+            CONNECT BY PRIOR ITM_ID = UP_ITM_ID
+            ORDER SIBLINGS BY CHAR_ITM_SN, ITM_ID
+		)
+		SELECT	/*+  ordered*/ C.LVL
+            	, B.ITM_ID
+            	, VIEW_ITM_ID
+            	, VIEW_SCR_KOR
+            	, VIEW_SCR_ENG
+            	, NVL (B.SCR_KOR, ' ') AS SCR_KOR
+            	, NVL (B.SCR_ENG, ' ') AS SCR_ENG
+            	, B.UP_ITM_ID
+            	, SUBSTR (C.PARENT_CODE, 2, INSTR (C.PARENT_CODE, '@', -1) - 1) AS PARENT_CODE
+            	, SUBSTR (C.PARENT_NAME_KOR, 2, INSTR (C.PARENT_NAME_KOR, '@', -1) - 1) AS PARENT_NAME_KOR
+            	, SUBSTR (C.PARENT_NAME_ENG, 2, INSTR (C.PARENT_NAME_ENG, '@', -1) - 1) AS PARENT_NAME_ENG
+            	, B.UNIT_ID
+            	, DECODE (UNIT_ID, NULL, NULL, (SELECT NVL(CD_NM, ' ')
+                              					FROM $dbUser$TC_UNIT
+                             					WHERE CD_ID = B.UNIT_ID)) AS UNIT_NM_KOR
+            	, DECODE (UNIT_ID, NULL, NULL, (SELECT NVL(CD_ENG_NM, ' ')
+                         						FROM $dbUser$TC_UNIT
+                        						WHERE CD_ID = B.UNIT_ID)) AS UNIT_NM_ENG
+            	, CASE CMMT_AT
+          		  	WHEN 'Y' THEN
+          		  		CASE
+                        	WHEN (
+                        			SELECT 	COUNT (1)
+                                   	FROM 	$dbUser$TN_CMMT_INFO
+                                  	WHERE   ORG_ID = B.ORG_ID
+                                        	AND TBL_ID = B.TBL_ID
+                                        	AND CMMT_SE = '1210613'
+                                        	AND LNG_SE = '1211910'
+	                                        AND OBJ_VAR_ID = B.OBJ_VAR_ID
+    	                                    AND ITM_ID = B.ITM_ID
+    	                          ) > 0 THEN
+    	                   		'Y'
+                           	ELSE
+                           		'N'
+                        END
+          			ELSE
+          				'N'
+       			END AS CMMT_AT_KOR,
+       			CASE CMMT_AT
+          			WHEN 'Y' THEN
+          				CASE
+                        	WHEN (
+                           			SELECT	COUNT (1)
+                                   	FROM 	$dbUser$TN_CMMT_INFO
+                                  	WHERE   ORG_ID = B.ORG_ID
+                                        	AND TBL_ID = B.TBL_ID
+                                        	AND CMMT_SE = '1210613'
+                                        	AND LNG_SE = '1211911'
+                                        	AND OBJ_VAR_ID = B.OBJ_VAR_ID
+                                        	AND ITM_ID = B.ITM_ID
+                                 ) > 0 THEN
+
+                           		'Y'
+                           	ELSE
+                           		'N'
+                        END
+          			ELSE
+          				'N'
+       			END AS CMMT_AT_ENG
+		FROM 	(
+					SELECT	TO_CHAR (TARGET_VALUE)  AS ITM_ID
+                 	FROM 	$condTable$
+				 	WHERE 	SESSION_ID = #sessionId#
+                 			AND TARGET_ID = #targetId#
+                 ) A
+                 , $dbUser$TN_ITM_LIST B
+                 , ITM_LIST C
+		WHERE 	B.ORG_ID = #orgId# AND B.TBL_ID = #tblId# AND B.OBJ_VAR_ID = #objVarId#
+        		AND B.ORG_ID = C.ORG_ID
+        		AND B.TBL_ID = C.TBL_ID
+        		AND B.OBJ_VAR_ID = C.OBJ_VAR_ID
+        		AND B.ITM_ID = C.ITM_ID
+        		AND A.ITM_ID = B.ITM_ID
+		ORDER BY RNUM
+		]]>
+	</select>
+
+	<select id="selectItemDimensionList" parameterClass="map" resultClass="hmap">
+		<![CDATA[
+		SELECT	ITM_ID, NVL(SCR_KOR, ' ') AS SCR_KOR, NVL(SCR_ENG, ' ') AS SCR_ENG
+				, UNIT_ID
+				, DECODE(UNIT_ID, NULL, NULL, (SELECT NVL(CD_NM, ' ') FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID)) AS UNIT_NM_KOR
+				, DECODE(UNIT_ID, NULL, NULL, (SELECT NVL(CD_ENG_NM, ' ') FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID)) AS UNIT_NM_ENG
+				, CASE CMMT_AT
+          		  	WHEN 'Y' THEN
+          		  		CASE
+          		  			WHEN (	SELECT 	COUNT (1)
+                                   	FROM 	$dbUser$TN_CMMT_INFO
+                                  	WHERE   ORG_ID = A.ORG_ID
+                                        	AND TBL_ID = A.TBL_ID
+                                        	AND CMMT_SE = '1210611'
+                                        	AND LNG_SE = '1211910'
+                                        	AND OBJ_VAR_ID = A.OBJ_VAR_ID
+                                        	AND ITM_ID = A.ITM_ID) > 0 THEN
+                            	'Y'
+                           	ELSE
+                           		'N'
+                        END
+          			ELSE
+          				'N'
+       			  END AS CMMT_AT_KOR
+          		, CASE CMMT_AT
+          		  	WHEN 'Y' THEN
+          		  		CASE
+          		  			WHEN (	SELECT 	COUNT (1)
+                                   	FROM 	$dbUser$TN_CMMT_INFO
+                                  	WHERE   ORG_ID = A.ORG_ID
+                                        	AND TBL_ID = A.TBL_ID
+                                        	AND CMMT_SE = '1210611'
+                                        	AND LNG_SE = '1211911'
+                                        	AND OBJ_VAR_ID = A.OBJ_VAR_ID
+                                        	AND ITM_ID = A.ITM_ID) > 0 THEN
+                            	'Y'
+                           	ELSE
+                           		'N'
+                        END
+          			ELSE
+          				'N'
+       			  END AS CMMT_AT_ENG
+		FROM 	$dbUser$TN_ITM_LIST A
+		WHERE 	ORG_ID = #orgId#
+           		AND TBL_ID = #tblId#
+           		AND OBJ_VAR_ID = '13999001'
+           		AND ITM_ID IN
+                (
+                	SELECT 	TARGET_VALUE
+                    FROM 	$condTable$
+                    WHERE 	SESSION_ID = #sessionId#
+                            AND TARGET_ID = 'ITM_ID'
+				)
+		ORDER BY CHAR_ITM_SN, ITM_ID
+		]]>
+	</select>
+
+	<select id="selectTimeDimensionList" parameterClass="param" resultClass="string">
+		<![CDATA[
+		SELECT 	PRD_VALUE
+		FROM 	$condTable$
+		WHERE 	SESSION_ID = #sessionId# AND TARGET_ID = 'PRD'
+		]]>
+	</select>
+
+	<select id="selectClassListForWhereClause" parameterClass="param" resultClass="string">
+		<![CDATA[
+		SELECT	TARGET_ID
+		FROM 	$condTable$
+		WHERE 	SESSION_ID = #sessionId#
+          		AND TARGET_ID LIKE 'OV_L%'
+		GROUP BY TARGET_ID
+		ORDER BY TARGET_ID
+		]]>
+	</select>
+
+	<select id="selectDimDtData" fetchSize ="100" resultClass="hmap" remapResults="true">
+		<![CDATA[
+			$sql$
+		]]>
+	</select>
+
+	<select id="selectFuncPrd" parameterClass="map" resultClass="hmap" remapResults="true">
+		<![CDATA[
+			$sql$
+		]]>
+	</select>
+
+	<!-- 2013.11.20 추가 -->
+	<select id="selectVarOrdSn" parameterClass="map" resultClass="string">
+		<![CDATA[
+		SELECT 	VAR_ORD_SN||'' AS VAR_ORD_SN
+		FROM 	$dbUser$TN_OBJ_ITM_CLS
+        WHERE  	ORG_ID = #orgId#
+           		AND TBL_ID = #tblId#
+           		AND OBJ_VAR_ID = #objVarId#
+           ]]>
+	</select>
+
+	<select id="selectAnalTypeNm" parameterClass="param" resultClass="hmap">
+		<![CDATA[
+		SELECT 	FUNC_NAME, FUNC_EN_NAME
+		FROM 	$dbUser$OLAP_EXC_MAP
+        WHERE  	FUNC_CODE = #analType#
+        		AND ROWNUM = 1
+           ]]>
+	</select>
+
+	<select id="selectAnalCmprNm" parameterClass="param" resultClass="hmap">
+		<![CDATA[
+		SELECT 	FUNC_PRD_NAME, FUNC_PRD_EN_NAME
+		FROM 	$dbUser$OLAP_EXC_PRD
+        WHERE  	FUNC_PRD_CODE = #analCmpr#
+        		AND ROWNUM = 1
+           ]]>
+	</select>
+
+	<select id="selectItemName" parameterClass="map" resultClass="hmap">
+		<![CDATA[
+		SELECT 	NVL(SCR_KOR, ' ') AS SCR_KOR, NVL(SCR_ENG, ' ') AS SCR_ENG
+		FROM 	$dbUser$TN_ITM_LIST
+        WHERE  	ORG_ID = #orgId#
+           		AND TBL_ID = #tblId#
+           		AND OBJ_VAR_ID = #objVarId#
+           		AND ITM_ID = #itmId#
+           ]]>
+	</select>
+
+	<select id="selectRecdPrdSmblCn" parameterClass="map" resultClass="hmap">
+		<![CDATA[
+		SELECT 	PRD_SE||PRD_DE AS CODE, SMBL_CN
+		FROM 	$dbUser$TN_RECD_PRD
+		WHERE  	ORG_ID = #orgId#
+           		AND TBL_ID = #tblId#
+           		AND PRD_SE||PRD_DE
+        ]]>
+        	<iterate property="prdList" prepend="IN" open="(" conjunction="," close=")">
+        	<![CDATA[
+        		#prdList[]#
+			]]>
+        	</iterate>
+	</select>
+
+	<!-- 2014.10 -->
+	<select id="selectMartExist" resultClass="int">
+		<![CDATA[
+			$sql$
+		]]>
+	</select>
+
+</sqlMap>

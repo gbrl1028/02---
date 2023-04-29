@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">   
+
+<sqlMap namespace="downlarge">
+
+	<!-- 통계표 직접다운로드 분류정보 조회
+		20151218 남규옥 ::: 13999000 (가상분류) 조회되지 않도록 조건 추가 
+	-->
+	<select id="objVarList" resultClass="egovMap">
+		  <![CDATA[
+		  SELECT A.VAR_ORD_SN,
+		         A.OBJ_VAR_ID, 
+		         SUBSTR(A.PUB_SE, -1) AS PUB_SE,
+		         A.SCR_KOR,
+		         A.SCR_ENG
+		    FROM $dbUser$TN_OBJ_ITM_CLS A
+		   WHERE A.ORG_ID = #orgId#
+		     AND A.TBL_ID = #tblId#
+		     AND A.OBJ_VAR_ID != '13999001'
+		     AND A.OBJ_VAR_ID != '13999000'		     
+		     AND A.PUB_SE  ]]>
+                   		<include refid="common.pub_se"/>
+        <![CDATA[ 
+		ORDER BY VAR_ORD_SN
+		]]>
+	</select>
+	
+	<!-- 통계표 직접다운로드 항목정보 조회--> 
+	<select id="itmIdList" resultClass="egovMap">
+		<![CDATA[
+		  SELECT ITM_ID,
+		  (SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID) AS UNIT_NM,
+		         SUBSTR(PUB_SE, -1) AS PUB_SE,
+		         CASE
+		            WHEN UNIT_ID IS NOT NULL THEN
+		                  SCR_KOR
+		               || '['
+		               || (SELECT NVL(CD_ABBR_NM, CD_NM)
+		                     FROM $dbUser$TC_UNIT
+		                    WHERE CD_ID = A.UNIT_ID)
+		               || ']'
+		            ELSE
+		               SCR_KOR
+		         END
+		            AS SCR_KOR,
+		         CASE
+		            WHEN UNIT_ID IS NOT NULL THEN
+		                  SCR_ENG
+		               || '['
+		               || (SELECT NVL(CD_ABBR_NM, CD_NM)
+		                     FROM $dbUser$TC_UNIT
+		                    WHERE CD_ID = A.UNIT_ID)
+		               || ']'
+		            ELSE
+		               SCR_ENG
+		         END
+		            AS SCR_ENG,
+		         ITM_ID
+		         || CASE
+		               WHEN UNIT_ID IS NOT NULL THEN
+		                     SCR_KOR
+		                  || '[' || (SELECT NVL(CD_ABBR_NM, CD_NM)
+		                        FROM $dbUser$TC_UNIT
+		                       WHERE CD_ID = A.UNIT_ID)
+		                  || ']'
+		               ELSE
+		                  SCR_KOR
+		            END
+		            AS ITM_SCR_KOR
+		    FROM $dbUser$TN_ITM_LIST A, $condTable$ B
+		   WHERE ORG_ID = #orgId#
+		     AND TBL_ID = #tblId#
+		     AND A.ITM_ID = B.TARGET_VALUE
+		     AND B.SESSION_ID = #sessionId#
+		     AND B.TARGET_ID = 'ITM_ID'
+		     AND OBJ_VAR_ID = '13999001'
+		     AND PUB_SE ]]>
+                   		<include refid="common.pub_se"/>
+        <![CDATA[ 
+		ORDER BY CHAR_ITM_SN
+		]]>
+	</select>
+
+	<select id="selectPrdValue" parameterClass="param" resultClass="string">
+		<![CDATA[
+	    SELECT PRD_VALUE
+		  FROM $condTable$
+		 WHERE SESSION_ID = #sessionId#
+		   AND TARGET_ID = 'PRD'
+		   ]]>
+	</select>
+	
+	<!-- generator  -->
+	<select id="selectDownData" fetchSize ="100" resultClass="hmap" remapResults="true">
+		<![CDATA[
+			$sql$
+		]]>
+	</select>
+	
+	<select id="selectPrdDetail" resultClass="string">
+		<![CDATA[
+		 SELECT NVL(PRD_DETAIL, 'IR') PRD_SE
+		  FROM $dbUser$TN_STBL_RECD_INFO A
+		 WHERE ORG_ID = #orgId#
+		   AND TBL_ID = #tblId#
+		   AND PRD_SE = 'F'
+	   ]]>
+	</select>
+	
+	<select id="selectTblUnitNm" resultClass="egovMap">
+		<![CDATA[
+			SELECT CD_NM, CD_ENG_NM 
+			  FROM $dbUser$TN_STBL_INFO A, $dbUser$TC_UNIT B
+			 WHERE A.UNIT_ID = B.CD_ID
+			   AND ORG_ID = #orgId#
+			   AND TBL_ID = #tblId# 
+		]]>
+	</select>
+	
+</sqlMap>

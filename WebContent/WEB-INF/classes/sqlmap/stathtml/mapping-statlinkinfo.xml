@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">   
+
+<sqlMap namespace="statlinkinfo">
+	
+	<select id="selectStatLinkMain" parameterClass="map" resultClass="egovMap">
+		<![CDATA[
+		SELECT	C.STAT_ID
+				, REPLACE(REPLACE(C.PUB_LINK, CHR (10), ''),CHR (13), '') AS PUB_LINK
+				, REPLACE(REPLACE(C.NEWS_LINK, CHR (10), ''),CHR (13), '') AS NEWS_LINK
+				, D.CONFM_NO
+				, D.INPT_YEAR
+                , DECODE(NVL(C.APP_AT,'Y'),'Y',DECODE(NVL(INPT_YEAR,NULL),NULL,'YN','Y'),'N') APP_AT
+                , NVL(E.HTTP_CN, B.URL_CN) URL_CN
+                , E.ORG_NM_ENG AS ORG_ENG_NM
+		]]>                 
+        	<isEqual property="serverTypeOrigin" compareValue="service">
+   				, (SELECT SNAMEENG FROM $dbUser$C_STAT WHERE SID = B.STAT_ID AND ROWNUM = 1) AS SNAMEENG
+   			</isEqual>
+   			<isEqual property="serverTypeOrigin" compareValue="service_en">
+   				, (SELECT SNAMEENG FROM $dbUser$C_STAT WHERE SID = B.STAT_ID AND ROWNUM = 1) AS SNAMEENG
+   			</isEqual>
+   			<isEqual property="serverTypeOrigin" compareValue="stat">
+   				, (SELECT SNAMEENG FROM C_STAT$etldbLink$ WHERE SID = B.STAT_ID AND ROWNUM = 1) AS SNAMEENG
+   			</isEqual>
+   			<isEqual property="serverTypeOrigin" compareValue="stat_emp">
+   				, (SELECT SNAMEENG FROM C_STAT$etldbLink$ WHERE SID = B.STAT_ID AND ROWNUM = 1) AS SNAMEENG
+   			</isEqual>
+   		<![CDATA[
+                FROM	$dbUser$TN_STBL_INFO A           
+                		,$dbUser$TN_STBL_STAT_REL B
+                		,$dbUser$TN_STAT C
+		]]>			                		
+                	<isEqual property="serverTypeOrigin" compareValue="service">
+   						, $dbUser$TN_NARA_PMS_INFO D
+   					</isEqual>
+   					<isEqual property="serverTypeOrigin" compareValue="service_en">
+   						, $dbUser$TN_NARA_PMS_INFO D
+   					</isEqual>
+   					<isEqual property="serverTypeOrigin" compareValue="stat">
+   						, TN_NARA_PMS_INFO$etldbLink$ D
+   					</isEqual>
+   					<isEqual property="serverTypeOrigin" compareValue="stat_emp">
+   						, TN_NARA_PMS_INFO$etldbLink$ D
+   					</isEqual>
+   		<![CDATA[
+   						,$dbUser$TN_ORG E
+                WHERE	A.ORG_ID = #orgId#
+                      	AND A.TBL_ID = #tblId#
+                      	AND A.ORG_ID = E.ORG_ID
+                        AND A.PUB_SE
+        ]]>
+        <isEqual property="st" compareValue="service">
+			<isEqual property="serverTypeOrigin" compareValue="stat_emp">
+           		<include refid="common.pub_se_stat_emp"/>
+           	</isEqual>
+           	<isEqual property="serverTypeOrigin" compareValue="stat">
+           		<include refid="common.pub_se_stat"/>
+           	</isEqual>
+           	<isEqual property="serverTypeOrigin" compareValue="service">
+           		<include refid="common.pub_se"/>
+           	</isEqual>
+           	<isEqual property="serverTypeOrigin" compareValue="service_en">
+           		<include refid="common.pub_se"/>
+           	</isEqual>
+        </isEqual>
+        <isNotEqual property="st" compareValue="service">
+           	<include refid="common.pub_se"/>
+        </isNotEqual>
+        <![CDATA[                               
+                        AND A.ORG_ID = B.ORG_ID
+                        AND A.TBL_ID = B.TBL_ID
+                        AND B.STAT_PK_AT = 'Y'
+                        AND B.STAT_ID = C.STAT_ID
+						AND C.STAT_ID = D.STAT_ID(+)
+		]]>
+	</select>
+	
+	<select id="selectStatLinkMainSply" parameterClass="map" resultClass="egovMap">
+		<![CDATA[
+		SELECT	C.STAT_ID
+				, REPLACE(C.PUB_LINK, CHR(10), '') AS PUB_LINK
+				, REPLACE(C.NEWS_LINK, CHR(10), '') AS NEWS_LINK
+				, C.APRV_SN AS CONFM_NO
+       			, C.FST_EXEC_YY AS INPT_YEAR
+                , DECODE (NVL (C.APP_AT, 'Y'),'Y', DECODE (NVL(FST_EXEC_YY, NULL), NULL, 'YN', 'Y'),'N') APP_AT
+                , NVL(E.HTTP_CN, B.URL_CN) URL_CN
+                , E.ORG_NM_ENG AS ORG_ENG_NM
+                , C.STAT_ENG_NM AS SNAMEENG
+                ,(SELECT COUNT(*) FROM $dbUser$TN_STBL_STAT_REL SU WHERE A.ORG_ID = SU.ORG_ID AND A.TBL_ID = SU.TBL_ID) STATCNT
+        FROM	$dbUser$TN_STBL_INFO A           
+          		,$dbUser$TN_STBL_STAT_REL B
+                ,$dbUser$TN_STAT C
+   				,$dbUser$TN_ORG E
+        WHERE	A.ORG_ID = #orgId#
+                AND A.TBL_ID = #tblId#
+                AND A.ORG_ID = E.ORG_ID
+                AND A.ORG_ID = B.ORG_ID
+                AND A.TBL_ID = B.TBL_ID
+                AND B.STAT_ID = C.STAT_ID
+                AND A.PUB_SE
+        ]]>
+                <include refid="common.pub_se"/>
+        <![CDATA[                               
+                AND A.ORG_ID = B.ORG_ID
+                AND A.TBL_ID = B.TBL_ID
+                AND B.STAT_PK_AT = 'Y'
+                AND B.STAT_ID = C.STAT_ID
+		]]>
+	</select>
+	
+	<select id="selectStatLinkDept" parameterClass="map" resultClass="egovMap">
+		SELECT 	 $dbUser$GET_STAT_BYITEM(#orgId#, #tblId#, 'DEPT','N') DEPT_NM
+               	, $dbUser$GET_STAT_BYITEM(#orgId#, #tblId#, 'TEL' ,'N') DEPT_TEL 
+        FROM 	DUAL
+	</select>
+	
+	<select id="selectStatLinkOrg" parameterClass="map" resultClass="egovMap">
+		<![CDATA[
+		SELECT 	ORG_NM
+				, ORG_NM_ENG 
+        FROM 	$dbUser$TN_ORG
+        WHERE 	ORG_ID = #orgId#
+		]]>
+	</select>
+	
+</sqlMap>

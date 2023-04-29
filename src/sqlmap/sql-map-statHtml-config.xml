@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<settings useStatementNamespaces="true"/>
+
+    <typeAlias type="java.util.HashMap" alias="hmap"/>
+    <typeAlias type="nurimsoft.stat.info.ParamInfo" alias="param"/>
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    
+    <sqlMap resource="sqlmap/stathtml/mapping-common.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-statinfo.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-defaultsetting.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-statdata.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-cmmtinfo.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-statlinkinfo.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-log.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-metainfo.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-downlarge.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-sdmx.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-scrap.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-direct.xml"/>
+    <sqlMap resource="sqlmap/stathtml/mapping-test.xml"/>
+    
+    <!-- 2015.06.04 상속통계표 -->
+    <sqlMap resource="sqlmap/stathtml/mapping-statinherit.xml"/>
+    
+</sqlMapConfig>

@@ -1,0 +1,19 @@
+
+*.iml
+DevOps/
+target/
+.idea/
+
+.project
+.settings
+.springBeans
+.classpath
+
+.gitattributes
+
+#src/main/webapp/META-INF/
+# src/main/webapp/WEB-INF/lib/
+#src/main/webapp/WEB-INF/classes/
+
+#src/main/webapp/WEB-INF/lib
+#!src/main/webapp/WEB-INF/lib/ojdbc8.jar

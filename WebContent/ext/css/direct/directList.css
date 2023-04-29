@@ -1,0 +1,23 @@
+@charset "utf-8";
+/* 직접다운로드 */
+.firstDown {border:0px solid #000; background:#fff; }
+.firstDown .downLayer {position:absolute; width:670px; height:534px; left:5%; top:15%; padding:40px 0 0 10px; border:1px solid #5fb5dc; color:#565656; font:12px/1.5em AppleGothic,Dotum,sans-serif; margin:0; background:url('../../ext/images/directDown/layout_bg.gif') no-repeat; background-size:690px 574px}
+.firstDown .downLayerLink {position:absolute; width:670px; height:435px; left:5%; top:15%;border:1px solid #5fb5dc; font:12px/1.5em AppleGothic,Dotum,sans-serif;}
+/* .firstDown .downLayer {position:absolute; width:660px; height:534px; left:5%; top:15%; padding:40px 0 0 10px; border:1px solid #5fb5dc; color:#565656; font:12px/1.5em AppleGothic,Dotum,sans-serif; margin:0; background:url('../../ext/images/directDown/layout_bg.gif') no-repeat;} */
+.firstDown th {padding:5px 0; text-align:left;}
+.firstDown td {padding:2px 0; color:#565656;}
+.firstDown td.check {height:12px; padding:5px 0; font-size:11px; line-height:20px;}
+.firstDown td.check .gap {font-size:12px; color:#ccc;}
+.firstDown .dataBox {width:504px; height:168px; padding:5px 0;border:1px solid #ccc; text-align:left; overflow-y:auto; font-size:13px; font-family:dotum;}
+.firstDown .dataBox ul {width:300px; list-style:none; padding-left:5px; margin-top:0px; margin-left:0px;}
+.firstDown td {font-size:11px; margin-top:0px;}
+.firstDown td .f_red {color:#cc3333;}
+.firstDown select {font-size:12px; font-family:dotum;}
+.firstDown select.date {width:75px; color:#666; border:#ddd 1px solid;}
+
+.downBtn {text-align:center; margin-top:20px;}
+
+#close_layer img {margin:-32px 0 0 630px; position:absolute;}		
+#close_layer2 img {margin:507px 0 0 630px; position:absolute;}
+#close_layer3 {margin:-26px 0 0 170px; position:absolute;}
+#close_layer3 img {margin:4px 0 0 0; position:absolute;}

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="direct">
+	<select id="getMetaDownInfo" resultClass="hmap">
+		<![CDATA[
+		SELECT TBL_NM,
+			NVL (A.OLAP_STL, '') AS OLAP_STL,
+			CMMT_AT,
+			'' AS CMMT_DC,
+			NVL (DIM_CO, 0) DIM_CO,
+			NVL(A.APP_AT,'N') AS APP_AT,
+			B.DATE_VALUE AS SEND_DE,
+			RENEWAL_DATE,
+			TO_CHAR(SYSDATE, 'yyyy.mm.dd hh24:mi') AS MAKE_DATE,
+			$dbUser$GET_STAT_BYITEM (A.ORG_ID, A.TBL_ID, DECODE(NVL(A.APP_AT,'N'),'Y','JOSA','N','DEPT'), 'Y') AS DEPT_NM,
+			$dbUser$GET_STAT_BYITEM (A.ORG_ID, A.TBL_ID, 'TEL' , NVL(A.APP_AT,'N')) AS DEPT_TEL,
+			$dbUser$FN_GET_STBL_PRD_SEARCH(A.ORG_ID, A.TBL_ID, #dbUser#, #serverType#, 'ko', 'ko') AS PRD_INFO
+		FROM $dbUser$TN_STBL_INFO A,
+			(
+					SELECT S1.ORG_ID, S1.TBL_ID, NVL ( TO_CHAR (MAX (SEND_DE), 'YYYY-MM-DD HH24:MI'), TO_CHAR (TO_DATE (MAX (S2.LST_CHN_DE), 'YYYYMMDD'), 'YYYY-MM-DD')) AS DATE_VALUE
+	       ,(with list as
+	       (
+	       select max(send_de) as send_de, max(lst_chn_de) as lst_chn_de from( SELECT NVL (
+	                  TO_CHAR (MAX (SEND_DE), 'YYYYMMDD'),
+	                  MAX (
+	                     TO_CHAR (
+	                        TO_DATE (
+	                           CASE
+	                              WHEN LENGTH (S2.LST_CHN_DE) = 8
+	                                   AND INSTR (S2.LST_CHN_DE, '/') = 0
+	                              THEN
+	                                 TO_DATE (S2.LST_CHN_DE, 'YYYYMMDD')
+	                              WHEN LENGTH (S2.LST_CHN_DE) = 8
+	                                   AND INSTR (S2.LST_CHN_DE,
+	                                              '/',
+	                                              1,
+	                                              2) = 6
+	                              THEN
+	                                 TO_DATE (S2.LST_CHN_DE, 'YY/MM/DD')
+	                              ELSE
+	                                 NULL
+	                           END),
+	                        'YYYYMMDD')))
+	                  AS SEND_DE, s1.lst_chn_de, a.org_id, a.tbl_id
+	          FROM $dbUser$TN_STBL_RECD_INFO S1, $dbUser$TN_RECD_PRD S2, $dbUser$TN_STBL_INFO a
+	         WHERE     S1.ORG_ID = S2.ORG_ID
+	               AND S1.TBL_ID = S2.TBL_ID
+	               and s1.org_id = a.org_id
+	               and s1.tbl_id = a.tbl_id
+	               and  a.ORG_ID = #orgId# AND a.TBL_ID = #tblId#
+	               AND S1.PRD_SE = S2.PRD_SE
+	               AND S1.PUB_SE 
+        ]]>
+                   			<include refid="common.pub_se"/>
+
+        <![CDATA[
+	               AND S2.PRD_DE BETWEEN (CASE
+	                                         WHEN     S1.STRT_RLS_DE IS NOT NULL
+	                                              AND S1.STRT_RSTR_DE IS NOT NULL
+	                                              AND S1.STRT_RLS_DE >= SYSDATE
+	                                         THEN
+	                                            S1.STRT_RSTR_DE
+	                                         ELSE
+	                                            S1.STRT_PRD_DE
+	                                      END)
+	                                 AND (CASE
+	                                         WHEN     S1.END_RLS_DE IS NOT NULL
+	                                              AND S1.END_RSTR_DE IS NOT NULL
+	                                              AND S1.END_RLS_DE >= SYSDATE
+	                                         THEN
+	                                            S1.END_RSTR_DE
+	                                         ELSE
+	                                            S1.END_PRD_DE
+	                                      END)
+	               group by s1.lst_chn_de, a.org_id, a.tbl_id
+	               ) b )
+	               select
+	                  CASE 
+	                    WHEN send_de > lst_chn_de THEN TO_CHAR(to_date(send_de, 'yyyymmddhh24mi'), 'yyyy-mm-dd')
+	                    WHEN lst_chn_de > send_de THEN TO_CHAR(to_date(lst_chn_de, 'yyyymmddhh24mi'), 'yyyy-mm-dd')
+	                    ELSE DECODE(SEND_DE, NULL, TO_CHAR(to_date(lst_chn_de, 'yyyymmddhh24mi'), 'yyyy-mm-dd'), TO_CHAR(to_date(SEND_DE, 'yyyymmddhh24mi'), 'yyyy-mm-dd')) 
+	                END big_de 
+	               from list
+	               ) AS RENEWAL_DATE
+					FROM $dbUser$TN_STBL_RECD_INFO S1, $dbUser$TN_RECD_PRD S2
+					WHERE S1.ORG_ID = #orgId#
+					AND S1.TBL_ID = #tblId#
+					AND S1.ORG_ID = S2.ORG_ID
+					AND S1.TBL_ID = S2.TBL_ID
+					AND S1.PRD_SE = S2.PRD_SE
+					AND S1.PUB_SE ]]> <include refid="common.pub_se"/><![CDATA[
+					AND S2.PRD_DE BETWEEN (
+											CASE WHEN S1.STRT_RLS_DE IS NOT NULL AND S1.STRT_RSTR_DE IS NOT NULL AND S1.STRT_RLS_DE >= SYSDATE
+												THEN S1.STRT_RSTR_DE
+												ELSE S1.STRT_PRD_DE
+											END
+											) AND (
+											CASE WHEN S1.END_RLS_DE IS NOT NULL AND S1.END_RSTR_DE IS NOT NULL AND S1.END_RLS_DE >= SYSDATE
+												THEN S1.END_RSTR_DE
+												ELSE S1.END_PRD_DE
+											END
+											)
+				GROUP BY S1.ORG_ID, S1.TBL_ID
+			) B
+		WHERE B.ORG_ID = A.ORG_ID 
+		AND B.TBL_ID = A.TBL_ID
+		]]>
+	</select>
+	
+	<select id="getSelectPrdSe" resultClass="hmap">
+		<![CDATA[
+		SELECT A.PRD_SE
+		       , DECODE(A.PRD_SE, 'F', (SELECT PRD_NM FROM $dbUser$TC_PRD_DETAIL C WHERE PRD_DETAIL = NVL(A.PRD_DETAIL, 'IR')), PRD_NM) AS PRD_NM
+		  FROM $dbUser$TN_STBL_RECD_INFO A, $dbUser$TC_PRD_INFO B
+		 WHERE A.PUB_SE ]]> <include refid="common.pub_se"/>
+		<![CDATA[
+		   AND A.ORG_ID = #orgId#
+		   AND A.TBL_ID = #tblId#
+		   AND A.PRD_SE = B.PRD_SE
+		 ORDER BY B.PRD_SN ASC
+		 ]]> 
+	</select>
+	
+		
+	<!-- 통계표 직접다운로드 시점 조회-->
+	<select id="getSelectPrdDe" resultClass="hmap">
+	<![CDATA[
+	SELECT PRD_DE
+		  FROM $dbUser$TN_STBL_RECD_INFO A, $dbUser$TN_RECD_PRD B
+		 WHERE B.ORG_ID = #orgId#
+		   AND B.TBL_ID = #tblId#
+		   AND B.PUB_SE ]]> <include refid="common.pub_se"/>
+		   <![CDATA[
+		   AND B.PRD_SE = #prdSe#
+		   AND A.ORG_ID = B.ORG_ID
+		   AND A.TBL_ID = B.TBL_ID
+		   AND A.PRD_SE = B.PRD_SE
+		   AND B.PRD_DE BETWEEN CASE
+		                           WHEN A.STRT_RSTR_DE IS NOT NULL
+		                            AND A.STRT_RLS_DE IS NOT NULL
+		                            AND SYSDATE < A.STRT_RLS_DE THEN
+		                              CASE
+		                                 WHEN A.STRT_RSTR_DE < (SELECT MIN(PRD_DE)
+		                                                          FROM $dbUser$TN_RECD_PRD
+		                                                         WHERE ORG_ID = A.ORG_ID
+		                                                           AND TBL_ID = A.TBL_ID
+		                                                           AND PRD_SE = A.PRD_SE
+		                                                           AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE
+		                                                           AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[) THEN
+		                                    (SELECT MIN(PRD_DE)
+		                                       FROM $dbUser$TN_RECD_PRD
+		                                      WHERE ORG_ID = A.ORG_ID
+		                                        AND TBL_ID = A.TBL_ID
+		                                        AND PRD_SE = A.PRD_SE
+		                                        AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE
+		                                        AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[)
+		                                 ELSE
+		                                    A.STRT_RSTR_DE
+		                              END
+		                           ELSE
+		                              (SELECT MIN(PRD_DE)
+		                                 FROM $dbUser$TN_RECD_PRD
+		                                WHERE ORG_ID = A.ORG_ID
+		                                  AND TBL_ID = A.TBL_ID
+		                                  AND PRD_SE = A.PRD_SE
+		                                  AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE
+		                                  AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[)
+		                        END
+		                    AND CASE
+		                           WHEN A.END_RSTR_DE IS NOT NULL
+		                            AND A.END_RLS_DE IS NOT NULL
+		                            AND SYSDATE < A.END_RLS_DE THEN
+		                              CASE
+		                                 WHEN A.END_RSTR_DE > (SELECT MAX(PRD_DE)
+		                                                         FROM $dbUser$TN_RECD_PRD
+		                                                        WHERE ORG_ID = A.ORG_ID
+		                                                          AND TBL_ID = A.TBL_ID
+		                                                          AND PRD_SE = A.PRD_SE
+		                                                          AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE
+		                                                          AND PUB_SE  ]]> <include refid="common.pub_se"/> <![CDATA[) THEN
+		                                    (SELECT MAX(PRD_DE)
+		                                       FROM $dbUser$TN_RECD_PRD
+		                                      WHERE ORG_ID = A.ORG_ID
+		                                        AND TBL_ID = A.TBL_ID
+		                                        AND PRD_SE = A.PRD_SE
+		                                        AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE
+		                                        AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[) 
+		                                 ELSE
+		                                    A.END_RSTR_DE
+		                              END
+		                           ELSE
+		                              (SELECT MAX(PRD_DE)
+		                                 FROM $dbUser$TN_RECD_PRD
+		                                WHERE ORG_ID = A.ORG_ID
+		                                  AND TBL_ID = A.TBL_ID
+		                                  AND PRD_SE = A.PRD_SE
+		                                  AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE
+		                                  AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[)
+		                        END
+		ORDER BY PRD_DE DESC]]>
+	</select>
+
+	<!-- 통계표 직접다운로드 주석 조회-->
+	<select id="cmmtinfo" resultClass="hmap">
+		  <![CDATA[
+		  SELECT A.CMMT_SE,
+		         A.CMMT_DC,
+		         B.TBL_NM AS SCR_KOR,
+		         '통계표 >' AS CMMT_NM,
+		         0 AS SN,
+		         A.LINE_SN,
+		         RANK() OVER(PARTITION BY A.ORG_ID, A.TBL_ID ORDER BY A.LINE_SN) RNUM
+		    FROM $dbUser$TN_CMMT_INFO A, $dbUser$TN_STBL_INFO B
+		   WHERE A.ORG_ID = B.ORG_ID
+		     AND A.TBL_ID = B.TBL_ID
+		     AND A.ORG_ID = #orgId#
+		     AND A.TBL_ID = #tblId#
+		     AND A.CMMT_SE = '1210610'
+		     AND A.LNG_SE = '1211910'
+			 AND B.PUB_SE ]]> <include refid="common.pub_se"/>
+		   <![CDATA[
+		UNION ALL
+		  SELECT A.CMMT_SE,
+		         A.CMMT_DC,
+		         B.SCR_KOR,
+		         '항목 > ' AS CMMT_NM,
+		         B.CHAR_ITM_SN AS SN,
+		         A.LINE_SN,
+		         RANK() OVER(PARTITION BY A.ITM_ID ORDER BY A.LINE_SN) RNUM
+		    FROM $dbUser$TN_CMMT_INFO A, $dbUser$TN_ITM_LIST B
+		   WHERE A.ORG_ID = B.ORG_ID
+		     AND A.TBL_ID = B.TBL_ID
+		     AND A.ORG_ID = #orgId#
+		     AND A.TBL_ID = #tblId#
+		     AND A.VAR_LVL_CO = '1'
+		     AND A.ITM_ID = B.ITM_ID
+		     AND A.OBJ_VAR_ID = B.OBJ_VAR_ID
+		     AND B.OBJ_VAR_ID = '13999001'     
+		     AND A.CMMT_SE = '1210611'
+		     AND A.LNG_SE = '1211910'
+			 AND B.PUB_SE ]]> <include refid="common.pub_se"/>
+		   <![CDATA[
+		UNION ALL
+		  SELECT A.CMMT_SE,
+		         A.CMMT_DC,
+		         B.SCR_KOR,
+		         B.SCR_KOR AS CMMT_NM,
+		         B.VAR_ORD_SN AS SN,
+		         A.LINE_SN,
+		         RANK() OVER(PARTITION BY A.OBJ_VAR_ID ORDER BY A.LINE_SN) RNUM
+		    FROM $dbUser$TN_CMMT_INFO A, $dbUser$TN_OBJ_ITM_CLS B
+		   WHERE A.ORG_ID = B.ORG_ID
+		     AND A.TBL_ID = B.TBL_ID
+		     AND A.ORG_ID = #orgId#
+		     AND A.TBL_ID = #tblId#
+		     AND A.VAR_LVL_CO = '1'
+		     AND A.OBJ_VAR_ID = B.OBJ_VAR_ID
+		     AND B.OBJ_VAR_ID != '13999001'
+		     AND A.CMMT_SE = '1210612'
+		     AND A.LNG_SE = '1211910'
+			 AND B.PUB_SE ]]> <include refid="common.pub_se"/>
+		   <![CDATA[
+		UNION ALL
+		  SELECT A.CMMT_SE,
+		         A.CMMT_DC,
+		         B.SCR_KOR,
+		         (SELECT SCR_KOR FROM $dbUser$TN_OBJ_ITM_CLS WHERE ORG_ID = B.ORG_ID AND TBL_ID = B.TBL_ID AND OBJ_VAR_ID = B.OBJ_VAR_ID)||' > '||B.SCR_KOR AS CMMT_NM, 
+		         B.CHAR_ITM_SN AS SN,
+		         A.LINE_SN,
+		         RANK() OVER(PARTITION BY A.ITM_ID ORDER BY A.LINE_SN) RNUM
+		    FROM $dbUser$TN_CMMT_INFO A, $dbUser$TN_ITM_LIST B
+		   WHERE A.ORG_ID = B.ORG_ID
+		     AND A.TBL_ID = B.TBL_ID
+		     AND A.ORG_ID = #orgId#
+		     AND A.TBL_ID = #tblId#
+		     AND A.VAR_LVL_CO = '1'
+		     AND A.ITM_ID = B.ITM_ID
+		     AND A.OBJ_VAR_ID = B.OBJ_VAR_ID
+		     AND B.OBJ_VAR_ID != '13999001'
+		     AND A.CMMT_SE = '1210613'
+		     AND A.LNG_SE = '1211910'
+			 AND B.PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[
+		ORDER BY CMMT_SE, SN, LINE_SN ]]>
+	</select>
+	
+		<!-- 통계표 직접다운로드 메타데이터 조회
+		20151218 남규옥 ::: 13999000 (가상분류) 조회되지 않도록 조건 추가 
+		-->
+	<select id="objitminfo" resultClass="hmap">
+	<![CDATA[
+		SELECT ORG_ID,
+			   TBL_ID,
+			   OBJ_VAR_ID,
+			   '항목' AS OBJ_SCR_KOR,
+			   ITM_ID,
+			   SCR_KOR AS ITM_SCR_KOR,
+			   DECODE((SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = UNIT_ID), NULL, '', (SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = UNIT_ID)) AS UNIT_ID,
+			   A.WGT_CO,
+			   9999 AS SN,
+			   CHAR_ITM_SN
+		  FROM $dbUser$TN_ITM_LIST A
+		 WHERE ORG_ID = #orgId#
+		   AND TBL_ID = #tblId# 
+		   AND A.OBJ_VAR_ID = '13999001'
+		   AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[
+		UNION ALL
+		SELECT A.ORG_ID,
+			   A.TBL_ID,
+			   A.OBJ_VAR_ID,
+			   A.SCR_KOR AS OBJ_SCR_KOR,
+			   B.ITM_ID,
+			   B.SCR_KOR AS ITM_SCR_KOR,
+			   DECODE((SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = UNIT_ID), NULL, '',(SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = UNIT_ID)) AS UNIT_ID,
+			   B.WGT_CO,
+			   A.VAR_ORD_SN AS SN,
+			   CHAR_ITM_SN
+		  FROM $dbUser$TN_OBJ_ITM_CLS A, $dbUser$TN_ITM_LIST B
+		 WHERE A.ORG_ID = B.ORG_ID
+		   AND A.TBL_ID = B.TBL_ID
+		   AND A.OBJ_VAR_ID = B.OBJ_VAR_ID
+		   AND A.ORG_ID = #orgId# 
+		   and A.TBL_ID = #tblId#
+		   AND A.OBJ_VAR_ID != '13999001'
+		   AND A.OBJ_VAR_ID != '13999000'
+		   AND A.PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[
+		   AND B.PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[
+		ORDER BY SN, CHAR_ITM_SN ]]>
+	</select>
+
+	<select id="getConnPath" resultClass="string">
+		SELECT LEV_1_CD||LEV_2_CD
+		FROM EKP.TN_USELOG_CODE
+		WHERE VW_CD = #vwCd#
+	</select>
+
+	<select id="directClassListForWhereClause" parameterClass="param" resultClass="string">
+		<![CDATA[
+		SELECT 'OV_L'||VAR_ORD_SN||'_ID' AS TARGET_ID 
+		  FROM $dbUser$TN_OBJ_ITM_CLS
+		 WHERE ORG_ID = #orgId#
+		   AND TBL_ID = #tblId#
+		   AND OBJ_VAR_ID != '13999001'
+		   AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[
+		 ORDER BY VAR_ORD_SN 
+		]]>
+	</select>
+	
+	<!-- 통계표 직접다운로드 항목정보 조회--> 
+	<select id="directObjVarPubInfo" resultClass="egovMap">
+		<![CDATA[
+		SELECT 'OV_L'||VAR_ORD_SN||'_ID' AS TARGET_ID, PUB_SE
+		  FROM $dbUser$TN_OBJ_ITM_CLS
+		 WHERE ORG_ID = #orgId#
+		   AND TBL_ID = #tblId#
+		   AND OBJ_VAR_ID != '13999001'
+		 ORDER BY VAR_ORD_SN 
+		]]>
+	</select>
+	
+	<!-- 통계표 직접다운로드 항목정보 조회--> 
+	<select id="directItmIdList" resultClass="egovMap">
+		<![CDATA[
+		  SELECT ITM_ID,
+		         (SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID) AS UNIT_NM,
+		         SUBSTR(PUB_SE, -1) AS PUB_SE,
+		         CASE WHEN UNIT_ID IS NOT NULL
+		              THEN SCR_KOR || '[' || (SELECT NVL(CD_ABBR_NM, CD_NM) FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID) || ']'
+		              ELSE SCR_KOR
+		          END AS SCR_KOR,
+		         CASE WHEN UNIT_ID IS NOT NULL
+		              THEN SCR_ENG || '[' || (SELECT NVL(CD_ABBR_NM, CD_NM) FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID) || ']'
+		              ELSE SCR_ENG
+		          END AS SCR_ENG,
+		         ITM_ID ||
+		         CASE WHEN UNIT_ID IS NOT NULL
+		              THEN SCR_KOR || '[' || (SELECT NVL(CD_ABBR_NM, CD_NM) FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID) || ']'
+		              ELSE SCR_KOR
+		          END AS ITM_SCR_KOR
+		    FROM $dbUser$TN_ITM_LIST A
+		   WHERE ORG_ID = #orgId#
+		     AND TBL_ID = #tblId#
+		     AND OBJ_VAR_ID = '13999001'
+		     AND PUB_SE ]]> <include refid="common.pub_se"/> <![CDATA[ 
+		ORDER BY CHAR_ITM_SN
+		]]>
+	</select>
+	
+</sqlMap>

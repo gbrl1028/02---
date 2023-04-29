@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">   
+
+<sqlMap namespace="cmmtinfo">
+
+	<!-- 통계표 정보 주석 -->
+	<select id="selectStblCmmt" resultClass="string">
+		<![CDATA[
+			SELECT	CMMT_DC
+			FROM 	$dbUser$TN_CMMT_INFO
+			WHERE	ORG_ID = #orgId#
+					AND TBL_ID = #tblId#
+					AND CMMT_SE = #cmmtSe#
+					AND LNG_SE = #lngSe#
+			ORDER BY LINE_SN
+		]]>
+	</select>
+	
+	<!-- 분류 주석 -->
+	<select id="selectClassCmmt" resultClass="string">
+		<![CDATA[
+			SELECT	CMMT_DC
+			FROM 	$dbUser$TN_CMMT_INFO
+			WHERE	ORG_ID = #orgId#
+					AND TBL_ID = #tblId#
+					AND OBJ_VAR_ID = #objVarId#
+					AND CMMT_SE = #cmmtSe#
+					AND LNG_SE = #lngSe#
+			ORDER BY LINE_SN
+		]]>
+	</select>
+	
+	<!-- 분류값, 항목 주석 -->
+	<select id="selectClassItemCmmt" resultClass="string">
+		<![CDATA[
+			SELECT	CMMT_DC
+			FROM 	$dbUser$TN_CMMT_INFO
+			WHERE	ORG_ID = #orgId#
+					AND TBL_ID = #tblId#
+					AND OBJ_VAR_ID = #objVarId#
+					AND ITM_ID = #itmId#
+					AND CMMT_SE = #cmmtSe#
+					AND LNG_SE = #lngSe#
+			ORDER BY LINE_SN
+		]]>
+	</select>
+	
+	<!-- 차원 주석 -->
+	<select id="selectDimCmmt" resultClass="string">
+		<![CDATA[
+			SELECT	CMMT_DC
+			FROM 	$dbUser$TN_CMMT_INFO
+			WHERE	ORG_ID = #orgId#
+					AND TBL_ID = #tblId#
+					AND ITM_RCGN_SN = #itmRcgnSn#
+					AND CMMT_SE = #cmmtSe#
+					AND LNG_SE = #lngSe#
+			ORDER BY LINE_SN
+		]]>
+	</select>
+	
+	<!-- 해당 주석 가져오기 -->
+	<select id="selectCmmtStr" resultClass="string">
+		<![CDATA[
+			SELECT	CMMT_DC
+			FROM 	$dbUser$TN_CMMT_INFO
+			WHERE	ORG_ID = #orgId#
+					AND TBL_ID = #tblId#
+		]]>
+					<isEqual property="cmmtSe" compareValue="1210612">
+						<![CDATA[
+   						AND OBJ_VAR_ID = #objVarId#
+   						]]>
+   					</isEqual>
+   					<isEqual property="cmmtSe" compareValue="1210611">
+						<![CDATA[
+   						AND OBJ_VAR_ID = #objVarId#
+   						AND ITM_ID = #itmId#
+   						]]>
+   					</isEqual>
+   					<isEqual property="cmmtSe" compareValue="1210613">
+						<![CDATA[
+   						AND OBJ_VAR_ID = #objVarId#
+   						AND ITM_ID = #itmId#
+   						]]>
+   					</isEqual>
+   					<isEqual property="cmmtSe" compareValue="1210614">
+						<![CDATA[
+   						AND ITM_RCGN_SN = #itmRcgnSn#
+   						]]>
+   					</isEqual>
+		<![CDATA[
+					AND CMMT_SE = #cmmtSe#
+					AND LNG_SE = #lngSe#
+			ORDER BY LINE_SN
+		]]>
+	</select>
+	
+	<!-- 해당 주석의 타이틀 가져오기 -->
+	<select id="selectCmmtTitle" resultClass="string">
+		<![CDATA[
+		SELECT
+    		CASE #cmmtSe#
+        		WHEN '1210610' THEN
+            		(
+            			SELECT
+		]]>
+            			<isEqual property="lngSe" compareValue="1211911">
+            					TBL_ENG_NM 
+						</isEqual>
+						<isEqual property="lngSe" compareValue="1211910">
+            					TBL_NM 
+						</isEqual>
+		<![CDATA[
+            			FROM 	$dbUser$TN_STBL_INFO 
+            			WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId#
+            		)
+        		WHEN '1210611' THEN
+            		(
+            			SELECT
+		]]>
+            			<isEqual property="lngSe" compareValue="1211911">
+            					SCR_ENG 
+						</isEqual>
+						<isEqual property="lngSe" compareValue="1211910">
+            					SCR_KOR 
+						</isEqual>
+		<![CDATA[
+            			FROM 	$dbUser$TN_ITM_LIST 
+            			WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId#  AND OBJ_VAR_ID = '13999001' AND ITM_ID = #itmId#
+            		)
+        		WHEN '1210612' THEN
+            		(
+            			SELECT	
+		]]>
+            			<isEqual property="lngSe" compareValue="1211911">
+            					SCR_ENG
+						</isEqual>
+						<isEqual property="lngSe" compareValue="1211910">
+            					SCR_KOR
+						</isEqual>
+		<![CDATA[
+            			FROM 	$dbUser$TN_OBJ_ITM_CLS 
+            			WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId#  AND OBJ_VAR_ID = #objVarId#
+            		)
+        		WHEN '1210613' THEN
+            		(
+            			SELECT
+		]]>
+            			<isEqual property="lngSe" compareValue="1211911">
+            					SCR_ENG
+						</isEqual>
+						<isEqual property="lngSe" compareValue="1211910">
+            					SCR_KOR
+						</isEqual>
+		<![CDATA[
+            			FROM 	$dbUser$TN_ITM_LIST
+            			WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId# AND OBJ_VAR_ID = #objVarId# AND ITM_ID = #itmId#
+            		)
+        		ELSE
+		]]>
+        			<isEqual property="lngSe" compareValue="1211911">
+            			'Cell Comment'
+					</isEqual>
+					<isEqual property="lngSe" compareValue="1211910">
+            			'셀 주석'
+					</isEqual>
+		<![CDATA[            		          	
+    		END AS TITLE
+		FROM DUAL
+		]]>
+	</select>
+	
+</sqlMap>

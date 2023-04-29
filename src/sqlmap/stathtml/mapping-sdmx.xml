@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">   
+
+<sqlMap namespace="sdmx">
+	
+	<select id="selectSdmxReqSeq" resultClass="int">
+		<![CDATA[
+		SELECT $dbUser$$sdmxSeq$.NEXTVAL FROM DUAL
+		]]>
+	</select>
+	
+	<insert id="insertSdmxInfo" parameterClass="map">
+		<![CDATA[
+		INSERT INTO $dbUser$$sdmxInfo$ (	
+			ORG_ID, TBL_ID, REQ_SEQ, FILE_TYPE, REQ_USR_ID, REQ_APP_TYPE, REQ_IP, REQ_PROC
+		) VALUES (
+			#orgId#, #tblId#, #reqSeq#, #fileType#, #reqUsrId#, 'H', #reqIp#, 'R'
+		)
+		]]>
+	</insert>
+	
+	<insert id="insertSdmxInfoMapObjItm" parameterClass="map">
+		<![CDATA[
+		INSERT INTO $dbUser$$sdmxInfoMap$ (
+			ORG_ID, TBL_ID, REQ_SEQ, CODE_TYPE, OBJ_VAR_ID, ITM_ID
+		)
+		SELECT	A.ORG_ID, A.TBL_ID, #reqSeq# AS REQ_SEQ, 'DBCODE' AS CODE_TYPE, A.OBJ_VAR_ID, B.TARGET_VALUE AS ITM_ID 
+		FROM 	$dbUser$TN_OBJ_ITM_CLS A, $condTable$ B
+        WHERE 	A.ORG_ID = #orgId#
+         		AND A.TBL_ID = #tblId#
+                AND B.SESSION_ID = #sessionId#
+                AND B.TARGET_ID LIKE 'OV_L%'
+                AND A.OBJ_VAR_ID != '13999001'
+                AND A.VAR_ORD_SN = SUBSTR(B.TARGET_ID, 5, 1)
+        UNION ALL
+        SELECT	A.ORG_ID, A.TBL_ID, #reqSeq# AS REQ_SEQ, 'ITEM' AS CODE_TYPE, A.OBJ_VAR_ID, B.TARGET_VALUE AS ITM_ID 
+        FROM 	$dbUser$TN_OBJ_ITM_CLS A, $condTable$ B
+        WHERE 	A.ORG_ID = #orgId#
+         		AND A.TBL_ID = #tblId#
+         		AND B.SESSION_ID = #sessionId#
+         		AND B.TARGET_ID LIKE 'ITM_ID'
+         		AND A.OBJ_VAR_ID = '13999001'
+		]]>
+	</insert>
+	
+	<insert id="insertSdmxInfoMapPrd" parameterClass="map">
+		<![CDATA[
+		INSERT INTO $dbUser$$sdmxInfoMap$ (
+			ORG_ID, TBL_ID, REQ_SEQ, CODE_TYPE, PRD_SE, PRD_DE
+		)
+		VALUES (
+			#orgId#, #tblId#, #reqSeq#, 'PRD', #prdSe#, #prdDe#
+		)
+		]]>
+	</insert>
+	
+	<parameterMap id="spMap" class="hmap">
+		<parameter property="orgId" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="tblId" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="reqSeq" javaType="java.lang.Integer" jdbcType="INTEGER" mode="IN"/>
+		<parameter property="serverType" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="result" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT"/>
+	</parameterMap>
+	
+	<procedure id="callSdmxMake" parameterMap="spMap">
+		<![CDATA[
+		{ CALL $dbUser$$sdmxMake$(?,?,?,?,?) }
+		]]>
+	</procedure>
+	
+	<select id="selectSdmxClob" parameterClass="map" resultClass="string">
+		<![CDATA[
+		SELECT 	REQ_SDMX_XML
+		FROM 	$dbUser$$sdmxInfo$
+		WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId# AND REQ_SEQ = #reqSeq#
+		]]>
+	</select>
+	
+	<delete id="deleteSdmxInfoMap" parameterClass="map">
+		<![CDATA[
+		DELETE
+		FROM 	$dbUser$$sdmxInfoMap$
+		WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId# AND REQ_SEQ = #reqSeq#
+		]]>
+	</delete>
+	
+</sqlMap>

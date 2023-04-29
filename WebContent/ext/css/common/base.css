@@ -1,0 +1,321 @@
+@charset "utf-8";
+
+/************************************************************************
+ * 파일명      : base.css
+ * 설명        : 기본_공통
+ * 작성자      : 박수림
+ * 작성일      : 2013.07.15
+************************************************************************/
+
+/* 기본  */
+* {margin:0; padding:0;}
+html {font-family:dotum;}
+body {line-height:140%; font-size:0.75em;  font-family:dotum; min-width:1040px; min-height:500px;} /*2017.11.29 KOSIS 리뉴얼에 따른 사이즈 변경 min-width:950px -> min-width:1040px*/
+pre, div, ul, ol, dl, p, td, th, input, textarea, select {font-family:dotum; font-size:12px;}
+table {border-collapse:collapse; border-spacing:0; width:100%;}
+img, fieldset {border:0 none; vertical-align:middle;}
+h1,h2,h3,h4,h5,h6 {font-size:100%; font-weight:normal;}
+ul, ol, li, dl, dt, dd {list-style:none; margin:0; padding:0;} /* 블릿감춤 */
+
+
+/* Link */
+a {text-decoration:none; color:#585858;}
+/*a:hover, a:active, a:focus {text-decoration:none; color:#434343;}*/
+.hideLink {color:#D2D2D2;}
+.noLinkInquire {color:#585858;}
+
+input,select,option {font-size:11px; height:23px; font-family:Verdana; color:#585858; vertical-align:middle;}
+
+
+/* form */
+select,input {vertical-align:middle;}
+input.text {height:23px; border:1px solid #ccc; line-height:20px;}
+textarea.textarea {font-family:Verdana; border:1px solid #ccc; padding:5px; font-size:1em; color:#777; line-height:130%;  width:150px; height:120px;}
+select {overflow:auto; padding:1px; border-right:#ccc 1px solid; border-top:#ccc 1px solid; border-left:#ccc 1px solid; border-bottom:#ccc 1px solid;}
+/* mode!=tab */
+
+#topTitleKo {width:100%; clear:both; position:relative; height:30px; padding:8px 0 0 0; background:url('images/toprightBg.gif') #235b94 no-repeat right 0;}
+#topTitleEn {width:100%; clear:both; position:relative; height:30px; padding:8px 0 0 0; background:url('images/toprightBg_en.gif') #235b94 no-repeat right 0;}
+	 .logo {float:left; margin-left:12px;}
+	 .textarea {float:left; line-height:15px; margin:3px 0 0 12px; color:#fff;}
+	 .textarea img.vtp {vertical-align:middle;}
+#kosis{position:absolute; top:6px; width:80px; height:25px;}
+
+/* body */
+/* contents*/
+/*2017.11.29 KOSIS 리뉴얼에 따른 사이즈 변경 (#wrap,#modal,#modal2,#popup_outer) width:950px -> width:1040px*/
+#wrap {width:1038px; height:800px; margin:0 auto; border:0px solid #ccc; z-index:200;}
+#header {padding:5px 0px;}
+#modal {width:1040px; height:800px; margin:0; position:absolute; z-index:110; visibility:hidden; background:black; filter:alpha(opacity=10); opacity:0.1;}
+#modal2{width:1040px; height:800px; margin:0; position:absolute; z-index:110; visibility:hidden; background:gray; filter:alpha(opacity=10); opacity:0.1;}
+#popup_outer {width:1040px; height:800px; margin:0; position:absolute; visibility:hidden; z-index:110;}
+
+/* 1217 수정 */
+.titleLeft {height:40px; background:url('images/titlebgLeft.gif') no-repeat left 0;}
+.titleCenter {position:relative; height:40px; background:url('images/titlebgCenter.gif') repeat-x 0 0;}
+.titleRight {height:40px; background:url('images/titlebgRight.gif') no-repeat right 0;}
+
+h1.title {height:40px; padding-left:10px; font-weight:bold; text-align:left; font-size:15px; color:#333; line-height:38px;}
+h1.title span.sup a {font-family:dotum; font-size:10px; color:#bf390c; line-height:25px; vertical-align:top;}
+
+ul.title_utill {position:absolute; top:12px; right:0;}
+ul.title_utill li {float:left; background:url('images/titlegap.gif') no-repeat 0 3px; padding:0 12px; color:#555;}
+ul.title_utill li.none {background:none;}
+
+.more {margin-top:5px; color:#555; text-align:right;}
+.more img {vertical-align:top;}
+
+
+/*#title {float:left; width:10%; font-size:10px; text-align:right;}
+h1.title {font-weight:bold; text-align:center; font-size:15px; line-height:30px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;} */
+#sigaLink {float:right; width:10%; font-size:10px; text-align:right; line-height:30px;}
+/*.dateBtn {float:left; width:100%; font-size:12px; list-style:none;}
+	.dateBtn li {display:inline;}
+	.dateBtn li.date {float:left; padding-top:10px; height: 13px;}
+	.dateBtn ul li.btn {float:right; display:inline;}*/
+
+
+.content {float:left; position:relative; width:100%; padding-bottom:10px;}
+
+/* .tabMenu {float:left; height:33px;} */
+/* 		.tabMenu .selection1{width:950px;} */
+/* 		.tabMenu .selection1 li {text-align:center; float:left; margin-right:3px; border:1px solid #b1b1b1; height:19px; padding:5px 8px 3px 8px; font-size:11px; color:#666; background:#fff; overflow:hidden; white-space:nowrap;text-overflow:ellipsis;vertical-align:middle} */
+/* 			.tabMenu li.on {position:relative; border-bottom:0 solid #fff; height:24px; padding:6px 8px 3px 8px; font-weight:bold; z-index:100;} */
+
+/* 영수 탭메뉴적용 테스트
+.tabMu {float:left; position:relative; width:100%; height:21px; border-bottom:1px solid #078836; margin-top:10px;}
+       .tabMu .selection1{width:858px;}
+        .detailBtn {float:left;}
+        .tabMu ul {float:left; margin-left:-6px; }
+        .tabMu li {float:left; margin-right:-7px;}
+            .tabMu li.menu_off a {float:left; color:#585858; font-size:11px; font-weight:bold; text-align:center; height:19px; padding:3px 20px 0 30px; background:url('images/tabBg2.gif') no-repeat 0 -20px; overflow:hidden; white-space:nowrap;text-overflow:ellipsis;vertical-align:middle}
+            .tabMu li.menu_off span.bg3 {position:relative; float:left; width:10px; height:22px; background:url('images/tabbg3.png') no-repeat 100% -20px;}
+            .tabMu li.menu_on a {float:left; color:#fff; font-size:11px; font-weight:bold; text-align:center; height:18px; padding:4px 20px 0 30px; background:url('images/tabBg2.gif') no-repeat 0 -52px; overflow:hidden; white-space:nowrap;text-overflow:ellipsis;vertical-align:middle}
+            .tabMu li.menu_on span.bg3 {position:relative; float:left; width:10px; height:22px; background:url('images/tabbg3.png') no-repeat 100% -52px;}
+ 			.tabMu li.lastbg {background:#ffffff; height:21px; margin-left:-3px;}
+*/
+
+/* 1217 수정 */
+.tabMu {position:relative; margin-top:10px; height:29px; border-bottom:2px solid #038383;}
+.tabMu .leftBtn {position:absolute; top:3px; left:0;}
+.tabMu .rightBtn {position:absolute; top:3px; right:0; cursor:pointer;}
+.tabMu ul {margin-left:76px;}
+.tabMu li{display:block;}
+.tabMu li.menu_off { float:left; margin:0 -1px;  height:21px; padding:7px 10px 0 10px; background:#f8f8f8; border-top:1px solid #cdcdcd; border-left:1px solid #cdcdcd; border-right:1px solid #cdcdcd; text-align:center; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;}
+.tabMu li.first {margin:0 -1px 0 0;}
+.tabMu li.menu_on {float:left; position:relative; margin:0;  height:22px; padding:7px 10px 0 10px; font-weight:bold; color:#038383; background:#fff; border-top:2px solid #038383; border-left:2px solid #038383; text-align:center; text-overflow:ellipsis; white-space:nowrap; overflow:hidden;border-right:2px solid #038383;}
+.tabMu li.menu_off a {color:#222; text-decoration:none;}
+.tabMu li.menu_on a {color:#038383; text-decoration:none;}
+
+/* 2013.12.30 */
+#directMenu {display:none; position:relative; height:666px; border-top:2px solid #038383; border-bottom:1px solid #b1b1b1; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1;background:url('images/building.gif') #f9f9f9 repeat-x 0 bottom; padding-left:18px;}
+.fileService {margin-top:5px; width:686px; height:43px; padding:20px 0 0 20px; background:url('images/gobox.gif') no-repeat 0 0;}
+.ex_text {margin:5px 0 10px 7px;}
+.ex_text dd {line-height:20px; background:url('images/dotGreen.gif') no-repeat 0 8px; padding-left:8px; color:#6f6f6f; font-family:dotum; font-size:13px; font-weight:bold;}
+/* icon */
+.bigGreen {margin:10px 0 0px 0; height:23px; line-height:20px; background:url('images/circleGreen.png') no-repeat 0 1px; padding-left:22px; font-family:dotum; color:#038384; font-size:16px; font-weight:bold;}
+.smallGreen {line-height:20px; vertical-align:middle; background:url('images/dotGreen.gif') no-repeat 0 6px; padding-left:8px; color:#414141; font-family:dotum; color:#6f6f6f; font-size:13px;}
+/* 직접다운로드 iframe div */
+.tableLayer {width:682px; height:420px; border:1px solid #d7d7d7; background-color:#fff;}
+
+/* .block_definition{position:absolute;top:35px;left:10px;padding-right:10px;} */
+/*1218 수정 */
+.block_definition{position:absolute; top:32px; left:10px; padding-right:10px;}
+.cont_lay {float:left; position:relative; border-bottom:1px solid #b1b1b1; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1; width:949px; height:637px; padding:0; overflow-x:auto; overflow-y:hidden;} /* 1217 수정 padding:0 10px; */
+.cont_line {float:left; position:relative; border-top:0px solid #b1b1b1; width:1040px; height:638px;} /*2017.11.29 KOSIS 리뉴얼에 따른 사이즈 변경 width:950px -> width:1040px*/
+
+.bu_2circle {clear:both; background:url('images/bu_twinCircle.gif') no-repeat 0 0; padding-left:18px; color:#333;} /* 1217 수정 */
+
+/* 1217 수정 */
+.btnIcon {float:left; width:100%; height:18px; margin:5px 0;}
+/* 2014.01.06*/
+.btnIcon .text {float:left; font-size:11px; line-height:25px; color:#555; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* 2014.01.06*/
+.btnIcon .align {width:50%; float:right; text-align:right;}
+.btnIcon .align li {display:inline;}
+.btnIcon .align li.gap {display:inline; background:url('images/btngap.gif') no-repeat 3px 3px; padding-left:10px;}
+
+/* 1218 영수 추가*/
+.h3_arrow {clear:both; overflow:hidden; font-weight:bold; background:url('images/ico_arrGreen.gif') no-repeat 0px 3px; padding:0px 0 0 18px; color:#222;z-index:1;  line-height:20px;}
+/*2013.12.02*/
+/* .icoalign {text-align:right; margin-bottom:8px;}*/
+/* .icoalign {width:100%; height:25px; position:relative}
+			.icoalign ul {float:right; positon:relative}
+ 					.icoalign li.icobtn a {display:block; color:#fff; font-weight:bold; font-size:11px; height:19px; line-height:20px; padding:1px 5px; background:#6699cc; border:1px solid #457eb7;}
+ 					.icoalign li.icobtn a {display:block; font-size:11px; height:19px; line-height:20px; padding:1px 5px; border:1px solid #8c96a0;}
+ 					.icoalign li.icobtnoff {display:block; color:#fff; font-weight:bold; font-size:11px; height:19px; line-height:20px; padding:1px 5px; background:#9e9e9e; border:1px solid #868686;}
+					.icoalign li.icobtn a {display:block; color:#333; font-size:11px; height:18px; line-height:22px; padding:1px 5px 0px 5px; background:#fff; border:1px solid #8c96a0;}
+					.icoalign li.icobtnoff {display:block; color:#333; font-size:11px; height:18px; line-height:22px; padding:1px 5px 0px 5px; background:#e5e5e5; border:1px solid #8c96a0;}
+					.icoalign li.icobtn img, .icoalign li.icobtnoff img {vertical-align:middle; margin-bottom : 4px;} */
+/* 부가기능, 피봇 등 버튼*/
+.align li {padding-left:1px;}
+
+.cont_detail{float:left;}
+	.popMode{float:left; width:1038px; height:606px;}
+		.inner {float:left; overflow:auto; width:100%; height:100%; border:1px solid #b1b1b1;}
+			/* .inner table { table-layout:fixed; white-space:nowrap; margin:0px; width:300px !important;} */
+			.inner table {table-layout:fixed; margin:0px; width:100px;}
+				/* .inner table tr th {border:1px solid #8c96a0; padding:3px 0; background:#ecead9; font-size:11px; overflow:hidden; text-overflow:ellipsis;} */
+				.inner table tr th {padding:3px 3px 0 0; background:#ecead9; text-align:left;}
+					.inner table tr th span{float:left;width:18px}
+					.inner table tr th span.text{width:147px; word-wrap:break-word;}
+					.inner table tr th.colHead-first {border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb; background:#dceed8; font-weight:normal;}
+					.inner table tr th.colHead-last {border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb; background:#dceed8; font-weight:normal;}
+					.inner table tr th.rowHead {border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb; background:#b0e4ce; text-align:left;}
+				/* .inner table tr td {border:1px solid #bbbbbb; padding:3px 0; text-align:right; padding-right:5px; overflow:hidden; text-overflow:ellipsis;} */
+				.inner table tr td {padding:3px 3px 0 0; text-align:right;}
+					.inner table tr td span{float:left;width:18px;}
+					.inner table tr td span.text{float:right;width:147px;}
+					.inner table tr td span.val{width:97px;word-wrap:break-word;}
+					.inner table tr td.first {border-top:1px solid #bbbbbb; border-right:1px solid #bbbbbb; background:#f6f7e7 no-repeat 10px 5px; text-align:left;}
+					.inner table tr td.first-end {border-top:1px solid #bbbbbb; border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb; background:#f6f7e7 no-repeat 10px 5px; text-align:left;}
+					.inner table tr td.merge {border-right:1px solid #bbbbbb; background:#f6f7e7 no-repeat 10px 5px; text-align:left;}
+					.inner table tr td.merge-end {border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb; background:#f6f7e7 no-repeat 10px 5px; text-align:left;}
+					.inner table tr td.value {border-top:1px solid #bbbbbb; border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb;}
+					.inner table tr th.sortRowHead {text-align:center; border-right:1px solid #bbbbbb; background:#b0e4ce; height:10px; padding:2px;}
+					.inner table tr th.sortColHead {text-align:center; border-right:1px solid #bbbbbb; border-bottom:1px solid #bbbbbb; background:#dceed8; height:10px; padding:0px;}
+	  				/* 1217 추가 */
+					.inner table tr th .sup {color:#bf390c; font-weight:bold;}
+					.inner table tr td .sup {margin-left:-13px; color:#bf390c; font-weight:bold;}
+
+
+		.chart {float:left; width:100%; border-top:1px solid #b1b1b1; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1;}
+			.chart .chartTop {position:relative; height:28px; padding:6px 5px 0 5px; background:#f4f4f4; border-bottom:1px solid #ddd;}
+				.chart .chartTop .chartBtn {float:left;}
+				.chart .chartTop .alignRight {float:right; width:265px;}
+				.chart .chartTop .alignRight a{cursor:pointer;}
+				.chart .chartTop .alignText {float:right; margin-top:-8px;}
+
+	  	.remark{float:left; width:100%; position:relative; border-bottom:1px solid #b1b1b1; border-left:1px solid #b1b1b1; border-right:1px solid #b1b1b1;}
+		.remark .legend{margin-top:16px; margin-left:10px;}
+.Selectable1 {width:170px;}
+.Selectable2 {width:120px;}
+
+		.text_lay {overflow:hidden; width:100%; padding-top:10px; height:43px;} /* padding 추가 1217*/
+/* 			.text_lay li.text {float:left; font-size:11px;} */
+				/*1218 영수 수정*/
+				.text_lay li.text {float:left; font-size:11px; color:#545454;}
+				.text_lay li.text .f_red {color:#e64332; font-weight:bold;}
+				.text_lay li.text .f_gray{color:#BDBDBD; font-weight:bold;}			/* #747474 */
+				.text_lay li.text .f_bold{font-weight:bold;}
+			.text_lay li.btn_r {float:right; font-size:11px;}
+
+		.selectBox {table-layout:fixed; float:left; position:relative; height:532px; border:1px solid #ccc; margin-right:6px;}
+			.selectBox h2.top { height:30px; padding:5px 0 0 8px; font-size:12px; border-bottom:1px solid #ccc;}
+				.selectBox h2.top .right {position:absolute; right:5px;}
+				.selectBox h2.top .tit {line-height:25px; text-align:center; font-weight:bold; }
+
+			.selectBox .selectList {overflow-Y:auto; padding:15px 20px; height:466px;}
+				.selectBox .selectList li {line-height:25px; white-space:nowrap;}
+				.selectBox .selectList li a{color:#000000;}
+				.selectBox select.box {width:80px;}
+
+			.selectBox .selectList2{overflow-Y:auto;padding:15px 5px; height:466px;}
+				.selectBox .selectList2 li {line-height:25px; white-space:nowrap;}
+				.selectBox .selectList2 li.liOther{padding:0px 15px; line-height:25px; white-space:nowrap;}
+				.selectBox .selectList2 li a{color:#000000;}
+
+		.selectTimeBox {float:left; height:532px; border:1px solid #ccc; margin-right:6px;}
+			.selectTimeBox div.top { height:30px; padding:5px 0 0 8px; font-size:12px; border-bottom:1px solid #ccc;}
+			.selectTimeBox h2.top { height:30px; padding:5px 0 0 8px; font-size:12px; border-bottom:1px solid #ccc; text-align:center;}
+			.selectTimeBox h2.top a {cursor:pointer;  left:184px; display:inline-block}
+				.selectTimeBox h2.top .right {position:absolute; right:5px;}
+				.selectTimeBox div.top .tit {line-height:25px; text-align:center; font-weight:bold; }
+
+				.selectTimeBox div.top .tit2 {line-height:17px; height:15px; text-align:left; font-weight:bold; }
+				.selectTimeBox div.top .tit3 {line-height:17px; height:15px; text-align:left; font-weight:bold; }
+
+			.selectTimeBox .selectList{overflow-Y:auto; padding:15px 20px; height:432px;}
+				.selectTimeBox .selectList li {line-height:25px; white-space:nowrap;}
+				.selectTimeBox select.box {width:80px;}
+		.nomg {margin-right:0;}
+
+/* .exemple {clear:both; position:absolute; bottom:15px; left:10px;} */
+/* .exemple {position:absolute; float:left; height:200px; left:10px;} */
+.exemple {clear:both; position:absolute; top:600px; left:10px; display:inline-block;}
+.exemple span {margin-right:25px;}
+
+/* 1217 수정 */
+#footer {clear:both; width:100%; height:17px;}
+	#footer .footer_wrap {overflow:hidden; padding:0;}
+		#footer .footer_wrap li {font-size:11px; color:#333;}
+			#footer .footer_wrap .left {float:left;}
+			#footer .footer_wrap .right {float:right; text-align:right;}
+
+
+
+/* etc*/
+.nomg {margin-right:0;}
+.smalltxt {font-size:11px; color:#777; margin-left:15px; line-height:10px;}
+/* .simbol {color:#434343; font-size:12px; margin-right:50px;} */
+	.simbol {font-size:12px; margin-right:50px;}
+
+
+/* 버튼 */
+.btn_lay {clear:both; padding:15px 0; text-align:center;}
+/*이규정 btn_lay2 추가*/
+.btn_lay2 {clear:both; padding:15px 0 0 0; text-align:center;}
+.confirmBtn a {display:inline-block; margin:0 3px; border:1px solid #0a6494; background:#3F65AF; color:#fff; padding:5px 12px 0 12px; height:20px; font-size:11px; font-weight:bold;}
+.cancelBtn a {display:inline-block; margin:0 3px; border:1px solid #999; background:#b0b0b0; color:#fff; padding:5px 12px 0 12px; height:20px; font-size:11px; font-weight:bold;}
+.grayBtn a {display:block; font-size:11px; height:15px; padding:2px 10px 3px 10px;; border:1px solid #4a4a4a; background:#747474; color:#fff; letter-spacing:-0.1em;}
+/* 조회범위 설정 안영수*/
+.btn_lay3 {position:absolute; top:2px; right:0px; text-align:right;}
+/* 분석 설정 안영수*/
+.btn_lay4 {clear:both; text-align:center;}
+/* 정렬버튼 */
+.alignBtn {display:inline-block; width:14px; white-space:normal; vertical-align:middle; line-height:0; padding:0;}
+.alignBtn img {border:0; margin:0 0 -1px 0;}
+
+/* 동작하지 않는 기능의 텍스트 스타일*/
+.notFunctext {color:#C1C1C1;}
+
+/* progressBar */
+#disPlayBox {position:absolute; background:#ffffff; top:40%; left:34%; width:314px; height:74px; display:none; z-index: 150;}
+
+/*2013.12.20*/
+#analysisText {font-weight:bold; font-size:12px; color:#3F65AF}
+
+/*김정현 추가*/
+.downLarge_lay {clear:both; padding:15px 0; text-align:center;}
+.loading_lay {clear:both; padding:15px 0; text-align:center;}
+.downLargeBtn a {display:inline-block; margin:0 3px; border:1px solid #0a6494; background:#3F65AF; color:#fff; padding:5px 12px 0 12px; height:20px; font-size:11px; font-weight:bold;}
+.loadingBtn {display:inline-block; margin:0 3px; border:1px solid #bf8521; background:#f4af0a; color:#fff; padding:5px 12px 0 12px; height:20px; font-size:11px; font-weight:bold;}
+
+/* 수치 부호중 *, ** 윗첨자로 만들기 위해 추가 */
+sup{vertical-align: super; font-size: smaller;}
+
+/* 2019.08.05 차트저장, 차트인쇄 스타일*/
+.PrintBtn .GraphPrint {display:block; background:url('images/icon_print.png') no-repeat 0 4px; padding-top:4px; padding-left:20px; font-size:12px; color:#666; font-family:'나눔고딕B'; line-height:20px; height:20px;float:left;margin-left:10px;margin-top:2px; cursor:pointer; border:none;}
+.PrintBtn .ImageDownload {display:block; background:url('images/imagedownload.png') no-repeat 0 7px; padding-top:4px; padding-left:17px; font-size:12px; color:#666; font-family:'나눔고딕B'; line-height:20px; height:20px;float:left;margin-left:10px;margin-top:2px; cursor:pointer; border:none;}
+
+/* 2020.08.27 행 클릭시 배경색 변경*/
+.rowClick{background-color:#cfe98e;}
+
+/* 2020.09.11 메인버튼이미지 교체*/
+/* 통계목록 버튼 CSS S */
+.btnIcon {float: left;  width: 100%;  min-height: 29px; height:auto; margin: 7px 0  0 0; }
+.btnIcon .BtnGroup {  width: auto; position:absolute; right:0; top:7px;}
+.btnIcon .BtnGroup .Partition { position:relative; text-align:left; display:inline-block; text-indent: -1000px; overflow:hidden; width:1px; height:21px; background:#ddd; vertical-align: middle;}
+.btnIcon .BtnGroup button { font-family:dotum, '돋움', sans-serif; font-size:12px; font-weight:bold; color:#555; height:23px; padding:0 6px 0 22px; background:#fff; border:#ccc solid 1px; border-radius:2px;vertical-align: middle; cursor: pointer; line-height:23px; position:relative; letter-spacing:-1px;}
+.btnIcon .BtnGroup button:before {content:''; display:inline-block; width:13px; height:13px; vertical-align:middle; background:url("images/btn_statistics_table.png") no-repeat left top; position:absolute; left:6px; top:4px; }
+.btnIcon .BtnGroup button.Btn_newwin { background:#235b94; color:#fff; border:none; padding-left:20px; padding-top:1px;}
+.btnIcon .BtnGroup button.Btn_newwin:before { background-position-x:0; width:10px;}
+.btnIcon .BtnGroup button.Btn_comment, .btnIcon .BtnGroup button.Btn_url { border-color:#6488ae; color:#235b94;}
+.btnIcon .BtnGroup button.Btn_comment:before { background-position-x:-15px;}
+.btnIcon .BtnGroup button.Btn_url:before { background-position-x:-30px; width:15px;}
+.btnIcon .BtnGroup button.Btn_swap:before { background-position-x:-45px; width:14px;}
+.btnIcon .BtnGroup button.Btn_analysis:before { background-position-x:-60px;}
+.btnIcon .BtnGroup button.Btn_chart:before { background-position-x:-75px;}
+.btnIcon .BtnGroup button.Btn_setting:before { background-position-x:-90px;}
+.btnIcon .BtnGroup button.Btn_scrap:before { background-position-x:-105px;}
+.btnIcon .BtnGroup button.Btn_download:before { background-position-x:-120px;}
+.btnIcon .BtnGroup button.Btn_print:before { background-position-x:-135px;}
+.btnIcon .BtnGroup button.Btn_info { background:#235b94; color:#fff; border:none; padding-left:22px; padding-top:1px;}
+.btnIcon .BtnGroup button.Btn_info:before { background-position:-150px 1px;}
+.btnIcon .BtnGroup button.off { background:#eee; color:#bbb; cursor:auto; border-color:#ddd;}
+.btnIcon .BtnGroup button.off:before {background-position-y:-13px;}
+/* 통계목록 버튼 CSS E */
+
+/* 분석*/ 두줄 추가
+.btnIcon .text:nth-of-type(1) { margin-bottom:4px;}
+.btnIcon .text:nth-of-type(2) { clear:both; float:none; background:linear-gradient(#ddd 1px, #f4f4f4 1px); width:100% !important;  padding-left:10px; box-sizing: border-box; }

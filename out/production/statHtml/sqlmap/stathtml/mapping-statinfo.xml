@@ -1,0 +1,1081 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"   "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="statinfo">
+
+	<!-- 항목과 분류를 한번에 SELECT 하면안됨...기본적인 탭메뉴구조는 항목이 항상 첫번째여야함 VAR_ORD_SN과 VAR_ORD_CUR에 따른 ORDER BY가 달라지므로
+		 쿼리에서는 항목을 처음 ROW로 세팅
+		 화면에 안보여지더라도 항목정보는 가지고 있어야 함 초기조회조건 세팅시 필요 -->
+	<select id="selectTabMenuList" parameterClass="param" resultClass="egovMap">
+		<![CDATA[
+			SELECT OBJ_VAR_ID
+                  ,DECODE(OBJ_VAR_ID, '13999001', '항목', SCR_KOR) AS SCR_KOR
+                  ,DECODE(OBJ_VAR_ID, '13999001', 'ITEM', SCR_ENG) AS SCR_ENG
+                  ,LVL_CO
+                  ,SCR_LVL_CO
+                  ,PUB_SE
+                  ,VAR_ORD_SN
+                  ,VAR_ORD_CUR
+                  ,'' AS VISIBLE_YN
+			      ,'' TOT_IGNR_AT
+	       		FROM $dbUser$TN_OBJ_ITM_CLS
+	            WHERE ORG_ID=#orgId#
+				AND   TBL_ID=#tblId#
+	            AND OBJ_VAR_ID='13999001'
+			 UNION ALL
+             SELECT OBJ_VAR_ID
+                        ,NVL(SCR_KOR, ' ') SCR_KOR
+                        ,NVL(SCR_ENG, ' ') SCR_ENG
+                        ,LVL_CO
+                        ,SCR_LVL_CO
+                        ,PUB_SE
+                        ,VAR_ORD_SN
+                        ,VAR_ORD_CUR
+                        ,VISIBLE_YN
+                        ,TOT_IGNR_AT
+	             FROM(
+	                   SELECT OBJ_VAR_ID
+	                          ,SCR_KOR
+	                          ,SCR_ENG
+	                          ,LVL_CO
+	                          ,SCR_LVL_CO
+	                          ,PUB_SE
+	                          ,VAR_ORD_SN
+	                          ,VAR_ORD_CUR
+	                          ,NVL(VAR_ORD_CUR,VAR_ORD_SN) AS SN
+	                          ,CASE WHEN PUB_SE]]>
+	                          		<include refid="common.pub_se"/>
+               						<![CDATA[
+                          			THEN 'Y'
+	                            ELSE 'N'
+	                     	  	END AS VISIBLE_YN
+	                     	  ,TOT_IGNR_AT
+	                   FROM $dbUser$TN_OBJ_ITM_CLS A
+	                   WHERE ORG_ID=#orgId#
+	                   AND   TBL_ID=#tblId#
+	                   AND OBJ_VAR_ID !='13999001'
+	                   AND OBJ_VAR_ID !='13999000'
+	                   ORDER BY VAR_ORD_SN
+           		 	)
+			 UNION ALL
+			 SELECT
+			         'period'
+			         ,'기간'
+			         ,'TIME'
+			         ,0
+			         ,0
+			         ,''
+			         ,0
+			         ,0
+			         ,''
+			         ,''
+ 			FROM DUAL
+		]]>
+	</select>
+
+	<sql id="selectClassItemWith">
+		<![CDATA[
+			WITH ITM_LIST AS
+	            (
+	            SELECT ORG_ID, TBL_ID, OBJ_VAR_ID, ITM_ID, SCR_KOR, SCR_ENG, UP_ITM_ID, CHAR_ITM_SN
+	            FROM $dbUser$TN_ITM_LIST
+	            WHERE ORG_ID = #orgId# AND TBL_ID = #tblId# AND OBJ_VAR_ID = #objVarId#
+	    ]]>
+	            <!-- 얘를 뺴고 밑에 컨디션을 j로 해야될듯 -->
+	            <!-- 
+	            <isNotEmpty property="itmid">
+                	AND ITM_ID = #itmid#
+            	</isNotEmpty>
+            	 -->
+            	<isEqual property="totIgnrAt" compareValue="Y">
+                	AND  NVL(FTN_VAL_AT, 'N') != 'Y'
+            	</isEqual>
+		<![CDATA[
+	            AND PUB_SE
+   		]]>
+   			<include refid="common.pub_se"/>
+   			<![CDATA[
+    		)
+     	]]>
+	</sql>
+
+	<sql id="selectClassItemCommon">
+		<![CDATA[
+			SELECT LVL
+	   				,ORG_ID
+	   				,TBL_ID
+	   				,NVL(SCR_KOR, ' ') SCR_KOR
+	     			,NVL(SCR_ENG, ' ') SCR_ENG
+	   				,ITM_ID
+	   				,UP_ITM_ID
+	   				,ROWNUM
+	   				,OBJ_VAR_ID
+	   				,CHAR_ITM_SN
+	   				,LEAF
+	   			FROM(
+	   			SELECT LEVEL LVL
+	   				   ,ORG_ID
+	   				   ,TBL_ID
+	   				   ,SCR_KOR
+	   				   ,SCR_ENG
+	   				   ,ITM_ID
+	   				   ,UP_ITM_ID
+	   				   ,ROWNUM
+	   				   ,OBJ_VAR_ID
+	   				   ,CHAR_ITM_SN
+	   				   ,CONNECT_BY_ISLEAF AS LEAF
+		        FROM ITM_LIST
+		]]>
+		<isNotEmpty property="searchItem">	<!-- CONNECT BY PRIOR 1= 2 였으나 Synonym에서는 안먹는 관계로 ORG_ID = TBL_ID 변경 - 2014.04.30 김경호 -->
+				CONNECT BY PRIOR ORG_ID = TBL_ID
+		</isNotEmpty>
+		<isEmpty property="searchItem">
+				START WITH UP_ITM_ID IS NULL
+				CONNECT BY PRIOR ITM_ID = UP_ITM_ID
+		</isEmpty>
+		<![CDATA[
+		        ORDER SIBLINGS BY CHAR_ITM_SN, ITM_ID
+		        )
+		]]>
+		<isNotEmpty property="searchCondition">
+				<isEqual prepend="WHERE" property="searchCondition" compareValue="D">
+					 UP_ITM_ID IS NULL
+				</isEqual>
+				<isEqual prepend="WHERE" property="searchCondition" compareValue="J">
+					 UP_ITM_ID =#itmId#
+				</isEqual>
+				<isEqual prepend="WHERE" property="searchCondition" compareValue="A">
+					 LVL = #lvl#
+				</isEqual>
+		</isNotEmpty>
+	</sql>
+
+
+	<select id="selectHtmlItemList" resultClass="egovMap">
+		<include refid="selectClassItemWith"/>
+		<include refid="selectClassItemCommon"/>
+	</select>
+
+	<!-- 공표구분에 따른 주기 -->
+	<sql id="selectPeriodPubSe">
+		<![CDATA[
+			AND B.PRD_DE BETWEEN
+            CASE
+                WHEN A.STRT_RSTR_DE IS NOT NULL AND A.STRT_RLS_DE IS NOT NULL AND SYSDATE < A.STRT_RLS_DE THEN
+                    CASE
+                        WHEN A.STRT_RSTR_DE < (SELECT MIN(PRD_DE) FROM $dbUser$TN_RECD_PRD WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PRD_SE = A.PRD_SE AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE AND PUB_SE
+                        ]]>
+                        <include refid="common.pub_se"/>
+						<![CDATA[
+                        ) THEN
+                            (SELECT MIN(PRD_DE) FROM $dbUser$TN_RECD_PRD WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PRD_SE = A.PRD_SE AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE AND PUB_SE
+                            ]]>
+                            <include refid="common.pub_se"/>
+							<![CDATA[
+                            )
+                        ELSE A.STRT_RSTR_DE
+                    END
+                ELSE
+                    (SELECT MIN(PRD_DE) FROM $dbUser$TN_RECD_PRD WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PRD_SE = A.PRD_SE AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE AND PUB_SE
+                    ]]>
+                    <include refid="common.pub_se"/>
+					<![CDATA[
+                    )
+            END
+            AND
+            CASE
+                WHEN A.END_RSTR_DE IS NOT NULL AND A.END_RLS_DE IS NOT NULL AND SYSDATE < A.END_RLS_DE THEN
+                    CASE
+                        WHEN A.END_RSTR_DE > (SELECT MAX(PRD_DE) FROM $dbUser$TN_RECD_PRD WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PRD_SE = A.PRD_SE AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE AND PUB_SE
+                        ]]>
+                        <include refid="common.pub_se"/>
+						<![CDATA[
+                        ) THEN
+                            (SELECT MAX(PRD_DE) FROM $dbUser$TN_RECD_PRD WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PRD_SE = A.PRD_SE AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE AND PUB_SE
+                            ]]>
+                            <include refid="common.pub_se"/>
+						<![CDATA[
+                            )
+                        ELSE A.END_RSTR_DE
+                    END
+                ELSE
+                    (SELECT MAX(PRD_DE) FROM $dbUser$TN_RECD_PRD WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PRD_SE = A.PRD_SE AND PRD_DE BETWEEN A.STRT_PRD_DE AND A.END_PRD_DE AND PUB_SE
+                    ]]>
+                    <include refid="common.pub_se"/>
+					<![CDATA[
+                    )
+            END
+		]]>
+	</sql>
+
+	<!-- 시점 세팅 및 AJAX 같이 사용  -->
+	<!-- 20.04.09 업무용에서 담당자가 st 파라미터를 이용하여 서비스용으로 조회할때 원래 serverType은 관리자 였으므로 기간보안 체크안함
+		(손상호 주무관의 요청에 따라 [미리보는KOSIS]에서는 기간보안 체크안함.
+	 -->		
+	<select id="selectPeriodInfoList"  resultClass="egovMap">
+		<![CDATA[
+		SELECT  B.PRD_SE,B.PRD_DE
+			 FROM (
+		            SELECT S1.*, S2.PRD_SN FROM $dbUser$TN_STBL_RECD_INFO S1, $dbUser$TC_PRD_INFO S2 WHERE ORG_ID=#orgId# AND TBL_ID=#tblId#
+		            AND PUB_SE
+		            ]]>
+		            <include refid="common.pub_se"/>
+					<![CDATA[
+					AND S1.PRD_SE = S2.PRD_SE
+			) A , $dbUser$TN_RECD_PRD B
+			WHERE A.ORG_ID = B.ORG_ID
+			AND A.TBL_ID = B.TBL_ID
+			AND A.PRD_SE = B.PRD_SE]]>
+			AND B.PUB_SE <include refid="common.pub_se"/> <!-- 중간에 끼인 시점의 공표가 담당자일때도 조회가 되는 현상 수정 - 2018.01.23 김경호 -->
+			<isNotEqual property="serverType" compareValue="stat_emp">
+				<isNotEqual property="serverTypeOrigin" compareValue="stat_emp">
+					<include refid="selectPeriodPubSe"/>
+				</isNotEqual>
+			</isNotEqual>
+					
+		<isEmpty property="assayYn">
+			<isNotEmpty prepend="AND" property="prdSe">
+						A.PRD_SE = #prdSe#
+						AND B.PRD_DE BETWEEN #startPrd# AND #endPrd#
+			</isNotEmpty>
+		</isEmpty>
+		<isNotEmpty property="assayYn">
+			AND A.PRD_SE =#prdSe#
+		</isNotEmpty>
+		ORDER BY PRD_SN, PRD_DE
+	</select>
+
+	<!-- 분류 max 레벨 구하기 -->
+	<select id="selectClassMaxLevel" parameterClass="map" resultClass="int">
+		<include refid="selectClassItemWith"/>
+		<![CDATA[
+			SELECT NVL(MAX(LVL),1) AS MAXLEVEL FROM (
+			 SELECT    LEVEL LVL
+                        FROM     ITM_LIST
+                       START WITH UP_ITM_ID IS NULL
+                       CONNECT BY PRIOR ITM_ID = UP_ITM_ID
+               )
+		]]>
+	</select>
+
+	<!-- 분류 max 레벨 구하기 -->
+	<select id="selectClassDepthCnt" parameterClass="map" resultClass="int">
+		<include refid="selectClassItemWith"/>
+		<![CDATA[
+			SELECT COUNT(*)
+	   			FROM(
+	   			SELECT LEVEL LVL
+	   				   ,ORG_ID
+	   				   ,TBL_ID
+	   				   ,SCR_KOR
+	   				   ,SCR_ENG
+	   				   ,ITM_ID
+	   				   ,UP_ITM_ID
+	   				   ,ROWNUM
+	   				   ,OBJ_VAR_ID
+	   				   ,CHAR_ITM_SN
+	   				   ,CONNECT_BY_ISLEAF AS LEAF
+		        FROM ITM_LIST
+		         START WITH UP_ITM_ID IS NULL
+              	 CONNECT BY PRIOR ITM_ID = UP_ITM_ID
+		        ORDER SIBLINGS BY CHAR_ITM_SN, ITM_ID
+		        )WHERE LVL =#classLvl#
+			]]>
+	</select>
+	
+	<!-- 2015.11.24 남규옥 추가 ::: TBL_SE(통계표 구분) -->
+	<select id="selectMainInfo" parameterClass="map" resultClass="hmap" remapResults="true">
+		<![CDATA[
+			SELECT TBL_NM
+				   ,TBL_ID
+				   ,SMBL_YN
+				   ,NVL(TBL_ENG_NM, ' ') TBL_ENG_NM
+				   ,CHAR_ITM_CO
+		           ,DECODE(DIM_UNIT_YN,'Y','Y','N') AS DIM_UNIT_YN
+		           ,DECODE(WGT_YN,'Y','Y','N') AS WGT_YN
+		           ,UNIT_ID
+		           ,TBL_SE
+		           ,DECODE(UNIT_ID, NULL, NULL, (SELECT CD_NM FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID)) AS UNIT_NM_KOR
+		           ,DECODE(UNIT_ID, NULL, NULL, (SELECT CD_ENG_NM FROM $dbUser$TC_UNIT WHERE CD_ID = A.UNIT_ID)) AS UNIT_NM_ENG
+		           , CASE CMMT_AT
+          		  		WHEN 'Y' THEN
+          		  			CASE
+          		  				WHEN (	SELECT 	COUNT (1)
+                                   		FROM 	$dbUser$TN_CMMT_INFO
+                                  		WHERE   ORG_ID = A.ORG_ID
+                                        		AND TBL_ID = A.TBL_ID
+                                        		AND CMMT_SE = '1210610'
+                                        		AND LNG_SE = '1211910') > 0 THEN
+                            		'Y'
+                           		ELSE
+                           			'N'
+                        	END
+          				ELSE
+          					'N'
+       			  	END AS EXIST_STBL_CMMT_KOR
+       			  	, CASE CMMT_AT
+          		  		WHEN 'Y' THEN
+          		  			CASE
+          		  				WHEN (	SELECT 	COUNT (1)
+                                   		FROM 	$dbUser$TN_CMMT_INFO
+                                  		WHERE   ORG_ID = A.ORG_ID
+                                        		AND TBL_ID = A.TBL_ID
+                                        		AND CMMT_SE = '1210610'
+                                        		AND LNG_SE = '1211911') > 0 THEN
+                            		'Y'
+                           		ELSE
+                           			'N'
+                        	END
+          				ELSE
+          					'N'
+       			  	END AS EXIST_STBL_CMMT_ENG
+		           ,DECODE((SELECT     COUNT (1)
+		                           FROM    $dbUser$TN_CMMT_INFO
+		                          WHERE   ORG_ID = A.ORG_ID
+		                            AND TBL_ID = A.TBL_ID
+		                            AND LNG_SE = '1211910' ),0,'N','Y') AS EXIST_CMMT_KOR
+		          ,DECODE((SELECT     COUNT (1)
+		                           FROM    $dbUser$TN_CMMT_INFO
+		                          WHERE   ORG_ID = A.ORG_ID
+		                            AND TBL_ID = A.TBL_ID
+		                            AND CMMT_SE = '1210610'
+		                            AND LNG_SE = '1211911' ),0,'N','Y') AS EXIST_CMMT_ENG
+		          ,OLAP_STL
+              	  ,NVL(DIM_CO, 0) AS DIM_CO
+              	  ,$dbUser$FN_GET_STBL_PRD_SEARCH(A.ORG_ID, A.TBL_ID, #dbUser#, #serverType#, #language#, #dataOpt#) AS CONTAIN_PERIOD
+	       ,(
+	       with list as
+	       (
+	       select max(send_de) as send_de, max(lst_chn_de) as lst_chn_de from( SELECT NVL (
+	                  TO_CHAR (MAX (SEND_DE), 'YYYYMMDD'),
+	                  MAX (
+	                     TO_CHAR (
+	                        TO_DATE (
+	                           CASE
+	                              WHEN LENGTH (S2.LST_CHN_DE) = 8
+	                                   AND INSTR (S2.LST_CHN_DE, '/') = 0
+	                              THEN
+	                                 TO_DATE (S2.LST_CHN_DE, 'YYYYMMDD')
+	                              WHEN LENGTH (S2.LST_CHN_DE) = 8
+	                                   AND INSTR (S2.LST_CHN_DE,
+	                                              '/',
+	                                              1,
+	                                              2) = 6
+	                              THEN
+	                                 TO_DATE (S2.LST_CHN_DE, 'YY/MM/DD')
+	                              ELSE
+	                                 NULL
+	                           END),
+	                        'YYYYMMDD')))
+	                  AS SEND_DE, s1.lst_chn_de, a.org_id, a.tbl_id
+	          FROM $dbUser$TN_STBL_RECD_INFO S1, $dbUser$TN_RECD_PRD S2, $dbUser$TN_STBL_INFO a
+	         WHERE     S1.ORG_ID = S2.ORG_ID
+	               AND S1.TBL_ID = S2.TBL_ID
+	               and s1.org_id = a.org_id
+	               and s1.tbl_id = a.tbl_id
+	               and  a.ORG_ID = #orgId# AND a.TBL_ID = #tblId#
+	               AND S1.PRD_SE = S2.PRD_SE
+	               AND S1.PUB_SE
+        ]]>
+                   			<include refid="common.pub_se"/>
+
+        <![CDATA[
+	               AND S2.PRD_DE BETWEEN (CASE
+	                                         WHEN     S1.STRT_RLS_DE IS NOT NULL
+	                                              AND S1.STRT_RSTR_DE IS NOT NULL
+	                                              AND S1.STRT_RLS_DE >= SYSDATE
+	                                         THEN
+	                                            S1.STRT_RSTR_DE
+	                                         ELSE
+	                                            S1.STRT_PRD_DE
+	                                      END)
+	                                 AND (CASE
+	                                         WHEN     S1.END_RLS_DE IS NOT NULL
+	                                              AND S1.END_RSTR_DE IS NOT NULL
+	                                              AND S1.END_RLS_DE >= SYSDATE
+	                                         THEN
+	                                            S1.END_RSTR_DE
+	                                         ELSE
+	                                            S1.END_PRD_DE
+	                                      END)
+	               group by s1.lst_chn_de, a.org_id, a.tbl_id
+	               ) b )
+	               select
+	                  CASE
+	                    WHEN send_de > lst_chn_de THEN TO_CHAR(to_date(send_de, 'yyyymmddhh24mi'), 'yyyy-mm-dd')
+	                    WHEN lst_chn_de > send_de THEN TO_CHAR(to_date(lst_chn_de, 'yyyymmddhh24mi'), 'yyyy-mm-dd')
+	                    ELSE DECODE(SEND_DE, NULL, TO_CHAR(to_date(lst_chn_de, 'yyyymmddhh24mi'), 'yyyy-mm-dd'), TO_CHAR(to_date(SEND_DE, 'yyyymmddhh24mi'), 'yyyy-mm-dd'))
+	                END big_de
+	               from list
+	               ) AS RENEWAL_DATE
+               	, STAT_ID
+               	, SUBSTR(PUB_SE, -1) AS PUB
+               	, (SELECT ORG_NM FROM $dbUser$TN_ORG C  WHERE A.ORG_ID = C.ORG_ID)  AS ORG_NM
+		]]>
+            	<isEqual property="serverTypeOrigin" compareValue="service">
+					<isEqual property="serverLocation" compareValue="NSO">
+	                	, (SELECT DECODE(COUNT(1), 0, 'N', 'Y') FROM $dbUser$TN_MASS WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID AND PROC_SE = 'F' AND SERVICE_AT = 'Y') AS MASS_YN
+	                </isEqual>
+            	</isEqual>
+            	<!-- 2017.03.30 영문 대용량 서비스 개시 -->
+            	<isEqual property="serverTypeOrigin" compareValue="service_en">
+					<isEqual property="serverLocation" compareValue="NSO">
+						, (SELECT DECODE (COUNT (1), 0, 'N', 'Y') 
+								FROM $dbUser$TN_MASS B, $dbUser$TN_MASS_FILE C, $dbUser$TC_PRD_INFO D
+							WHERE B.ORG_ID = A.ORG_ID
+							AND B.TBL_ID = A.TBL_ID
+							AND B.PROC_SE = 'F'
+							AND B.SERVICE_AT = 'Y'
+							AND B.MASS_NO = C.MASS_NO 
+							AND C.PRD_SE=D.PRD_SE
+							AND C.ENG_AT IS NOT NULL)  AS MASS_YN
+	                </isEqual>
+            	</isEqual>
+		<![CDATA[
+				FROM 	$dbUser$TN_STBL_INFO A
+				WHERE 	ORG_ID=#orgId#
+						AND TBL_ID=#tblId#
+		]]>
+	</select>
+
+	<delete id="deleteRequirement" parameterClass="param">
+		DELETE
+		FROM 	$condTable$
+		WHERE	SESSION_ID = #sessionId#
+	</delete>
+
+	<!-- 초기조회 조건 insert -->
+	<insert id="searchRequirementInsert" parameterClass="map">
+		INSERT INTO $condTable$ (
+			  IN_DATE
+			, SESSION_ID
+			, TARGET_ID
+			, PRD_VALUE
+			, TARGET_VALUE
+			, INPT_DE
+		) VALUES (
+			  SYSDATE
+			, #sessionId#
+			, #targetId#
+			, #prdValue#
+			, #targetValue#
+			, SYSDATE
+		)
+	</insert>
+
+	<!-- 
+		팝업화면 및 높이 구하기
+		2019.01.15 영문도 팝업가능하도록 수정. 
+	-->
+	<select id="selectPopupFileNm" parameterClass="param" resultClass="hmap">
+		<![CDATA[
+			SELECT	B.NAME, B.POPUP_HEIGHT||'' AS POPUP_HEIGHT
+		]]>
+		<isEqual property="serverTypeOrigin" compareValue="service_en">
+			FROM 	$dbUser$TN_OLAP_POP_ENG A, $dbUser$TN_OLAP_POP_CONTENT_ENG B
+		</isEqual>
+		<isNotEqual property="serverTypeOrigin" compareValue="service_en">
+			FROM 	$dbUser$TN_OLAP_POP A, $dbUser$TN_OLAP_POP_CONTENT B
+		</isNotEqual>
+		<![CDATA[
+           	WHERE 	A.IDX = B.IDX AND ORG_ID = #orgId#  AND TBL_ID = #tblId#
+           			AND SYSDATE BETWEEN B.SDATE AND B.EDATE
+		]]>
+	</select>
+
+	<!-- 주기가 F 인 경우 TN_STBL_RECD_INFO에서 상세주기를 가져온다. -->
+	<select id="selectPrdDetail" parameterClass="param" resultClass="string">
+		<![CDATA[
+		SELECT	NVL(PRD_DETAIL, 'IR') AS PRD_DETAIL
+		FROM	$dbUser$TN_STBL_RECD_INFO
+		WHERE 	ORG_ID = #orgId#
+				AND TBL_ID = #tblId#
+				AND PRD_SE = 'F'
+		]]>
+	</select>
+
+	<select id="selectTcPrdInfo" parameterClass="string" resultClass="egovMap">
+		<![CDATA[
+		SELECT	PRD_SE, PRD_NM, PRD_ENG_NM
+		FROM	$dbUser$TC_PRD_INFO
+		]]>
+	</select>
+
+	<select id="selectTcPrdDetail" parameterClass="string" resultClass="egovMap">
+		<![CDATA[
+		SELECT	PRD_DETAIL, PRD_NM, PRD_ENG_NM
+		FROM	$dbUser$TC_PRD_DETAIL
+		]]>
+	</select>
+
+	<select id="selectItemUnit" parameterClass="param" resultClass="egovMap">
+		<![CDATA[
+		SELECT	UNIT_ID
+  				,DECODE (UNIT_ID,NULL, NULL,(SELECT	CD_NM
+                  							 FROM 	$dbUser$TC_UNIT
+                 							 WHERE 	CD_ID = A.UNIT_ID)
+                ) AS UNIT_NM_KOR
+ 				,DECODE (UNIT_ID,NULL, NULL,(SELECT	CD_ENG_NM
+                  							 FROM 	$dbUser$TC_UNIT
+                 							 WHERE 	CD_ID = A.UNIT_ID)
+                ) AS UNIT_NM_ENG
+ 		FROM 	$dbUser$TN_ITM_LIST A
+ 		WHERE 	ORG_ID = #orgId#
+ 				AND TBL_ID = #tblId#
+ 				AND OBJ_VAR_ID = '13999001'
+ 				AND PUB_SE
+		]]>
+				<include refid="common.pub_se"/>
+	</select>
+
+	<select id="statHtmlDefaultCondition" parameterClass="param" resultClass="string">
+		<![CDATA[
+		SELECT DECODE(COUNT(*) ,0,'N','Y') AS INFO_YN
+		FROM $dbUser$TN_STBL_INFO
+		WHERE 	ORG_ID = #orgId#
+				AND TBL_ID = #tblId#
+				AND PUB_SE
+		]]>
+		<isEqual property="st" compareValue="service">
+			<isEqual property="serverTypeOrigin" compareValue="stat_emp">
+           		<include refid="common.pub_se_stat_emp"/>
+           	</isEqual>
+           	<isEqual property="serverTypeOrigin" compareValue="stat">
+           		<include refid="common.pub_se_stat"/>
+           	</isEqual>
+           	<isEqual property="serverTypeOrigin" compareValue="service">
+           		<include refid="common.pub_se"/>
+           	</isEqual>
+           	<isEqual property="serverTypeOrigin" compareValue="service_en">
+           		<include refid="common.pub_se"/>
+           	</isEqual>
+        </isEqual>
+        <isNotEqual property="st" compareValue="service">
+           	<include refid="common.pub_se"/>
+        </isNotEqual>
+
+	</select>
+
+	<!-- 조회범위 상세설정하기 분류정보 조회 pubse필요없음-->
+	<select id="selectRangeClassInfo" resultClass="egovMap">
+		<![CDATA[
+		SELECT OBJ_VAR_ID
+			   ,SCR_KOR
+			   ,SCR_ENG
+			   ,LVL_CO
+			   ,VAR_ORD_CUR
+			   ,TOT_IGNR_AT
+		FROM $dbUser$TN_OBJ_ITM_CLS
+		WHERE ORG_ID = #orgId#
+		AND TBL_ID = #tblId#
+		AND OBJ_VAR_ID = #objVarId#
+		]]>
+	</select>
+
+	<!-- 조회범위 상세설정 메인화면에서 선택된 항목 selectBox 오른쪽 charItmSn-->
+	<select id="selectRangeItemList" resultClass="egovMap">
+		SELECT A.*
+		FROM(
+		<include refid="selectClassItemWith"/>
+		<include refid="selectClassItemCommon"/>
+			<![CDATA[
+			)A,(SELECT	ITM_ID, NVL(SCR_KOR, ' ') AS SCR_KOR
+						, NVL(SCR_ENG, ' ') AS SCR_ENG
+						, UNIT_ID
+						, ORG_ID
+						, TBL_ID
+						, OBJ_VAR_ID
+				FROM 	$dbUser$TN_ITM_LIST A
+				WHERE 	ORG_ID = #orgId#
+		           		AND TBL_ID = #tblId#
+		           		AND OBJ_VAR_ID = '13999001'
+		           		AND ITM_ID IN
+		                (
+		                	SELECT 	TARGET_VALUE
+		                    FROM 	$condTable$
+		                    WHERE 	SESSION_ID = #sessionId#
+		                            AND TARGET_ID = 'ITM_ID'
+						)
+				ORDER BY CHAR_ITM_SN, ITM_ID
+				)B
+				WHERE A.ORG_ID(+) = B.ORG_ID
+				AND   A.TBL_ID(+) = B.TBL_ID
+				AND   A.ITM_ID(+) = B.ITM_ID
+				AND	  A.OBJ_VAR_ID(+) = B.OBJ_VAR_ID
+			]]>
+	</select>
+
+	<!-- 조회범위 상세설정 메인화면에서 선택된 분류selectBox 오른쪽 rowNum -->
+	<select id="selectRangeClassList" resultClass="egovMap">
+		SELECT A.*
+		FROM(
+		<include refid="selectClassItemWith"/>
+		<include refid="selectClassItemCommon"/>
+			<![CDATA[
+			)A,(WITH TMP AS
+				(
+		     		SELECT *
+		     		FROM 	$dbUser$TN_ITM_LIST
+		    		WHERE  	ORG_ID = #orgId#
+		                    AND TBL_ID = #tblId#
+		                    AND OBJ_VAR_ID = #objVarId#
+				)
+				, ITM_LIST AS
+				(
+					SELECT 	LEVEL LVL
+		                    , ORG_ID
+		                    , TBL_ID
+		                    , OBJ_VAR_ID
+		                    , ITM_ID
+		                    , LPAD(' ',(LEVEL-1)*3, ' ')|| ITM_ID AS  VIEW_ITM_ID
+		                    , LPAD(' ',(LEVEL-1)*3, ' ')|| SCR_KOR AS  VIEW_SCR_KOR
+		                    , LPAD(' ',(LEVEL-1)*3, ' ')|| SCR_ENG AS  VIEW_SCR_ENG
+		                    , SYS_CONNECT_BY_PATH (ITM_ID, '@') AS PARENT_CODE
+		                    , NVL (SYS_CONNECT_BY_PATH (NVL(SCR_KOR, ' '), '@'), ' ') AS PARENT_NAME_KOR
+		                    , NVL (SYS_CONNECT_BY_PATH (NVL(SCR_ENG, ' '), '@'), ' ') AS PARENT_NAME_ENG
+		                    , ROWNUM AS RNUM
+		            FROM	TMP
+		            START WITH UP_ITM_ID IS NULL
+		            CONNECT BY PRIOR ITM_ID = UP_ITM_ID
+		            ORDER SIBLINGS BY CHAR_ITM_SN, ITM_ID
+				)
+				SELECT	/*+  ordered*/ C.LVL
+		            	, B.ORG_ID
+		            	, B.TBL_ID
+		            	, B.OBJ_VAR_ID
+		            	, B.ITM_ID
+		            	, VIEW_ITM_ID
+		            	, VIEW_SCR_KOR
+		            	, VIEW_SCR_ENG
+		            	, NVL (B.SCR_KOR, ' ') AS SCR_KOR
+		            	, NVL (B.SCR_ENG, ' ') AS SCR_ENG
+		            	, B.UP_ITM_ID
+		            	, SUBSTR (C.PARENT_CODE, 2, INSTR (C.PARENT_CODE, '@', -1) - 1) AS PARENT_CODE
+		            	, SUBSTR (C.PARENT_NAME_KOR, 2, INSTR (C.PARENT_NAME_KOR, '@', -1) - 1) AS PARENT_NAME_KOR
+		            	, SUBSTR (C.PARENT_NAME_ENG, 2, INSTR (C.PARENT_NAME_ENG, '@', -1) - 1) AS PARENT_NAME_ENG
+		            	, B.UNIT_ID
+		            	, DECODE (UNIT_ID, NULL, NULL, (SELECT CD_NM
+		                              					FROM $dbUser$TC_UNIT
+		                             					WHERE CD_ID = B.UNIT_ID)) AS UNIT_NM_KOR
+		            	, DECODE (UNIT_ID, NULL, NULL, (SELECT CD_ENG_NM
+		                         						FROM $dbUser$TC_UNIT
+		                        						WHERE CD_ID = B.UNIT_ID)) AS UNIT_NM_ENG
+		            	, CASE CMMT_AT
+		          		  	WHEN 'Y' THEN
+		          		  		CASE
+		                        	WHEN (
+		                        			SELECT 	COUNT (1)
+		                                   	FROM 	$dbUser$TN_CMMT_INFO
+		                                  	WHERE   ORG_ID = B.ORG_ID
+		                                        	AND TBL_ID = B.TBL_ID
+		                                        	AND CMMT_SE = '1210613'
+		                                        	AND LNG_SE = '1211910'
+			                                        AND OBJ_VAR_ID = B.OBJ_VAR_ID
+		    	                                    AND ITM_ID = B.ITM_ID
+		    	                          ) > 0 THEN
+		    	                   		'Y'
+		                           	ELSE
+		                           		'N'
+		                        END
+		          			ELSE
+		          				'N'
+		       			END AS CMMT_AT_KOR,
+		       			CASE CMMT_AT
+		          			WHEN 'Y' THEN
+		          				CASE
+		                        	WHEN (
+		                           			SELECT	COUNT (1)
+		                                   	FROM 	$dbUser$TN_CMMT_INFO
+		                                  	WHERE   ORG_ID = B.ORG_ID
+		                                        	AND TBL_ID = B.TBL_ID
+		                                        	AND CMMT_SE = '1210613'
+		                                        	AND LNG_SE = '1211911'
+		                                        	AND OBJ_VAR_ID = B.OBJ_VAR_ID
+		                                        	AND ITM_ID = B.ITM_ID
+		                                 ) > 0 THEN
+
+		                           		'Y'
+		                           	ELSE
+		                           		'N'
+		                        END
+		          			ELSE
+		          				'N'
+		       			END AS CMMT_AT_ENG
+				FROM 	(
+							SELECT	TO_CHAR (TARGET_VALUE)  AS ITM_ID
+		                 	FROM 	$condTable$
+						 	WHERE 	SESSION_ID = #sessionId#
+		                 			AND TARGET_ID = #targetId#
+		                 ) A
+		                 , $dbUser$TN_ITM_LIST B
+		                 , ITM_LIST C
+				WHERE 	B.ORG_ID = #orgId# AND B.TBL_ID = #tblId# AND B.OBJ_VAR_ID = #objVarId#
+		        		AND B.ORG_ID = C.ORG_ID
+		        		AND B.TBL_ID = C.TBL_ID
+		        		AND B.OBJ_VAR_ID = C.OBJ_VAR_ID
+		        		AND B.ITM_ID = C.ITM_ID
+		        		AND A.ITM_ID = B.ITM_ID
+				ORDER BY RNUM
+			)B
+			WHERE A.ORG_ID(+) = B.ORG_ID
+			AND	  A.TBL_ID(+) = B.TBL_ID
+			AND	  A.ITM_ID(+) = B.ITM_ID
+			AND   A.OBJ_VAR_ID(+) = B.OBJ_VAR_ID
+		    ]]>
+	</select>
+
+	<!-- 분석종류 -->
+	<select id="selectExcCode" parameterClass="param" resultClass="string">
+		SELECT EXC_CODE
+		FROM $dbUser$OLAP_EXC_TBL
+		WHERE ORG_ID  = #orgId#
+		AND TBL_ID = #tblId#
+	</select>
+
+	<select id="selectAssayTypeList" resultClass="egovMap">
+		SELECT EXC_CODE
+			  ,FUNC_CODE
+			  ,FUNC_NAME
+			  ,FUNC_EN_NAME
+			  ,FUNC_SN
+		FROM  $dbUser$OLAP_EXC_MAP
+		WHERE EXC_CODE = #excCode#
+		ORDER BY FUNC_SN
+	</select>
+
+	<select id="selectCompareTypeList"  resultClass="egovMap">
+		SELECT FUNC_PRD_SE
+			  ,FUNC_PRD_CODE
+			  ,FUNC_PRD_NAME
+			  ,FUNC_PRD_EN_NAME
+			  ,FUNC_PRD_SN
+		FROM $dbUser$OLAP_EXC_PRD
+		WHERE FUNC_PRD_SE = #prdSe#
+		ORDER BY FUNC_PRD_SE, FUNC_PRD_SN
+	</select>
+
+	<!-- 다운로드 가능여부 체크 -->
+	<select id="selectDownloadable" resultClass="int">
+		<![CDATA[
+		SELECT COUNT(*) FROM
+		(
+			SELECT 1 FROM $dbUser$OLAP_FN_EXCPT
+			WHERE ORG_ID = #orgId# AND TBL_ID = #tblId# AND FN_EXCPT_CD = 'NOCOPY'
+			UNION ALL
+			SELECT 1 FROM $dbUser$OLAP_FN_EXCPT
+			WHERE VW_CD = #vwCd# AND LIST_ID = #listId# AND FN_EXCPT_CD = 'NOCOPY'
+		)
+		]]>
+	</select>
+
+	<!-- 분석 가능여부 체크 -->
+	<select id="selectAnalyzable" resultClass="int">
+		<![CDATA[
+		SELECT COUNT(*) FROM
+		(
+			SELECT 1 FROM $dbUser$OLAP_FN_EXCPT
+			WHERE ORG_ID = #orgId# AND TBL_ID = #tblId# AND FN_EXCPT_CD = 'NOFUNC'
+			UNION ALL
+			SELECT 1 FROM $dbUser$OLAP_FN_EXCPT
+			WHERE VW_CD = #vwCd# AND LIST_ID = #listId# AND FN_EXCPT_CD = 'NOFUNC'
+		)
+		]]>
+	</select>
+
+	<!-- 분석기능예외코드 가져오기 -->
+	<select id="selectFnExcptCd" resultClass="string">
+		<![CDATA[
+		SELECT	FN_EXCPT_CD
+		FROM
+		(
+			SELECT	FN_EXCPT_CD
+			FROM 	$dbUser$OLAP_FN_EXCPT
+			WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId# AND FN_EXCPT_CD NOT IN ('NOCOPY', 'NOFUNC')
+			UNION ALL
+			SELECT 	FN_EXCPT_CD
+			FROM 	$dbUser$OLAP_FN_EXCPT
+			WHERE 	VW_CD = #vwCd# AND LIST_ID = #listId# AND FN_EXCPT_CD NOT IN ('NOCOPY', 'NOFUNC')
+		)
+		WHERE	ROWNUM = 1
+		]]>
+	</select>
+
+	<!-- 분석기능예외코드 가져오기 -->
+	<select id="selectRTITLEListId" resultClass="string">
+		<![CDATA[
+		SELECT	LIST_ID
+		FROM 	$dbUser$TN_LIST_STBL_REL
+		WHERE 	ORG_ID = #orgId# AND TBL_ID = #tblId# AND VW_CD = 'MT_RTITLE'
+				AND ROWNUM = 1
+		]]>
+	</select>
+
+	<!-- 업무용(호스팅)인 경우 해당 통계에 대한 담당자 권한 체크 -->
+	<select id="selectCntForEmpAuth" resultClass="int">
+		<![CDATA[
+		SELECT COUNT(1) FROM $dbUser$$empAuth$
+		WHERE ORG_ID = #orgId# AND TBL_ID = #tblId# AND EMP_ID = #empId#
+		]]>
+	</select>
+
+	<!-- 부모 icon 변경 -->
+	<select id="selectParentIcon" parameterClass="map" resultClass="egovMap">
+		<![CDATA[
+		WITH TMP
+	     AS (SELECT *
+	           FROM $dbUser$TN_ITM_LIST
+	          WHERE ORG_ID = #orgId# AND TBL_ID = #tblId# AND OBJ_VAR_ID = #objVarId#),
+	    ITM_LIST
+	     AS (           SELECT LEVEL LVL,
+	                           ORG_ID,
+	                           TBL_ID,
+	                           OBJ_VAR_ID,
+	                           ITM_ID,
+	                           LPAD (' ', (LEVEL - 1) * 3, ' ') || ITM_ID AS VIEW_ITM_ID,
+	                           LPAD (' ', (LEVEL - 1) * 3, ' ') || SCR_KOR AS VIEW_SCR_KOR,
+	                           LPAD (' ', (LEVEL - 1) * 3, ' ') || SCR_ENG AS VIEW_SCR_ENG,
+	                           SYS_CONNECT_BY_PATH (ITM_ID, '@') AS PARENT_CODE,
+	                           NVL (SYS_CONNECT_BY_PATH (NVL (SCR_KOR, ' '), '@'), ' ')
+	                              AS PARENT_NAME_KOR,
+	                           NVL (SYS_CONNECT_BY_PATH (NVL (SCR_ENG, ' '), '@'), ' ')
+	                              AS PARENT_NAME_ENG,
+	                           ROWNUM AS RNUM
+	                      FROM TMP
+	                START WITH UP_ITM_ID IS NULL
+	                CONNECT BY PRIOR ITM_ID = UP_ITM_ID
+	         ORDER SIBLINGS BY CHAR_ITM_SN, ITM_ID)
+	   SELECT DISTINCT PARENT_CODE FROM(
+	    SELECT                                             /*+ ordered*/
+	                    C.LVL,
+	                     B.ITM_ID,
+	                     VIEW_ITM_ID,
+	                     VIEW_SCR_KOR,
+	                     VIEW_SCR_ENG,
+	                     NVL (B.SCR_KOR, ' ') AS SCR_KOR,
+	                     NVL (B.SCR_ENG, ' ') AS SCR_ENG,
+	                     B.UP_ITM_ID,
+	                     SUBSTR (C.PARENT_CODE, 2, INSTR (C.PARENT_CODE, '@', -1) - 1)
+	                        AS PARENT_CODE,
+	                     SUBSTR (C.PARENT_NAME_KOR,
+	                             2,
+	                             INSTR (C.PARENT_NAME_KOR, '@', -1) - 1)
+	                        AS PARENT_NAME_KOR,
+	                     SUBSTR (C.PARENT_NAME_ENG,
+	                             2,
+	                             INSTR (C.PARENT_NAME_ENG, '@', -1) - 1)
+	                        AS PARENT_NAME_ENG,
+	                     B.UNIT_ID
+	                FROM (SELECT TO_CHAR (TARGET_VALUE) AS ITM_ID
+	                        FROM $condTable$
+	                       WHERE SESSION_ID = #sessionId#
+	                             AND TARGET_ID = #targetId#) A,
+	                     $dbUser$TN_ITM_LIST B,
+	                     ITM_LIST C
+	               WHERE     B.ORG_ID = #orgId#
+	                     AND B.TBL_ID = #tblId#
+	                     AND B.OBJ_VAR_ID = #objVarId#
+	                     AND B.ORG_ID = C.ORG_ID
+	                     AND B.TBL_ID = C.TBL_ID
+	                     AND B.OBJ_VAR_ID = C.OBJ_VAR_ID
+	                     AND B.ITM_ID = C.ITM_ID
+	                    AND A.ITM_ID = B.ITM_ID
+	            ORDER BY RNUM
+	            )WHERE UP_ITM_ID  IS NOT NULL
+		]]>
+	</select>
+
+	<!-- 서비스용 ETLDB NSI_MART계정  -->
+	<select id="martCnt" resultClass="int">
+		<![CDATA[
+		SELECT COUNT(*) FROM NSI_MART.TN_MT_INFO
+		WHERE ORG_ID=#orgId#
+		AND TBL_ID=#tblId#
+		]]>
+	</select>
+
+	<insert id="resultTime" parameterClass="map">
+		INSERT INTO $dbUser$HTML_DEBUG_TIME (
+			  ORG_ID
+			, TBL_ID
+			, DEBUG_TYPE
+			, START_TIME
+			, ROW_CNT
+			, END_TIME
+			, IN_DATE
+		) VALUES (
+			  #orgId#
+			, #tblId#
+			, #debugType#
+			, #startTime#
+			, #rowCnt#
+			, #endTime#
+			, SYSDATE
+		)
+	</insert>
+
+	<insert id="insertOverCellLog" parameterClass="map">
+		INSERT INTO $dbUser$TH_HTML_OVERCELL_LOG (
+			  ORG_ID
+			, TBL_ID
+			, SYSTEM_TP
+			, REQ_CELL_CNT
+			, IN_DATE
+			, ROW_CNT
+			, USR_ID
+		) VALUES (
+			  #orgId#
+			, #tblId#
+			, #systemTp#
+			, #reqCellCnt#
+			, SYSDATE
+			, #rowCnt#
+			, #usrId#
+		)
+	</insert>
+
+	<!-- 2014.07.09 통계표 정보로부터 추가 정보 가져온다. 더미여부(유형), 대용량 여부도..나중에 추가 (NSI_MART 계정은 코딩에 포함.) -->
+	<select id="selectStblInfoExtra" parameterClass="map" resultClass="hmap">
+		<isEqual property="isService" compareValue="Y">
+			<![CDATA[
+			SELECT 	NVL(A.DMM_DISP_KD, 'N') AS DMM_DISP_KD, NVL(A.DIM_UNIT_YN, 'N') AS DIM_UNIT_YN, NVL(A.WGT_YN, 'N') AS WGT_YN
+					, NVL(A.DIM_CO, 0) DIM_CO, A.TBL_SE
+					, B.LST_CHN_TP AS MART_STATUS
+					, B.MT_ID
+			FROM 	$dbUser$TN_STBL_INFO A, NSI_MART.TN_MT_INFO B
+			WHERE 	A.ORG_ID=#orgId# AND A.TBL_ID=#tblId#
+					AND A.ORG_ID = B.ORG_ID(+) AND A.TBL_ID = B.TBL_ID(+)
+			]]>
+		</isEqual>
+		<isNotEqual property="isService" compareValue="Y">
+			<![CDATA[
+			SELECT 	NVL(DMM_DISP_KD, 'N') AS DMM_DISP_KD, NVL(DIM_UNIT_YN, 'N') AS DIM_UNIT_YN, NVL(WGT_YN, 'N') AS WGT_YN
+			FROM 	$dbUser$TN_STBL_INFO
+			WHERE 	ORG_ID=#orgId# AND TBL_ID=#tblId#
+			]]>
+		</isNotEqual>
+	</select>
+
+	<!-- 2015.5.18 비공개 분류수 -->
+	<select id="selectItmListPub" resultClass="int">
+		<![CDATA[
+		SELECT	COUNT(*)
+		FROM 	$dbUser$TN_OBJ_ITM_CLS
+		WHERE 	ORG_ID=#orgId# AND TBL_ID=#tblId#
+		AND OBJ_VAR_ID <> '13999001'
+		AND PUB_SE IN ('1210111','1210112')
+		]]>
+	</select>
+
+	<!-- 2015.06.03 공개 분류수 -->
+	<select id="openListCnt" parameterClass="map" resultClass="int">
+		<![CDATA[
+		SELECT	COUNT(*)
+		FROM 	$dbUser$TN_OBJ_ITM_CLS
+		WHERE 	ORG_ID=#orgId# AND TBL_ID=#tblId#
+		AND OBJ_VAR_ID <> '13999001'
+		AND PUB_SE IN ('1210110','1210113','1210114')
+		]]>
+	</select>
+	
+	<!-- 2015.04.07 관련통계표 정보를 가져온다 -->
+    <!-- 2016.03.30 조건변경 
+    	AND B.STAT_ID = D.STAT_ID 추가
+        AND C.STAT_SN = '1' 삭제 -->
+    <!-- 2020.04.16 업무용에서만 쓰는 st 파라미터로 공표를 구분하게 개발하여 서비스에서 조회되지 말아야할것도 조회가 됨 (개발당시 업무용만 생각하고  만든것으로 추정)
+    	st 파라미터로 분리하던것을 serverType 로  분기하도록 변경
+     -->
+	<select id="selectRelInfo" parameterClass="param" resultClass="egovMap">
+	<![CDATA[
+		SELECT
+			A.REL_ORG_ID,
+			$dbUser$GET_ORG_NAME(A.REL_ORG_ID) AS REL_ORG_NM,
+			$dbUser$GET_ORG_NAME(A.REL_ORG_ID,'ENG') AS REL_ORG_ENG_NM,
+			A.REL_TBL_ID,
+			B.STAT_NM,
+            D.STAT_ENG_NM,
+			B.TBL_NM AS REL_TBL_NM,
+			B.TBL_ENG_NM AS REL_ENG_TBL_NM,
+			A.REL_KOR_DETAIL,
+			A.REL_ENG_DETAIL,
+			$dbUser$GET_LAST_RECD_DETAIL_DATA(A.REL_ORG_ID, A.REL_TBL_ID) AS LAST_PRD_DE
+		FROM $dbUser$TN_STBL_INFO_REL A, $dbUser$TN_STBL_INFO B, $dbUser$TN_STBL_STAT_REL C, $dbUser$TN_STAT D
+		WHERE B.ORG_ID = A.REL_ORG_ID
+		AND B.TBL_ID = A.REL_TBL_ID
+		AND B.ORG_ID = C.ORG_ID
+		AND B.TBL_ID = C.TBL_ID
+        AND B.STAT_ID = C.STAT_ID
+        AND C.STAT_ID = D.STAT_ID
+		AND A.ORG_ID = #orgId#
+		AND A.TBL_ID = #tblId#
+        AND C.STAT_PK_AT = 'Y'
+		AND B.PUB_SE
+		]]>
+		<!--
+		<isEqual property="st" compareValue="service">
+			<![CDATA[ IN ('1210110', '1210113', '1210114') ]]>
+        </isEqual>
+        <isNotEqual property="st" compareValue="service">
+        	<![CDATA[ IN ('1210110', '1210111', '1210112', '1210113', '1210114') ]]>
+        </isNotEqual>
+        -->
+        <include refid="common.pub_se"/>
+	</select>
+	
+    <!-- 2016.03.30 조건변경 
+    	AND B.STAT_ID = D.STAT_ID 추가
+        AND C.STAT_SN = '1' 삭제 -->
+    <!-- 2020.04.16 업무용에서만 쓰는 st 파라미터로 공표를 구분하게 개발하여 서비스에서 조회되지 말아야할것도 조회가 됨 (개발당시 업무용만 생각하고  만든것으로 추정)
+    	st 파라미터로 분리하던것을 serverType 로  분기하도록 변경
+     -->        
+	<select id="RelCnt" parameterClass="param" resultClass="int">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM $dbUser$TN_STBL_INFO_REL A, $dbUser$TN_STBL_INFO B, $dbUser$TN_STBL_STAT_REL C, $dbUser$TN_STAT D
+		WHERE B.ORG_ID = A.REL_ORG_ID
+		AND B.TBL_ID = A.REL_TBL_ID
+		AND B.ORG_ID = C.ORG_ID
+		AND B.TBL_ID = C.TBL_ID
+        AND B.STAT_ID = C.STAT_ID
+        AND C.STAT_ID = D.STAT_ID
+		AND A.ORG_ID = #orgId#
+		AND A.TBL_ID = #tblId#
+		AND C.STAT_PK_AT = 'Y'
+		AND B.PUB_SE
+		]]>
+		<!--
+		<isEqual property="st" compareValue="service">
+			<![CDATA[ IN ('1210110', '1210113', '1210114') ]]>
+        </isEqual>
+        <isNotEqual property="st" compareValue="service">
+        	<![CDATA[ IN ('1210110', '1210111', '1210112', '1210113', '1210114') ]]>
+        </isNotEqual>
+        -->
+        <include refid="common.pub_se"/>
+	</select>
+
+	<!--2015.10.28 분석종류별 주석 조회  -->
+	<select id="assayTypeCmmtList"  resultClass="egovMap">
+		<![CDATA[
+		SELECT FUNC_CODE AS FUNCCODE, CMMT, CMMT_ENG AS CMMTENG
+		FROM OLAP_EXC_TBL_CMMT
+		WHERE ORG_ID=#orgId#
+			AND TBL_ID=#tblId#
+		]]>
+	</select>
+	
+	<select id="selectStatInfo" parameterClass="param" resultClass="egovMap">
+	<![CDATA[
+		SELECT            
+            A.TBL_ID,                        
+            B.STAT_NM,
+            B.STAT_ENG_NM           
+        FROM $dbUser$TN_STBL_STAT_REL A, $dbUser$TN_STAT B      
+        WHERE A.STAT_ID = B.STAT_ID
+        AND A.ORG_ID = #orgId#
+        AND A.TBL_ID = #tblId#
+        ORDER BY STAT_PK_AT DESC, STAT_SN
+		]]>		
+	</select>
+
+</sqlMap>
