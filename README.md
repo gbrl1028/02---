@@ -4,16 +4,21 @@
 
 #### 개발디비 TN_COUNTLOG 테이블 확인필요
 
-## 환경구성
+## 개발서버환경구성
 
 - Java 8
 - Spring 3.0.5
 - egov framework 2.5.0
 - DB: Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production 
-- WAS & WEB: Tomcat 7.0.109
-- lib 폴더와 tomcat 7 버전 lib 참조 (해당 프로젝트는 메이븐 아키타입 X)
----
+- WAS & WEB: Tomcat 9.0.74
+- 해당 프로젝트는 메이븐 아키타입 X
 
+---
+## 로컬환경구성 
+- lib 폴더와 tomcat 7 버전 lib 참조 (해당 프로젝트는 메이븐 아키타입 X)
+- WAS & WEB: Tomcat 7.0.109
+
+---
 ## 유저 가이드
 
 ### 개발 URL
