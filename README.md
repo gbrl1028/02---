@@ -60,7 +60,13 @@ Remote
 ### 브랜치 설정정보 파일
 ```bash
 src/config.properties
+* 시스템에 맞게 수정
+- server.url=http://localhost:8080
+- server.dbuser=NSI_IN_005
+- table.uselog=TN_OLAPLOG
+
 src/spring/context-datasource.xml
+* db, id, password 수정
 
 *** 브랜치 병합(merge)시 반드시 제외
 
