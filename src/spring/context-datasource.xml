@@ -9,7 +9,7 @@
 														(FAIL_OVER=on)
 					    								(LOAD_BALANCE=off)
 					    								(ADDRESS_LIST =
-					      									(ADDRESS = (PROTOCOL = TCP)(HOST = 221.158.185.26)(PORT = 1522))
+					      									(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1522))
 					    								)
 					    								(CONNECT_DATA =
 					      									(SERVICE_NAME = ORCL)

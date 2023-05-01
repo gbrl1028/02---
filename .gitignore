@@ -15,6 +15,6 @@ out/
 
 # src/main/webapp/WEB-INF/lib/
 src/main/WebContent/WEB-INF/classes/
-
+WebContent/WEB-INF/classes/
 #src/main/webapp/WEB-INF/lib
 #!src/main/webapp/WEB-INF/lib/ojdbc8.jar
