@@ -59,15 +59,15 @@ Remote
 ```
 ### 브랜치 설정정보 파일
 ```bash
-src/main/resources/properties/file.properties
-src/main/resources/config/spring/context-datasource.xml
+src/config.properties
+src/spring/context-datasource.xml
 
 *** 브랜치 병합(merge)시 반드시 제외
 
 제외 명령어
 git merge --no-commit --no-ff feature/xxx -X theirs
-git reset HEAD src/main/resources/properties/file.properties src/main/resources/config/spring/context-datasource.xml
-git restore src/main/resources/properties/file.properties src/main/resources/config/spring/context-datasource.xml
+git reset HEAD src/config.properties src/spring/context-datasource.xml
+git restore src/config.properties src/spring/context-datasource.xml
 git clean -fd
 git commit
 
