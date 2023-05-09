@@ -48,6 +48,6 @@
             <property name="validationQuery" value="select 1 from dual" />
             <property name="testWhileIdle" value="true"/>
             <property name="timeBetweenEvictionRunsMillis" value="300000"/>
-        </bean>-->
+        </bean>
 
 </beans>
