@@ -1,33 +1,9 @@
 package nurimsoft.webapp;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import nurimsoft.stat.info.AssayInfo;
-import nurimsoft.stat.info.ClassInfo;
-import nurimsoft.stat.info.ItemInfo;
-import nurimsoft.stat.info.ParamInfo;
-import nurimsoft.stat.info.PeriodInfo;
-import nurimsoft.stat.info.RelationInfo;
-import nurimsoft.stat.info.SelectAllInfo;
-import nurimsoft.stat.info.SelectRangeInfo;
-import nurimsoft.stat.info.StatInfo;
+import nurimsoft.stat.info.*;
 import nurimsoft.stat.manager.MakeDownLarge;
 import nurimsoft.stat.manager.MakeMetaManager;
 import nurimsoft.stat.manager.StatDataInfoManager;
@@ -35,7 +11,6 @@ import nurimsoft.stat.manager.StatInfoManager;
 import nurimsoft.stat.util.PropertyManager;
 import nurimsoft.stat.util.StatPivotUtil;
 import nurimsoft.stat.util.StringUtil;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -44,7 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
-import egovframework.rte.psl.dataaccess.util.EgovMap;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service("statHtmlService")
 public class StatHtmlService {
@@ -52,7 +34,7 @@ public class StatHtmlService {
 	@Resource(name = "statHtmlDAO")
 	private StatHtmlDAO statHtmlDAO;
 	private StringUtil sutil;
-	
+
 	public String getRTITLEListId(ParamInfo paramInfo) throws Exception{
 
 		String listId = paramInfo.getListId();
@@ -122,9 +104,9 @@ public class StatHtmlService {
 	public File getExcelData(ParamInfo paramInfo, HttpServletRequest request) throws Exception{
 
 		StatDataInfoManager pivotInfoManager = new StatDataInfoManager(paramInfo, statHtmlDAO, request);
-		
-		File file = null; 
-				
+
+		File file = null;
+
 		if(paramInfo.getView().equals("xls")){
 			file = pivotInfoManager.getExcelData("xls");
 		}else{
@@ -138,6 +120,13 @@ public class StatHtmlService {
 
 		StatDataInfoManager pivotInfoManager = new StatDataInfoManager(paramInfo, statHtmlDAO, request);
 		File file = pivotInfoManager.getCsvTxtData();
+
+		return file;
+	}
+
+	public File getPairData(ParamInfo paramInfo, HttpServletRequest request) throws Exception {
+		StatDataInfoManager pivotInfoManager = new StatDataInfoManager(paramInfo, statHtmlDAO, request);
+		File file = pivotInfoManager.getPairData();
 
 		return file;
 	}
@@ -293,7 +282,7 @@ public class StatHtmlService {
 	public int getRelCount(ParamInfo paramInfo) {
 		return statHtmlDAO.getRelCount(paramInfo);
 	}
-	
+
 	public void searchRequirementInsert(JSONArray jFieldArr, ParamInfo paramInfo) {
 		 statHtmlDAO.searchRequirementInsert(jFieldArr, paramInfo);
 	}
@@ -327,14 +316,14 @@ public class StatHtmlService {
 		//2013.11.26
 		//통계청, 호스팅
 		if(serverLocation.equals("NSO")){
-			
+
 			if(serverTypeOrigin.indexOf("service") > -1){
-				
+
 				String connPath = paramInfo.getConnPath();
-				
-				/*2018.07.10 
-					모니터링(connPath = Z6)에서 
-					서비스용(ServerLocation = NSO :통계청에 설치된, ServerTypeOrigin = service :서비스용)을 조회할경우 
+
+				/*2018.07.10
+					모니터링(connPath = Z6)에서
+					서비스용(ServerLocation = NSO :통계청에 설치된, ServerTypeOrigin = service :서비스용)을 조회할경우
 					TN_USELOG에 적재하지 않는다 - 최윤정 주무관
 				 */
 				/* 2018.08.23 위 내용의 작업을 할때 다운로드쪽은 검토하지 않아서 다운로드시 에러가 발생하여 조치함 */
@@ -426,15 +415,15 @@ public class StatHtmlService {
 		// 2015.09.06 관련통계표 팝업을 통해 조회된 통계표의 경우 rel_org_id, rel_tbl_id 원통계표 정보를 추가
 		String relChkOrgId = paramInfo.getRelChkOrgId();
 		String relChkTblId = paramInfo.getRelChkTblId();
-		
+
 		if(relChkOrgId == null || relChkOrgId.trim().length() == 0){
 			relChkOrgId = "NULL";
 		}
-		
+
 		if(relChkTblId == null || relChkTblId.trim().length() == 0){
 			relChkTblId = "NULL";
 		}
-		
+
 		paramMap.clear();
 		paramMap.put("useLog", PropertyManager.getInstance().getProperty("table.uselog"));
 
@@ -448,7 +437,7 @@ public class StatHtmlService {
 		paramMap.put("viewSe", viewSe);
 		paramMap.put("connPath", connPath);
 		paramMap.put("viewKind", viewKind);
-		
+
 		// 2015.09.06 관련통계표 조회시 정보
 		paramMap.put("relChkOrgId", relChkOrgId);
 		paramMap.put("relChkTblId", relChkTblId);
@@ -555,20 +544,20 @@ public class StatHtmlService {
 			//주기별로 데이터를 넣어야 한다.
 			String prd = statHtmlDAO.getTimeDimensionList(paramInfo);
 			StringBuffer tmpBuff = new StringBuffer();
-			
+
 			// 2016-01-11 null 값을 split 하려고 하다가 Exception 나는 경우를 S35 log에서 발견하여 수정 - 김경호
 			if(prd != null && prd.length() > 0){
 				String[] prdArr = prd.split("@");
-				
+
 				String prdSe = null;
 				for(int i = 0; i < prdArr.length; i++){
 					String[] tmpArr = prdArr[i].split(",");
 					prdSe = tmpArr[0];
-	
+
 					if(i != 0){
 						tmpBuff.append(",");
 					}
-	
+
 					tmpBuff.append(prdSe + tmpArr[tmpArr.length - 1] + "_" + prdSe + tmpArr[1]);
 				}
 			}
@@ -639,18 +628,18 @@ public class StatHtmlService {
 		// 2015.08.06 관련통계표 팝업을 통해 조회된 통계표의 경우 rel_org_id, rel_tbl_id 원통계표 정보를 추가
 		String relChkOrgId = paramInfo.getRelChkOrgId();
 		String relChkTblId = paramInfo.getRelChkTblId();
-		
+
 		if(relChkOrgId == null || relChkOrgId.trim().length() == 0){
 			relChkOrgId = "NULL";
 		}
-		
+
 		if(relChkTblId == null || relChkTblId.trim().length() == 0){
 			relChkTblId = "NULL";
 		}
-		
+
 		paramMap.put("relChkOrgId", relChkOrgId);
 		paramMap.put("relChkTblId", relChkTblId);
-		
+
 		if(paramInfo.getServerType().equals("stat_emp")){
 			paramMap.put("pubSe", "1");
 		}else{
@@ -716,19 +705,19 @@ public class StatHtmlService {
 		// 2015.08.03 관련통계표 팝업을 통해 조회된 통계표의 경우 rel_org_id, rel_tbl_id 원통계표 정보를 추가
 		String relChkOrgId = paramInfo.getRelChkOrgId();
 		String relChkTblId = paramInfo.getRelChkTblId();
-		
+
 		if(relChkOrgId == null || relChkOrgId.trim().length() == 0){
 			relChkOrgId = "NULL";
 		}
-		
+
 		if(relChkTblId == null || relChkTblId.trim().length() == 0){
 			relChkTblId = "NULL";
 		}
-		
+
 		paramMap.put("relChkOrgId", relChkOrgId);
 		paramMap.put("relChkTblId", relChkTblId);
 		// ----------------------------------------------------------------------------------------------------
-		
+
 		int updateCnt = statHtmlDAO.updateUseLogForHostingNSply(paramMap);
 		//update 하지 않았으면 데이터를 추가해야 함.
 		if(updateCnt == 0){
@@ -786,19 +775,19 @@ public class StatHtmlService {
 		// 2015.09.17 관련통계표 팝업을 통해 조회된 통계표의 경우 rel_org_id, rel_tbl_id 원통계표 정보를 추가
 		String relChkOrgId = paramInfo.getRelChkOrgId();
 		String relChkTblId = paramInfo.getRelChkTblId();
-		
+
 		if(relChkOrgId == null || relChkOrgId.trim().length() == 0){
 			relChkOrgId = "NULL";
 		}
-		
+
 		if(relChkTblId == null || relChkTblId.trim().length() == 0){
 			relChkTblId = "NULL";
 		}
-		
+
 		paramMap.put("relChkOrgId", relChkOrgId);
 		paramMap.put("relChkTblId", relChkTblId);
 		// ----------------------------------------------------------------------------------------------------
-		
+
 		int updateCnt = statHtmlDAO.updateOlapLog(paramMap);
 		//update 하지 않았으면 데이터를 추가해야 함.
 		if(updateCnt == 0){
@@ -1034,14 +1023,14 @@ public class StatHtmlService {
 			tabMap.put("prdSe",tempPeriod);
 			tabTimeArr.add(tabMap);
 
-			//2015.06.05 상속통계표일때 주기 시점은 부모통계표를 바라봄 
+			//2015.06.05 상속통계표일때 주기 시점은 부모통계표를 바라봄
 			if( "Y".equals(paramInfo.getInheritYn()) ){
 				paramMap.put("inheritYn", 	paramInfo.getInheritYn());
 				paramMap.put("originOrgId", paramInfo.getOriginOrgId());
 				paramMap.put("originTblId", paramInfo.getOriginTblId());
 			}
 
-			/* 
+			/*
 			 20.04.09 업무용에서 담당자가 st 파라미터를 이용하여 서비스용으로 조회할때 원래 serverType은 관리자 였으므로 기간보안 체크안함
 			(손상호 주무관의 요청에 따라 [미리보는KOSIS]에서는 기간보안 체크안함.
 			 */
@@ -1309,12 +1298,12 @@ public class StatHtmlService {
 			classList.add(clInfo);
 		}
 
-		/* 
+		/*
 		 20.04.09 업무용에서 담당자가 st 파라미터를 이용하여 서비스용으로 조회할때 원래 serverType은 관리자 였으므로 기간보안 체크안함
 		(손상호 주무관의 요청에 따라 [미리보는KOSIS]에서는 기간보안 체크안함.
 		 */
 		paramMap.put("serverTypeOrigin",paramInfo.getServerTypeOrigin());
-		
+
 		//화면에서 넘어온 시점 정보
 		paramMap.put("assayYn", "Y");			//분석에서만 사용하는 시점 구분
 		paramMap.put("prdSe",paramInfo.getFuncPrdSe());
@@ -1365,21 +1354,21 @@ public class StatHtmlService {
 		return assayInfo;
 	}
 
-	
+
 	/* 정창호 관련통계표
-	 * 
+	 *
 	 */
 	public RelationInfo getRelationInfo(ParamInfo paramInfo) throws Exception{
-	
+
 		RelationInfo relationInfo = new RelationInfo();
-		
+
 		List<EgovMap> relationInfoList = (List<EgovMap>)statHtmlDAO.getSelectRelInfo(paramInfo);
-		
+
 		relationInfo.setRelationList(relationInfoList);
-		
+
 		return relationInfo;
 	}
-	
+
 	/*
 	 *	김정현 파일다운로드
 	 */
@@ -1599,7 +1588,7 @@ public class StatHtmlService {
 			}
 			if(paramInfo.getNoSelect().equals("noSelect")){
 				paramWeb += "noSelect,noSelect@";
-			}		
+			}
 			paramMap.put("paramWeb", paramWeb);
 			paramMap.put("arrySn", ++arrySn);
 			statHtmlDAO.insertScrapParams(paramMap);
@@ -1918,18 +1907,18 @@ public class StatHtmlService {
 		}
 		return model;
 	}
-	
+
 	/* 출처 더보기
-	 * 
+	 *
 	 */
 	public RelationInfo getStatInfo(ParamInfo paramInfo) throws Exception{
-	
+
 		RelationInfo statInfo = new RelationInfo();
-		
+
 		List<EgovMap> statInfoList = (List<EgovMap>)statHtmlDAO.getSelectStatInfo(paramInfo);
-		
+
 		statInfo.setRelationList(statInfoList);
-		
+
 		return statInfo;
 	}
 

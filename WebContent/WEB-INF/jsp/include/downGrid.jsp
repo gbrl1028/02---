@@ -10,7 +10,7 @@ function fn_clickFileType(){
 		$("#downGridSdmxTypeDsd").removeAttr("disabled");
 		$("#downGridSdmxTypeData").removeAttr("disabled");
 		$("#sdmxDataType").removeAttr("disabled");
-		
+
 		document.getElementById("downGridSdmxTypeData").checked = true;
 	}else{
 		$(":radio[name='downGridSdmxType']").each(function(){
@@ -39,7 +39,7 @@ function fn_clickFileType(){
 function fn_downGridSubmit(){
 	var view = $(":radio[name='downGridFileType']:checked").val();
 	var viewSubKind;
-	
+
 	//2020.09.21 xls 파일은 데이터가 256열 이상이면 에러남
 	if(view == "xls"){
 		if($("#mainTable thead").children("tr:last-child").children("th").length > 256){
@@ -47,7 +47,7 @@ function fn_downGridSubmit(){
 			return;
 		}
 	}
-	
+
 	fn_searchCond();
 
 	$(".confirmBtn").hide();
@@ -139,7 +139,7 @@ function fn_downGridSubmit(){
 		success : function(response,status){
 			var file = response.file;
 
-			
+
 			form.action = "<%=request.getContextPath()%>/downNormal.do";
 			form.file.value = file;
 			form.submit();
@@ -170,7 +170,7 @@ function fn_downGridSubmit(){
 		document.getElementById("enableCellUnit").checked = false;
 	}
 
-	if( document.getElementById("PtypeOri").checked == true){ 
+	if( document.getElementById("PtypeOri").checked == true){
 		$("#periodCo option:last").remove();
 		$("#periodCo").val(periodCo);
 	}
@@ -187,7 +187,7 @@ function fn_downGridSubmit(){
 				<span class="btn_r grayBtn"><a href="javascript:fn_metaDown('grid');"><pivot:msg code="ui.btn.metaDown"/></a></span>
 			</div>
 			<div class="downList">
-				
+
 				<div style="margin-top:5px; position:relative;">
 					<div style="width:250px;"><h1 class="bu_circle"><pivot:msg code="ui.label.fileType"/></h1></div>
 					<div style="padding-right:5px; position:absolute; top:1px; right:0px;">
@@ -210,7 +210,13 @@ function fn_downGridSubmit(){
 						<li>
 							<input id="txtradio" type="radio" name="downGridFileType" value="txt" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="txtradio">TXT</label>
 						</li>
-						<%-- 
+						<li>
+							<input id="jsonradio" type="radio" name="downGridFileType" value="json" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="txtradio">JSON</label>
+						</li>
+						<li>
+							<input id="xmlradio" type="radio" name="downGridFileType" value="xml" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="txtradio">XML</label>
+						</li>
+						<%--
 						<li>
 							<input id="sdmxradio" type="radio" name="downGridFileType" value="sdmx" onclick="fn_clickFileType()"/> <img src="images/ico_sdmx.png" alt="" /><label for="sdmxradio"><span class="sdmxDown">SDMX(2.0)</span></label>
 							&nbsp;<b><span class="notFunctext flex"><label for="downGridSdmxTypeDsd">[</label></span></b><input type="radio" name="downGridSdmxType" id="downGridSdmxTypeDsd" value="dsd" style="margin-left:3px;" disabled="disabled"/>
@@ -256,9 +262,9 @@ function fn_downGridSubmit(){
 						<h2 class="arr_blue">통계표 파일서비스</h2>
 						<p class="text">- 자료량이 많은 통계표로 미리 생성한 파일을 제공합니다. </p>
 						<p class="goBtn"><a href="javascript:openMass('K');"><img src="images/shortcutBtn.gif" alt="바로가기" /></a></p>
-					</div>				
+					</div>
 					</c:if>
-					
+
 					<c:if test="${ParamInfo.language == 'en'}">
 					<div class="shortLay">
 						<h2 class="arr_blue">Statistical Table File Service</h2>

@@ -1,37 +1,14 @@
 package nurimsoft.webapp.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 import net.sf.json.JSONArray;
-import nurimsoft.stat.info.AssayInfo;
-import nurimsoft.stat.info.ClassInfo;
-import nurimsoft.stat.info.ItemInfo;
-import nurimsoft.stat.info.ParamInfo;
-import nurimsoft.stat.info.PeriodInfo;
-import nurimsoft.stat.info.RelationInfo;
-import nurimsoft.stat.info.SelectAllInfo;
-import nurimsoft.stat.info.SelectRangeInfo;
-import nurimsoft.stat.info.StatInfo;
+import nurimsoft.stat.info.*;
 import nurimsoft.stat.manager.StatExceptionManager;
 import nurimsoft.stat.util.MessageManager;
 import nurimsoft.stat.util.PropertyManager;
 import nurimsoft.stat.util.StatPivotUtil;
 import nurimsoft.stat.util.StringUtil;
 import nurimsoft.webapp.StatHtmlService;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -43,16 +20,28 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import egovframework.rte.psl.dataaccess.util.EgovMap;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
  * << 개정이력(Modification Information) >>
- *   
+ *
  *	수정일		수정자		수정내용
  *	----------	--------	---------------------------
  *	2016.01.04	남규옥		addParamInfo 메소드 호출 시 예외처리함
- *	
+ *
  * </pre>
  */
 @Controller
@@ -164,7 +153,7 @@ public class StatHtmlController {
 			HttpServletRequest request, HttpServletResponse response) throws Exception{
 
 		ModelAndView model = new ModelAndView();
-		
+
 		/*2020.06.09 - 직접접근으로 추정되는 접속이 제니퍼에서 error로 연속하여 올라오고 있음 접근금지하여 에러발생 차단- 손상호 주무관 */
 		String referer = request.getHeader("referer");
 
@@ -173,7 +162,7 @@ public class StatHtmlController {
 			model.setViewName("alert");
 			return model;
 		}
-		
+
 		String errMsg = null;
 		int errCode = 0;
 
@@ -203,7 +192,7 @@ public class StatHtmlController {
 
 		Object[] obj = null;
 		List list = null;
-		
+
 		try{
 			//2013.11.29 주석여부를 가져오기 위해 기존의 list 순번을 바꾸지 않으려고 함.
 			//list로 반환했던것을 object array로 받도록 함.
@@ -231,9 +220,9 @@ public class StatHtmlController {
 		//이규정 추가 uselog 적재
 		//statHtmlService.setLog(paramInfo);
 		//list.add(paramInfo.getLogSeq());
-		/*2018.07.10 
-			모니터링(connPath = Z6)에서 
-			서비스용(ServerLocation = NSO :통계청에 설치된, ServerTypeOrigin = service :서비스용)을 조회할경우 
+		/*2018.07.10
+			모니터링(connPath = Z6)에서
+			서비스용(ServerLocation = NSO :통계청에 설치된, ServerTypeOrigin = service :서비스용)을 조회할경우
 			TN_USELOG에 적재하지 않는다 - 최윤정 주무관
 		*/
 		String connPath = paramInfo.getConnPath();
@@ -244,13 +233,13 @@ public class StatHtmlController {
 			statHtmlService.setLog(paramInfo);
 			list.add(paramInfo.getLogSeq());
 		}
-		
+
 		//2013.11.26 추가 : 분석명
 		list.add(paramInfo.getAnalTextTblNm());
 
 		//2013.11.29 주석여부 추가
 		list.add((String)obj[1]);
-		
+
 		//이규정 추가 olaplog 적재
 		//통계청 서비스용이면서 viewKind가 1, 2, 5(조회, 다운로드, 분석)의 경우 적재
 		//2013.11.26
@@ -258,7 +247,7 @@ public class StatHtmlController {
 
 			// 2018.07.10 모니터링(connPath = Z6)에서는 TN_USELOG 와 마찬가지로 TN_OLAPLOG 도 적재하지 않는다. - 최윤정
 			// connPath 가 Z6(모니터링) 이 아닐때만 TN_OLAPLOG 적재
-			if( !connPath.equals("Z6")){	
+			if( !connPath.equals("Z6")){
 				String viewKind = paramInfo.getViewKind();
 				if(viewKind == null){
 					viewKind = "";
@@ -293,15 +282,15 @@ public class StatHtmlController {
 		paramInfo.setSessionId(session.getId());
 
 		StringUtil sutil = new StringUtil();
-		
+
 		String orgid = sutil.stringCheck(paramInfo.getOrgId());
 		String tblid = sutil.stringCheck(paramInfo.getTblId());
-		
+
 		/*2020.07.09 필수 파라미터를 빼고 접속하는 URL 에 대해 차단 - 코드는 일단 보내는데 받아서 쓰는건 놔두자...굳이...*/
 		if(orgid.equals("") || tblid.equals("")){
 			throw new StatExceptionManager("101");
 		}
-		
+
 		String serverType = PropertyManager.getInstance().getProperty("server.type");
 		if(serverType == null || serverType.trim().length() == 0 ){
 			serverType = "service";
@@ -422,9 +411,9 @@ public class StatHtmlController {
 		}else{
 			session.setAttribute("dataOpt", "ko");
 		}
-		
+
 		// 20151224 남규옥 추가 시작 ::: 호스팅일 경우 exception 처리
-		if(("H").equals(paramInfo.getViewType())){	
+		if(("H").equals(paramInfo.getViewType())){
 			String dbUserExcptDot = StringUtils.defaultString(paramInfo.getDbUser().replaceAll("\\.", ""));
 			if(dbUserExcptDot.equals(dbUser)){
 				//System.out.println("호스팅:: 적절하지않은 dbUser!! 에러발생 [dbUser] [" + dbUser+ "]---[dbUserExcptDot] ["+dbUserExcptDot+"]");
@@ -432,12 +421,12 @@ public class StatHtmlController {
 			}
 		}
 		// 20151224 남규옥 추가 끝
-		
+
 		// 2015.06.25 관련통계표 사용여부가 Y이고 등록된 관련통계표가 존재할 때만 관련통계표 버튼 보임
 		if(("ko").equals(paramInfo.getLanguage())){
 			String relUserYn = PropertyManager.getInstance().getProperty("rel.user.yn");
 			paramInfo.setRelUserYn(relUserYn);
-			
+
 			int relCnt = statHtmlService.getRelCount(paramInfo);
 			if (relCnt != 0){
 				paramInfo.setRelYn("Y");
@@ -485,7 +474,7 @@ public class StatHtmlController {
 		}
 		*/
 
-		/*담당자권한으로 통계표를 테스트할 경우 
+		/*담당자권한으로 통계표를 테스트할 경우
 		 * empId 를 아무 내용이나 넣어주고 아래 chkCnt 를 0 이상으로 넣어주면 됌.
 		 * */
 		String empNm = null;
@@ -614,12 +603,12 @@ public class StatHtmlController {
 			paramMap.put("originTblId",	paramInfo.getOriginTblId());
 		}
 
-		/* 
+		/*
 		 20.04.09 업무용에서 담당자가 st 파라미터를 이용하여 서비스용으로 조회할때 원래 serverType은 관리자 였으므로 기간보안 체크안함
 		(손상호 주무관의 요청에 따라 [미리보는KOSIS]에서는 기간보안 체크안함.
 		 */
 		paramMap.put("serverTypeOrigin",paramInfo.getServerTypeOrigin());
-		
+
 		List<EgovMap> divPeriodList = (List<EgovMap>) statHtmlService.getPeriodList(paramMap);
 		model.addObject("result", divPeriodList);
 		model.setViewName("jsonView");
@@ -635,19 +624,19 @@ public class StatHtmlController {
 
 			ModelAndView model = new ModelAndView();
 			Map paramMap = new HashMap();
-			
+
 			try{
 				addParamInfo(request, paramInfo);
 			}catch(StatExceptionManager se){
 				model.addObject("resultMsg", MessageManager.getInstance().getProperty(se.getCode(), paramInfo.getDataOpt()));
 				model.setViewName("alert");
-				return model; 
+				return model;
 			}catch(Exception e){ //2020.07.16 제니퍼에 아예 안나오도록...
 				model.addObject("resultMsg", MessageManager.getInstance().getProperty("fail.common.msg", paramInfo.getDataOpt()));
 				model.setViewName("alert");
 				return model;
 			}
-			
+
 			paramMap.put("orgId",paramInfo.getOrgId());
 			paramMap.put("tblId",paramInfo.getTblId());
 			paramMap.put("serverType",paramInfo.getServerType());
@@ -689,7 +678,7 @@ public class StatHtmlController {
 		}catch(StatExceptionManager se){
 			model.addObject("resultMsg", MessageManager.getInstance().getProperty(se.getCode(), paramInfo.getDataOpt()));
 			model.setViewName("alert");
-			return model; 
+			return model;
 		}catch(Exception e){ //2020.07.16 제니퍼에 아예 안나오도록...
 			model.addObject("resultMsg", MessageManager.getInstance().getProperty("fail.common.msg", paramInfo.getDataOpt()));
 			model.setViewName("alert");
@@ -749,7 +738,7 @@ public class StatHtmlController {
 			String errMsg = null;
 			errMsg = MessageManager.getInstance().getProperty("fail.common.msg", paramInfo.getDataOpt());
 			log.info(errMsg);
-		}		
+		}
 	}
 
 	@RequestMapping(value = "/downGrid")
@@ -768,7 +757,7 @@ public class StatHtmlController {
 			model.setViewName("alert");
 			return model;
 		}
-		
+
 		try{
 			addParamInfo(request, paramInfo);
 		}catch(StatExceptionManager se){
@@ -801,7 +790,7 @@ public class StatHtmlController {
 			return model;
 		}
 		 */
-		
+
 		addSelectAllInfo(request, paramInfo);
 
 		File file = null;
@@ -817,7 +806,10 @@ public class StatHtmlController {
 			}else if(paramInfo.getView().equals("sdmx")){
 				//sdmx
 				file = statHtmlService.getSdmxData(paramInfo, request);
-			}else{
+			} else if (paramInfo.getView().equals("json") || paramInfo.getView().equals("xml")) {
+				//json, xml
+				file = statHtmlService.getPairData(paramInfo, request);
+			} else {
 				//csv, txt
 				file = statHtmlService.getCsvTxtData(paramInfo, request);
 			}
@@ -825,13 +817,13 @@ public class StatHtmlController {
 			log.info("CODE : "+ se.getCode());
 			model.addObject("resultMsg", MessageManager.getInstance().getProperty(se.getCode(), paramInfo.getDataOpt()));
 			model.setViewName("alert");
-			return model;			
+			return model;
 		}catch(Exception e){ //2020.07.21 제니퍼에 아예 안나오도록...
 			model.addObject("resultMsg", MessageManager.getInstance().getProperty("fail.common.msg", paramInfo.getDataOpt()));
 			model.setViewName("alert");
 			return model;
 		}
-			
+
 		statHtmlService.setLog(paramInfo);
 		//통계청 서비스용이면서 viewKind가 1, 2, 5(조회, 다운로드, 분석)의 경우 적재
 		//2013.11.26
@@ -869,8 +861,8 @@ public class StatHtmlController {
 			model.addObject("resultMsg",MessageManager.getInstance().getProperty("301", paramInfo.getDataOpt()));
 			model.setViewName("alert");
 			return model;
-		}		
-		
+		}
+
 		try{
 			addParamInfo(request, paramInfo);
 		}catch(StatExceptionManager se){
@@ -917,7 +909,7 @@ public class StatHtmlController {
 			model.setViewName("alert");
 			return model;
 		}
-		
+
 		try{
 			addParamInfo(request, paramInfo);
 		}catch(StatExceptionManager se){
@@ -931,7 +923,7 @@ public class StatHtmlController {
 			model.setViewName("alert");
 			return model;
 		}
-		
+
 		/* 2020.06.09 위 작업으로 인해 바로 차단 - 제니퍼 에러  발생안되도록하고 DB적재는 이제 고만...IP알아서 뭐할라고?
 		if(referer == null || referer.indexOf("statHtml.do") < 0){
 			//통계청 서비스용 인경우에만 로그를 적재
@@ -1092,7 +1084,7 @@ public class StatHtmlController {
 
 			model.setViewName("jsonView");
 			return model;
-		}	
+		}
 
 		String direct = paramInfo.getDirect();
 
@@ -1126,7 +1118,7 @@ public class StatHtmlController {
 				// 파일형태 excel, csv
 				if(paramInfo.getDownLargeFileType().equals("excel")){
 					viewSubKind = "2_8_1";
-				}else if(paramInfo.getDownLargeFileType().equals("csv")){	
+				}else if(paramInfo.getDownLargeFileType().equals("csv")){
 					viewSubKind = "2_8_2";
 				}else{	//2017.11.29 직접다운로드로 TXT 추가 - 김기만 사무관
 					viewSubKind = "2_4";
@@ -1203,13 +1195,13 @@ public class StatHtmlController {
 
 		//String realPath = paramInfo.getRealPath(); // 2020.08.13 was 정보 노출!! 보안취약점 제거
 		String realPath = request.getSession().getServletContext().getRealPath("");
-		
+
 		String fileDir = "tmpFile";
 		String fileName = orgId + "_" + tblId;
 
 		String dateString = StatPivotUtil.getDateString();
 		String ext = "";
-		
+
 		if( type.equals("excel")){
 			ext = "xls";
 		}else if( type.equals("csv")){
@@ -1217,7 +1209,7 @@ public class StatHtmlController {
 		}else{	//2017.11.29 직접다운로드로 TXT 추가 - 김기만 사무관
 			ext = "txt";
 		}
-		
+
 		if(direct.equals("direct")){
 			fileName += "_" + prdSe;
 		}
@@ -1301,7 +1293,7 @@ public class StatHtmlController {
 				return model;
 			}
 		}
-		
+
 		try{
 			addParamInfo(request, paramInfo);
 		}catch(StatExceptionManager se){
@@ -1328,7 +1320,7 @@ public class StatHtmlController {
 			}
 		}
 		*/
-		
+
 		//String realPath = paramInfo.getRealPath(); // 2020.08.13 was 정보 노출!! 보안취약점 제거
 		String realPath = request.getSession().getServletContext().getRealPath("");
 		String fileDir = "tmpFile";
@@ -1357,7 +1349,7 @@ public class StatHtmlController {
 			HttpServletResponse response) throws Exception{
 
 		ModelAndView model = new ModelAndView();
-		
+
 		/*2020.06.09 - 직접접근으로 추정되는 접속이 제니퍼에서 error로 연속하여 올라오고 있음 접근금지하여 에러발생 차단- 손상호 주무관 */
 		String referer = request.getHeader("referer");
 
@@ -1365,8 +1357,8 @@ public class StatHtmlController {
 			model.addObject("resultMsg",MessageManager.getInstance().getProperty("301", paramInfo.getDataOpt()));
 			model.setViewName("alert");
 			return model;
-		}		
-		
+		}
+
 		try{
 			addParamInfo(request, paramInfo);
 		}catch(StatExceptionManager se){
@@ -1392,7 +1384,7 @@ public class StatHtmlController {
 			model.setViewName("alert");
 			return model;
 		}
-		
+
 		model.addObject("file", file);
 		model.setViewName("downloadView");
 
@@ -1452,7 +1444,7 @@ public class StatHtmlController {
 			model.addAttribute("resultMsg",MessageManager.getInstance().getProperty("301", paramInfo.getDataOpt()));
 			return "alert";
 		}
-		
+
 		try{
 			addParamInfo(request, paramInfo);
 		}catch(StatExceptionManager se){
@@ -1690,7 +1682,7 @@ public class StatHtmlController {
 		}
 		return "/direct/directDownPrdDe";
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/statInfo")
 	public String statInfo (

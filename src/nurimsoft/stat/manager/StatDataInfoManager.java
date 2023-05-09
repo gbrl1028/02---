@@ -1,39 +1,20 @@
 package nurimsoft.stat.manager;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import nurimsoft.stat.info.CmmtInfo;
 import nurimsoft.stat.info.ParamInfo;
-import nurimsoft.stat.pivot.ClassDimension;
-import nurimsoft.stat.pivot.ColumnAxis;
-import nurimsoft.stat.pivot.Dimension;
-import nurimsoft.stat.pivot.Item;
-import nurimsoft.stat.pivot.ItemDimension;
-import nurimsoft.stat.pivot.Measure;
-import nurimsoft.stat.pivot.RowAxis;
-import nurimsoft.stat.pivot.TimeDimension;
-import nurimsoft.stat.pivot.renderer.ChartRenderer;
-import nurimsoft.stat.pivot.renderer.CsvTxtRenderer;
-import nurimsoft.stat.pivot.renderer.ExcelRenderer;
-import nurimsoft.stat.pivot.renderer.HtmlRenderer;
-import nurimsoft.stat.pivot.renderer.Renderer;
-import nurimsoft.stat.pivot.renderer.XlsRenderer;
+import nurimsoft.stat.pivot.*;
+import nurimsoft.stat.pivot.renderer.*;
 import nurimsoft.stat.util.PropertyManager;
 import nurimsoft.stat.util.StatPivotUtil;
 import nurimsoft.webapp.StatHtmlDAO;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author leekyujeong
@@ -46,7 +27,7 @@ public class StatDataInfoManager {
 	private ParamInfo paramInfo;
 	private StatHtmlDAO statHtmlDAO;
 	private HttpServletRequest request;
-	
+
 	private StringBuffer strBuff = new StringBuffer();
 	private StringBuffer strBuffMainSelect = new StringBuffer();
 
@@ -609,47 +590,47 @@ public class StatDataInfoManager {
 				/*for(int i = tDim.getItemCount() - 1; i >= 0; i-- ){
 					ascList.add(tDim.getItem(i));
 				}*/
-				
+
 				/*2017.11.14 낮은 주기부터 먼저 조회되도록 작업하면서 틀어진 차트 시계열 수정
 				 *차트의 시계열 오름차순을 유지하면서 주기의 우선순위만 변경함.*/
 				/*--------------------------------------------------*/
 				List<Item> ascList_buff = new ArrayList<Item>();
 				String jugi	= "";	// 주기가 뭔지 저장...
 				String buff = "";
-				
+
 				for(int i = 0; i < tDim.getItemCount(); i++ ){
-					
+
 					Item item = tDim.getItem(i);
-	
+
 					buff = item.getCode();
-					
+
 					if( buff != null && buff.length() > 0){
 						buff = buff.substring(0,1);
 					}
-					
+
 					if( !jugi.equals(buff)){
 						jugi = buff;
-						
+
 						if( ascList_buff.size() > 0){
 							for(int j = ascList_buff.size() - 1; j >=0  ; j-- ){
 								ascList.add(ascList_buff.get(j));
-								
+
 							}
 							ascList_buff.clear();
 						}
 					}
-					
+
 					ascList_buff.add(item);
 				}
-				
-				//주기가 1개 일때 또는 주기가 여러개 일 경우 마지막 주기의 시계열이 담겨있는 ascList_buff의 사이즈가 0이 아닐때 
+
+				//주기가 1개 일때 또는 주기가 여러개 일 경우 마지막 주기의 시계열이 담겨있는 ascList_buff의 사이즈가 0이 아닐때
 				if( ascList.size() == 0 || ascList_buff.size() > 0){
 					for(int j = ascList_buff.size() - 1; j >=0  ; j-- ){
 						ascList.add(ascList_buff.get(j));
 					}
 				}
 				/*--------------------------------------------------*/
-				
+
 				tDim.setItemList(ascList);
 
 			}
@@ -685,10 +666,10 @@ public class StatDataInfoManager {
 		try{
 
 			makeData();
-			
+
 			Renderer renderer = null;
-			//System.out.println(((CsvTxtRenderer)renderer).fileText.toString());	
-			
+			//System.out.println(((CsvTxtRenderer)renderer).fileText.toString());
+
 			if( fileType.equals("xls")){	// 2016-07-06 xls 다운로드 추가 - 우찬균 주무관 요청
 				renderer = new XlsRenderer(paramInfo, resultMap, rowAxis, columnAxis, levelExpr, cmmtInfoManager,statHtmlDAO, request); //levelExpr : 계층별 컬럼보기 여부
 				renderer.write();
@@ -698,7 +679,7 @@ public class StatDataInfoManager {
 				renderer.write();
 				file = ((ExcelRenderer)renderer).file;
 			}
-			
+
 		}catch(Error e){
 			e.printStackTrace();
 			log.info(e.getMessage());
@@ -732,6 +713,29 @@ public class StatDataInfoManager {
 		}
 
 		return file;
+	}
+
+	public File getPairData() throws Exception {
+        File file = null;
+        try {
+            makeData();
+            Map tmMap = new HashMap();
+            tmMap.put("orgId", paramInfo.getOrgId());
+            tmMap.put("tblId", paramInfo.getTblId());
+            tmMap.put("dbUser", paramInfo.getDbUser());
+
+            int openCnt = statHtmlDAO.openListCnt(tmMap);
+
+            Renderer renderer = new PairRenderer(paramInfo, resultMap, rowAxis, columnAxis, levelExpr, cmmtInfoManager, openCnt, request); //levelExpr : 계층별 컬럼보기 여부
+            renderer.write();
+
+            file = ((PairRenderer)renderer).file;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            log.info(throwable.getMessage());
+        }
+
+        return file;
 	}
 
 	//parameter 정보를 읽어서 dimension 정보를 생성한다.
@@ -897,8 +901,8 @@ public class StatDataInfoManager {
 		paramMap.put("tblId", tblId);
 		paramMap.put("dbUser", dbUser);
 		paramMap.put("cmmtSe", "1210610");
-		
-		//2015.07.31 상속통계표 추가 
+
+		//2015.07.31 상속통계표 추가
 		paramMap.put("inheritYn", paramInfo.getInheritYn());
 		paramMap.put("originOrgId", paramInfo.getOriginOrgId());
 		paramMap.put("originTblId", paramInfo.getOriginTblId());
@@ -971,7 +975,7 @@ public class StatDataInfoManager {
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("sql", generateQuery());
-		
+
 		/*
 		log.info("UsingMemory before : " + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)));
 		long time01 = System.currentTimeMillis();
@@ -986,6 +990,35 @@ public class StatDataInfoManager {
 		long time02 = System.currentTimeMillis();
 		log.info("  spent time is " + (time02 - time01) + "ms.");
 		*/
+		Map<String, String> itemDimensionMap = new HashMap<>();
+		Map<String, ClassDimension> classDemensionMap = new HashMap<>();
+		for (int i = 0; i < columnAxis.getDimensionList().size(); i++) {
+			Dimension dimension = columnAxis.getDimension(i);
+			if (dimension instanceof ClassDimension) {
+				ClassDimension classDimension = (ClassDimension) dimension;
+				Map<String, String> classParamMap = classDimension.getParamMap();
+				classDemensionMap.put(classParamMap.get("targetId"), classDimension);
+			} else if (dimension instanceof ItemDimension) {
+				ItemDimension itemDimension = (ItemDimension) dimension;
+				for (Item item : itemDimension.getItemList()) {
+					itemDimensionMap.put(item.getCode(), item.getName());
+				}
+			}
+		}
+
+		for (int i = 0; i < rowAxis.getDimensionList().size(); i++) {
+			Dimension dimension = rowAxis.getDimension(i);
+			if (dimension instanceof ClassDimension) {
+				ClassDimension classDimension = (ClassDimension) dimension;
+				Map<String, String> classParamMap = classDimension.getParamMap();
+				classDemensionMap.put(classParamMap.get("targetId"), classDimension);
+			} else if (dimension instanceof ItemDimension) {
+				ItemDimension itemDimension = (ItemDimension) dimension;
+				for (Item item : itemDimension.getItemList()) {
+					itemDimensionMap.put(item.getCode(), item.getName());
+				}
+			}
+		}
 
 		String[] strArr = null;	//차원정보를 담기위한 문자배열
 		//분류수 + 항목 + 시점 * 년/월(분기)표는 시점 2개
@@ -1011,20 +1044,39 @@ public class StatDataInfoManager {
 		paramMap.put("tblId", tblId);
 		paramMap.put("dbUser", dbUser);
 		paramMap.put("cmmtSe", "1210614"); //주석
-		
+
 		//2015.06.08 상속통계표 주석 변수 추가
 		paramMap.put("inheritYn", paramInfo.getInheritYn());
 		paramMap.put("originOrgId", paramInfo.getOriginOrgId());
 		paramMap.put("originTblId", paramInfo.getOriginTblId());
 
 		for(Map<String, Object> map : list){
-
 			strArr = new String[size];
-
 			int i = 0;
+
+			Map<String, String> jsonMap = new LinkedHashMap<>();
+			jsonMap.put("TBL_NM", paramInfo.getTblNm());
+			jsonMap.put("TBL_ID", paramInfo.getTblId());
+			jsonMap.put("ORG_ID", paramInfo.getOrgId());
+			jsonMap.put("PRD_SE", StringUtils.defaultString((String) map.get("PRD_SE")));
+			jsonMap.put("PRD_DE", StringUtils.defaultString((String) map.get("PRD_DE")));
+
 			for(int idx : classList){
-				strArr[i] = idx + ":" + (String)map.get("OV_L" + idx + "_ID");
+				String ovlIdVal = (String) map.get("OV_L" + idx + "_ID");
+				strArr[i] = idx + ":" + ovlIdVal;
 				i++;
+				jsonMap.put("ITM_ID", (String)map.get("CHAR_ITM_ID"));
+				jsonMap.put("ITM_NM", itemDimensionMap.get(map.get("CHAR_ITM_ID")));
+
+				ClassDimension classDimension = classDemensionMap.get("OV_L" + idx + "_ID");
+				jsonMap.put("C" + idx + "_OBJ_NM", classDimension.getName());
+				for (Item item : classDimension.getItemList()) {
+					if (item.getCode().equals(ovlIdVal)) {
+						jsonMap.put("C" + idx, item.getCode());
+						jsonMap.put("C" + idx + "_NM", item.getName());
+						break;
+					}
+				}
 			}
 
 			int arrPos = classList.size();
@@ -1041,22 +1093,22 @@ public class StatDataInfoManager {
 			}
 
 			measure = new Measure();
-			
+
+
 			String prd_se_buff		= "";
 			String dtval_co_buff	= "";
-			String smbl_cn_buff		= ""; 
+			String smbl_cn_buff		= "";
 			String dmmt_at			= ""; //2020-05-19 추가
-			
+
 			prd_se_buff		=  StringUtils.defaultString((String)map.get("PRD_SE"));
 			dtval_co_buff	=  StringUtils.defaultString((String)map.get("DTVAL_CO"));
 			smbl_cn_buff	=  StringUtils.defaultString((String)map.get("SMBL_CN"));
 			dmmt_at			=  StringUtils.defaultString((String)map.get("DMM_AT"));	//2020-05-19 추가
-			
-			
+
 			/* 2016-01-21 김경호
 			 * Renderer.java 에서는 tn_dt 테이블에 ROW가 없는데 더미처리되어 넘어온 데이터중 DTVAL_CO, DTVAL_CO, SMBL_CN 값이 모두 null일경우 공백처리함
 			 * tn_dt 테이블에 ROW가 없고 더미도 아니면 [-] 처리되고 있음.
-			 * tn_dt 테이블에 ROW가 있는데 DTVAL_CO, DTVAL_CN, SMBL_CN 이 모두 NULL 일 경우는 [-] 처리해달라고 함 - 이원영 
+			 * tn_dt 테이블에 ROW가 있는데 DTVAL_CO, DTVAL_CN, SMBL_CN 이 모두 NULL 일 경우는 [-] 처리해달라고 함 - 이원영
 			 * tn_dt 테이블의 ROW 유무는 prd_se의 유무로 결정한다(기본키)
 			 */
 			// 수치값이 없고 통계표부호도 없는데 주기는 있다...(그럼 TN_DT테이블에 ROW가 있구만~)
@@ -1068,7 +1120,9 @@ public class StatDataInfoManager {
 			}else{ // ROW없으면 그냥 그대로 보내~
 				measure.setDtvalCo((String)map.get("DTVAL_CO"));
 			}
-			
+
+
+
 			measure.setSmblCn((String)map.get("SMBL_CN"));
 			measure.setWgtCo((String)map.get("WGT_CO"));
 			measure.setPeriodCo((String)map.get("PERIOD_CO"));
@@ -1081,6 +1135,11 @@ public class StatDataInfoManager {
 			if(map.get("ANAL_CO") != null){
 				measure.setAnalCo( ((BigDecimal)map.get("ANAL_CO")).toString() );
 			}
+
+            jsonMap.put("DT", measure.getDtvalCo());
+			jsonMap.put("UNIT_NM", StringUtils.defaultString(measure.getUnitNmKor(), ""));
+			jsonMap.put("UNIT_NM_ENG", StringUtils.defaultString(measure.getUnitNmEng(), ""));
+			measure.setExportMap(jsonMap);
 
 			//차원 주석담기
 			if(paramInfo.getDataOpt().indexOf("en") > -1){
@@ -1264,7 +1323,7 @@ public class StatDataInfoManager {
 				strBuff.append("                              (  \n");
 				strBuff.append("                              select * from " + dbUser + "tn_recd_prd  \n");
 				strBuff.append("                              where 1 = 1  \n");
-				
+
 				//2015.06.04 상속통계표
 				if("Y".equals(paramInfo.getInheritYn())){
 					strBuff.append("                             and org_id='" + paramInfo.getOriginOrgId() + "' and tbl_id='" + paramInfo.getOriginTblId() + "'  \n");
@@ -1309,7 +1368,7 @@ public class StatDataInfoManager {
 			strBuff.append("       	, B.PRD_SE||SUBSTR(B.PRD_DE,  5) AS TIME_MQ	\n");
 		}else{
 			//strBuff.append("       	B.PRD_SE||B.PRD_DE AS TIME	\n");
-			
+
 			//2015.06.04 상속통계표
 			if("Y".equals(paramInfo.getInheritYn())){
 				strBuff.append("       	DECODE(B.PRD_SE, 'F', (SELECT NVL(PRD_DETAIL, 'IR') FROM " + dbUser + "TN_STBL_RECD_INFO WHERE ORG_ID = '" + paramInfo.getOriginOrgId()  + "' AND TBL_ID = '" + paramInfo.getOriginTblId()  + "' and prd_se='F' ), B.PRD_SE)||B.PRD_DE AS TIME	\n");
@@ -1345,7 +1404,7 @@ public class StatDataInfoManager {
 		}
 		strBuffMainSelect.append("        , " + dimAlias + "CHAR_ITM_ID	\n");
 		strBuffMainSelect.append("        , DECODE(B.DTVAL_CO, NULL, B.DTVAL_CN, B.DTVAL_CO) AS DTVAL_CO	\n");
-		
+
 		//2019.01.28 윗 줄에서 문자를 DTVAL_CO에 넣어버리면 분석식에서 더하고 빼고 할때 에러남 그래서 DTVAL_CO를 따로 가져와서 비교하기 위해 DTVAL_CO_BUFF 추가
 		strBuffMainSelect.append("        , B.DTVAL_CO AS DTVAL_CO_BUFF	\n");
 		strBuffMainSelect.append("        , B.SMBL_CN	\n");
@@ -1391,7 +1450,7 @@ public class StatDataInfoManager {
 		strBuffMainSelect.append("		        			SELECT	COUNT (1)	\n");
 		strBuffMainSelect.append("		                  	FROM	" + dbUser + "TN_CMMT_INFO	\n");
 		strBuffMainSelect.append("		                	WHERE   1 = 1	\n");
-		
+
 		//2015.06.08 상속통계표
 		if("Y".equals(paramInfo.getInheritYn())){
 			strBuffMainSelect.append("		                     		AND ORG_ID = '" + paramInfo.getOriginOrgId() + "'	\n");
@@ -1417,7 +1476,7 @@ public class StatDataInfoManager {
 		strBuffMainSelect.append("		        			SELECT	COUNT (1)	\n");
 		strBuffMainSelect.append("		                 	FROM    " + dbUser + "TN_CMMT_INFO	\n");
 		strBuffMainSelect.append("		                	WHERE   1 = 1	\n");
-		
+
 		//2015.06.08 상속통계표
 		if("Y".equals(paramInfo.getInheritYn())){
 			strBuffMainSelect.append("		                     		AND ORG_ID = '" + paramInfo.getOriginOrgId() + "'	\n");
@@ -1447,10 +1506,10 @@ public class StatDataInfoManager {
 			strBuffMainSelect.append("		, '' AS UNIT_NM_ENG	\n");
 		}
 		strBuffMainSelect.append("		, TO_CHAR(" + dimAlias + "ITM_RCGN_SN) AS ITM_RCGN_SN	\n");
-		
+
 		//2020-05-19 업무규칙 SDSS0210에 해당하여 수치가 [-]로 나오는데 더미일 경우에는 예외를 두어 빈칸으로 나오도록 하자 - 손상호 주무관
 		strBuffMainSelect.append("		, " + dimAlias + "DMM_AT	\n");
-		
+
 		/********************************************************************************************************
 		 * strBuffMainSelect 끝
 		 ********************************************************************************************************/
@@ -1530,7 +1589,7 @@ public class StatDataInfoManager {
 			for(int i = 0; i < classListForWhereClause.size(); i++){
 				strBuff.append("        AND A." + (String)classListForWhereClause.get(i) + " = C." + (String)classListForWhereClause.get(i) + " \n");
 			}
-			
+
 			//2015.06.16 상속통계표 공표 체크
 			if("Y".equals(paramInfo.getInheritYn()) && !"1".equals(paramInfo.getPubSeType()) ){
 				//상속통계표 공표 타입이 "미지정"이면 TN_DT 도 공표 미지정으로... (그냥 몽땅인거지)
@@ -1554,7 +1613,7 @@ public class StatDataInfoManager {
 			//더미 여부 체크
 			// 2015.7.3 주석 처리 해야 할 수 있음
 			// 2016.1.28 dt에는 수치가 있는데 dim에 더미코드가 Y여서 수치가 안나오는 문제로 주석 (수치가 있으면 더미여도 수치가 우선) 위에 주석 누가달았는지 모름 - 김경호
-			//strBuff.append("        AND NVL(A.DMM_AT, 'N') != 'Y'	\n " ); 
+			//strBuff.append("        AND NVL(A.DMM_AT, 'N') != 'Y'	\n " );
 
 			//strBuff.append("        AND (B.DTVAL_CO IS NOT NULL OR B.DTVAL_CN IS NOT NULL OR B.SMBL_CN IS NOT NULL) \n");
 		}
@@ -1605,8 +1664,8 @@ public class StatDataInfoManager {
 				strBuff.append("       	DECODE(A.TIME_SE, 'F', (SELECT NVL(PRD_DETAIL, 'IR') FROM " + dbUser + "TN_STBL_RECD_INFO WHERE ORG_ID = '" + paramInfo.getOriginOrgId()  + "' AND TBL_ID = '" + paramInfo.getOriginTblId()  + "' and prd_se='F'), A.TIME_SE)||A.TIME_DE AS TIME	\n");
 			}else{
 				strBuff.append("       	DECODE(A.TIME_SE, 'F', (SELECT NVL(PRD_DETAIL, 'IR') FROM " + dbUser + "TN_STBL_RECD_INFO WHERE ORG_ID = A.ORG_ID AND TBL_ID = A.TBL_ID and prd_se='F'), A.TIME_SE)||A.TIME_DE AS TIME	\n");
-			}			
-			
+			}
+
 		}
 
 		/************************************************
@@ -1624,7 +1683,7 @@ public class StatDataInfoManager {
 		}
 		strBuff.append("        , A.CHAR_ITM_ID	\n");
 		strBuff.append("        , DECODE(B.DTVAL_CO, NULL, B.DTVAL_CN, B.DTVAL_CO) AS DTVAL_CO	\n");
-		
+
 		//2019.01.28 윗 줄에서 문자를 DTVAL_CO에 넣어버리면 분석식에서 더하고 빼고 할때 에러남 그래서 DTVAL_CO를 따로 가져와서 비교하기 위해 DTVAL_CO_BUFF 추가
 		strBuff.append("        , B.DTVAL_CO AS DTVAL_CO_BUFF	\n");
 		strBuff.append("        , B.SMBL_CN	\n");
@@ -1695,9 +1754,9 @@ public class StatDataInfoManager {
 		}
 		strBuff.append("		, TO_CHAR(A.ITM_RCGN_SN) AS ITM_RCGN_SN,	\n");
 
-		//2020-05-19 업무규칙 SDSS0210에 해당하여 수치가 [-]로 나오는데 더미일 경우에는 예외를 두어 빈칸으로 나오도록 하자 - 손상호 주무관 
+		//2020-05-19 업무규칙 SDSS0210에 해당하여 수치가 [-]로 나오는데 더미일 경우에는 예외를 두어 빈칸으로 나오도록 하자 - 손상호 주무관
 		strBuff.append("		A.DMM_AT");
-		
+
 		strBuff.append(" FROM ( \n");
 
 		strBuff.append(" 	SELECT	/*+ ordered use_nl(C A) index(a UQTN_DIM) */	\n");
@@ -1712,9 +1771,9 @@ public class StatDataInfoManager {
 		strBuff.append(" 	, A.CMMT_AT	\n");
 		strBuff.append(" 	, A.UNIT_ID	\n");
 
-		//2020-05-19 업무규칙 SDSS0210에 해당하여 수치가 [-]로 나오는데 더미일 경우에는 예외를 두어 빈칸으로 나오도록 하자 - 손상호 주무관 
+		//2020-05-19 업무규칙 SDSS0210에 해당하여 수치가 [-]로 나오는데 더미일 경우에는 예외를 두어 빈칸으로 나오도록 하자 - 손상호 주무관
 		strBuff.append("	, A.DMM_AT");
-				
+
 		strBuff.append(" 	FROM	COND C, " + dbUser + "TN_DIM A,	\n");
 
 		//Dummy where
@@ -2074,7 +2133,7 @@ public class StatDataInfoManager {
 			}else{
 				strBuff.append("           DECODE(PRD_SE, 'F', (SELECT NVL(PRD_DETAIL, 'IR') FROM " + dbUser + "TN_STBL_RECD_INFO WHERE ORG_ID = '" + orgId  + "' AND TBL_ID = '" + tblId  + "' and prd_se='F' ), PRD_SE)||COMP_PRD_DE AS T_PRD    \n");
 			}
-			
+
 /*			for(int i = 0; i < classListForWhereClause.size(); i++){
 				String tmpStr = (String)classListForWhereClause.get(i).substring(4,  5);
 				strBuff.append("        ,  OV_L" + tmpStr + "_ID  \n");
@@ -2119,7 +2178,7 @@ public class StatDataInfoManager {
 			}else{
 				strBuff.append("	DECODE(PRD_SE, 'F', (SELECT NVL(PRD_DETAIL, 'IR') FROM " + dbUser + "TN_STBL_RECD_INFO WHERE ORG_ID = '" + orgId  + "' AND TBL_ID = '" + tblId  + "' and prd_se='F' ), PRD_SE)||COMP_PRD_DE AS T_PRD,    \n");
 			}
-			
+
 			for(int i = 0; i < classListForWhereClause.size()-1; i++){
 				String tmpStr = (String)classListForWhereClause.get(i).substring(4,  5);
 				strBuff.append("	OV_L" + tmpStr + "_ID,  \n");
@@ -2301,8 +2360,8 @@ public class StatDataInfoManager {
 						}else{
 							strBuff.append("       	DECODE(S2.PRD_SE, 'F', (SELECT NVL(PRD_DETAIL, 'IR') FROM " + dbUser + "TN_STBL_RECD_INFO WHERE ORG_ID = '" + orgId  + "' AND TBL_ID = '" + tblId  + "' and prd_se='F' ), S2.PRD_SE)||S2.PRD_DE AS T_PRD	\n");
 						}
-						
-						
+
+
 						if(classListForWhereClause.size()==1){
 							//strBuff.append(" 			, S1.ov_l1_id \n");
 						}else{
@@ -2564,7 +2623,7 @@ public class StatDataInfoManager {
 				addWherePubSe();
 			}else{
 				addWherePubSeIncludeRecdPrd();
-			}			
+			}
 
 			// 전월비, 전분기비, 전반기비, 전년비
 			// 전년동월비, 전년동분기비, 전년동반기비, 전년비
@@ -3209,7 +3268,7 @@ public class StatDataInfoManager {
 
 	//분석 쿼리에서 공통으로 사용할 TN_DIM, TN_DT 공표구분 체크
 	private void addWherePubSe(){
-		
+
 		//2015.06.16 상속통계표 공표 체크
 		if("Y".equals(paramInfo.getInheritYn()) && !"1".equals(paramInfo.getPubSeType()) ){
 			//상속통계표 공표 타입이 "미지정"이면 TN_DT 도 공표 미지정으로... (그냥 몽땅인거지)
@@ -3233,7 +3292,7 @@ public class StatDataInfoManager {
 
 	//분석 쿼리에서 공통으로 사용할 TN_DIM, TN_DT, TN_RECD_PRD 공표구분 체크
 	private void addWherePubSeIncludeRecdPrd(){
-		
+
 		//2015.06.16 상속통계표 공표 체크
 		if("Y".equals(paramInfo.getInheritYn()) && !"1".equals(paramInfo.getPubSeType()) ){
 			//상속통계표 공표 타입이 "미지정"이면 TN_DT 도 공표 미지정으로... (그냥 몽땅인거지)

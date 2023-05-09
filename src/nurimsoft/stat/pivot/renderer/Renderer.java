@@ -434,7 +434,7 @@ public class Renderer {
 
 		Cell cell = null;
 		Dimension rowDim = null;
-		
+
 		for(int i = 0; i < rowDimCount; i++){
 			rowDim = rowAxis.getDimension(i);
 
@@ -450,7 +450,7 @@ public class Renderer {
 						colMap.put( mapIdx++, cell );
 					}
 				}
-				
+
 			}else{
 				cell = new Cell(CellType.RH, rowHeadCell, rowDim.getCode(), rowDim.getName(), rowDim.getVarOrdSn());
 				colMap.put( mapIdx++, cell );
@@ -494,7 +494,7 @@ public class Renderer {
 		Map<Integer, Cell> colMap = null;
 		Dimension dim = null;
 		Cell cell = null;
-		
+
 		for(int i = 0; i < rowCount; i++){
 
 			colMap = new TreeMap<Integer, Cell>();
@@ -505,7 +505,7 @@ public class Renderer {
 			String chartUnit = "";
 
 			cell = null;
-			
+
 			//Row-Dimension 출력
 			int mapIdx = 0;
 			for(int j = 0; j < rowDimCount; j++){
@@ -625,7 +625,7 @@ public class Renderer {
 		Map<Integer, Cell> colMap = null;
 		Item item = null;
 		Item parentItem = null;
-		
+
 		for(int h = 0; h < columnDimCount; h++){
 
 			colDim = columnAxis.getDimension(h);
@@ -830,7 +830,7 @@ public class Renderer {
 		int itemIndex = 0;
 
 		Cell cell = null;
-		
+
 		for(int i = 0; i < columnDimCount; i++){
 
 			Dimension colDim = columnAxis.getDimension(i);
@@ -854,7 +854,8 @@ public class Renderer {
 						for(int m = 0; m < rowMaxLevel; m++){
 
 							if(rowDim instanceof ClassDimension){
-								colMap.put( mapIdx++, makeHeadCell(CellType.RH, rowHeadCell, rowDim.getCode(), rowDim.getName() + "(" + (m + 1)+  ")", (ClassDimension)rowDim,m+1) );
+								colMap.put( mapIdx++,
+										makeHeadCell(CellType.RH, rowHeadCell, rowDim.getCode(), rowDim.getName() + "(" + (m + 1)+  ")", (ClassDimension)rowDim,m+1) );
 							}else{
 								cell = new Cell(CellType.RH, rowHeadCell, rowDim.getCode(), rowDim.getName());
 								colMap.put( mapIdx++, cell );
@@ -950,7 +951,7 @@ public class Renderer {
 		String[] mapStrArr = null;
 
 		Cell cell = null;
-		
+
 		//가중치거나 분석시 원자료 함께보기인경우 처리
 		if( (paramInfo.getEnableWeight() != null && paramInfo.getEnableWeight().equals("Y")) || (doAnal && originData) ){
 			mapStrArr = new String[rowDimCount + columnDimCount - 1];
@@ -1290,7 +1291,7 @@ public class Renderer {
 
 			Cell parentCell = null;
 			Cell tmpUpperCell = null;
-			
+
 			for(int i = 0; i < valRowBeginIdx; i++){
 				colMap = (Map<Integer, Cell>)dataHeaderList.get(i);
 
@@ -1392,11 +1393,11 @@ public class Renderer {
 					j++;
 				}
 
-				
+
 				System.out.println("tmpVal**************"+tmpVal);
 				System.out.println("colVal**************"+colVal);
-				
-				
+
+
 				//마지막 값 처리
 				if(colVal.equals(tmpVal)){
 					colCell.setColspan(++span);
@@ -1418,10 +1419,10 @@ public class Renderer {
 
 		//Row 삭제
 		if(rowDimCount > 0){
-			
+
 			Cell cell = null;
 			String val = null;
-			
+
 			for(int i = 0; i < dataBodyList.size(); i++){
 
 				boolean rowDelete = true;
@@ -1429,7 +1430,7 @@ public class Renderer {
 
 				cell = null;
 				val = null;
-				
+
 				for(int j = valColBeginIdx; j < colMap.size(); j++){
 					cell = (Cell)colMap.get(new Integer(j));
 
@@ -1457,12 +1458,12 @@ public class Renderer {
 
 			Cell cell = null;
 			String val = null;
-			
+
 			for(int i = valColBeginIdx; i < columnCount + valColBeginIdx; i++){
 				boolean colDelete = true;
 				cell = null;
 				val = null;
-				
+
 				for(int j = 0; j < dataBodyList.size(); j++){
 					colMap = (Map<Integer, Cell>)dataBodyList.get(j);
 					cell = colMap.get(i);
@@ -1574,6 +1575,9 @@ public class Renderer {
 			cell.setItmRcgnSn(measure.getItmRcgnSn());
 		}
 
+		if (measure != null && measure.getExportMap() != null) {
+			cell.setExportMap(measure.getExportMap());
+		}
 		return cell;
 	}
 
@@ -1674,9 +1678,9 @@ public class Renderer {
 				period = null;
 			}
 		}
-		
+
 		Boolean smblCn_Chk = false;
-		
+
 		if(value == null || value.trim().length() == 0){
 			if(smblCn == null || smblCn.trim().length() == 0){
 				data = ""; // 2015.02.23 더미여부는 공란으로
@@ -1704,13 +1708,13 @@ public class Renderer {
 				}else{
 					//2019.03.12 수치와 통계부호, 셀단위등을 붙여서 저장하면 통계부호를 따로 구분할 수 없기 때문에 [{ }] 로 감싸서 추후에 가공할 수 있도록 수정
 					//data = (isNumber) ? StatPivotUtil.getNumberFormatString(value, period, 0) + smblCn : value_buff + smblCn;
-					
+
 					smblCn_Chk =true;
 					data = (isNumber) ? StatPivotUtil.getNumberFormatString(value, period, 0) + "[{"+smblCn+ "}]" : value_buff + "[{"+smblCn+ "}]";
 				}
 			}
 		}
-		
+
 		/*분석이고 숫자값일 경우 - 시작
 		 * 0값인 수치에 마이너스가 붙어있으면 빼고 보여주도록 수정 - 박진현, 여인철 주무관 19.09.24
 		 * */
@@ -1746,7 +1750,7 @@ public class Renderer {
 			}
 		}
 		/*분석이고 숫자값일 경우 - 끝*/
-		
+
 		//단위 표현인 경우
 		if(paramInfo.getEnableCellUnit() != null && paramInfo.getEnableCellUnit().equals("Y")){
 			if(dataOpt.equals("ko")){

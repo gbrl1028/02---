@@ -13,7 +13,7 @@ target/
 
 out/
 
-# src/main/webapp/WEB-INF/lib/
 WebContent/WEB-INF/classes/
+# src/main/webapp/WEB-INF/lib/
 #src/main/webapp/WEB-INF/lib
 #!src/main/webapp/WEB-INF/lib/ojdbc8.jar
