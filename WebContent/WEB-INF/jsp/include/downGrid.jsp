@@ -211,10 +211,10 @@ function fn_downGridSubmit(){
 							<input id="txtradio" type="radio" name="downGridFileType" value="txt" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="txtradio">TXT</label>
 						</li>
 						<li>
-							<input id="jsonradio" type="radio" name="downGridFileType" value="json" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="txtradio">JSON</label>
+							<input id="jsonradio" type="radio" name="downGridFileType" value="json" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="jsonradio">JSON</label>
 						</li>
 						<li>
-							<input id="xmlradio" type="radio" name="downGridFileType" value="xml" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="txtradio">XML</label>
+							<input id="xmlradio" type="radio" name="downGridFileType" value="xml" onclick="fn_clickFileType()"/> <img src="images/ico_txt2.png" alt="" /><label for="xmlradio">XML</label>
 						</li>
 						<%--
 						<li>
