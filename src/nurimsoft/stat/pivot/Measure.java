@@ -1,5 +1,8 @@
 package nurimsoft.stat.pivot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Measure {
 
 	//수치값
@@ -12,20 +15,22 @@ public class Measure {
 	private String smblCn;
 	//분석값
 	private String analCo;
-	
+
 	private String unitId;
 	private String unitNmKor;
 	private String unitNmEng;
-	
+
 	private boolean isExistCmmtKor;//분류 주석여부(한글)
 	private boolean isExistCmmtEng;//분류 주석여부(영문)
-	
+
 	//차원번호
 	private String  itmRcgnSn;
 	//주석정보
 	private int cmmtNo;
 	private String cmmtSe;
-	
+
+	private Map<String, String> exportMap = new HashMap<>();
+
 	public int getCmmtNo() {
 		return cmmtNo;
 	}
@@ -104,5 +109,12 @@ public class Measure {
 	public void setAnalCo(String analCo) {
 		this.analCo = analCo;
 	}
-	
+
+	public Map<String, String> getExportMap() {
+		return exportMap;
+	}
+
+	public void setExportMap(Map<String, String> exportMap) {
+		this.exportMap = exportMap;
+	}
 }

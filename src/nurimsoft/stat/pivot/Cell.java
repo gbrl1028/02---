@@ -1,6 +1,7 @@
 package nurimsoft.stat.pivot;
 
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cell{
 
@@ -26,6 +27,7 @@ public class Cell{
 	private String chartUnit;
 	private String rowHeadId;	//차트 범례 생성을 위함(AYS)
 
+	private Map<String, String> exportMap = new HashMap<>();
 
 	public String getRowHeadId() {
 		return rowHeadId;
@@ -182,4 +184,11 @@ public class Cell{
 		this.isDummy = isDummy;
 	}
 
+	public Map<String, String> getExportMap() {
+		return exportMap;
+	}
+
+	public void setExportMap(Map<String, String> exportMap) {
+		this.exportMap = exportMap;
+	}
 }
