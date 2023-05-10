@@ -17,6 +17,22 @@
 - WAS & WEB: Tomcat 7.0.109
 
 ---
+## 셋업및 배포 시 유의 사항
+```
+인텔리제이 기준
+Source folder 설정 위치
+src
+
+Resource folder 설정 위치
+WebContent 
+
+배포 시
+빌드 후 
+/Users/fapchino/IdeaProjects/statHtml/out/production/statHtml 경로에 배포
+톰캣으로 한번 실행하여
+classes 디렉토리 생성 후 배포
+```
+---
 ## 유저 가이드
 
 ### 개발 URL
