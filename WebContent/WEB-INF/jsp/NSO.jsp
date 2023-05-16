@@ -24,9 +24,9 @@
 
 <!-- <script type="text/javascript" src="fusioncharts_3.12/fusioncharts.js"></script> -->
 <!-- <script type="text/javascript" src="fusioncharts/fusioncharts.js"></script> -->
-<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script> 
+<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
 <!-- <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/3.15.3/fusioncharts.js"></script> -->
-								    
+
 <script type="text/javascript" src="ext/js/jqgrid/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="ext/js/jqgrid/jquery.jqGrid.src.js"></script>
 <script type="text/javascript" src="ext/js/jqgrid/grid.locale-en.js"></script>
@@ -130,11 +130,11 @@
 		var g_rangeTimeArr = new Array();
 		var g_rangeTimeCnt =0;
 		var g_otherChartWidth = 1025; <%-- 2017.11.29 KOSIS 리뉴얼에 따른 사이즈 변경, 최신 크롬에서 부모박스(1040px)와 width를 같게 하면 부모박스를 벗어나는 문제가 있어서 약간 작게 --%>
-		
+
 		if("${ParamInfo.language}" == "en"){
 			g_otherChartWidth = 950;
 		}
-		
+
 		var olapStl = "${fn:substring(statInfo.olapStl,0,1)}";			<%--olapStl 맨앞 1자리 C일경우 차트먼저 보여줌 - 2014.04.17 김경호 --%>
 		var limitYn = "${fn:substring(statInfo.olapStl,13,14)}";		<%--olapStl 맨뒤자리 1일경우 각 만셀 제한 해제 - 2015.03.03 오종민 --%>
 
@@ -144,13 +144,13 @@
 		var g_classLvlArr = new Array();								<%--분류별 레벨 카운트 갯수--%>
 		var g_maxChkFlag = "Y";
 		var form;
-	
+
 		var chartInstance = new FusionCharts();
-		
+
 		FusionCharts.options.license({
-		   key: 'EE-13E5snlA22B9A8D4D2B2F2A4I4D2A1B4d1sB-11A1C4I-8zpnD17B3F6rfwD3B1D8A3B2A1A1F4F1F1A10B1A5B3D1F3fyF-7A4B8E2B11E2E3G1nmdC8B2E6bfuI4B3C8fD-13zD3D2E3E4I1C11A1B6C2A1E2A7uwB3B7FB1ycrA33A18B14crC6UA4H4nhyA7A3A3A5E5A4I4B1B9A9A3A5E4G2a==',		   
+		   key: 'EE-13E5snlA22B9A8D4D2B2F2A4I4D2A1B4d1sB-11A1C4I-8zpnD17B3F6rfwD3B1D8A3B2A1A1F4F1F1A10B1A5B3D1F3fyF-7A4B8E2B11E2E3G1nmdC8B2E6bfuI4B3C8fD-13zD3D2E3E4I1C11A1B6C2A1E2A7uwB3B7FB1ycrA33A18B14crC6UA4H4nhyA7A3A3A5E5A4I4B1B9A9A3A5E4G2a==',
 		});
-				
+
 		var gColNm = "";									<%--분류명--%>
 		var g_gubun = "";									<%-- 통계표차트 구분--%>
 
@@ -242,9 +242,9 @@ $(document).ready(function(){
 				if( yPos < 0 ){ $("#pop_nmlist").offset({"top":"0"});	}
 			}
 		});
-		<%--주석보기 --%>		
+		<%--주석보기 --%>
 		$("#pop_cmmtInfoAll").draggable({containment: "#wrap",scroll:false,cursor:"move",iframeFix:true,
-			handle : '.pop_top', 
+			handle : '.pop_top',
 			stop: function(){
 				var offset = $(this).offset();
 				var xPos = offset.left;
@@ -415,13 +415,13 @@ $(document).ready(function(){
 			$("#popup_outer").css("width",bodyWidth-10);
 
 			<%--
-			   2016.02.16 통계표 상단 틀고정 시작 
+			   2016.02.16 통계표 상단 틀고정 시작
 			   htmlGrid 위에 ThtmlGrid를 보여줘서 틀고정이 된것처럼 보이게 만듬 - 김경호
 			     열리는 창의 사이즈가 바뀔때마다 틀고정되는 div도 크기조정
 			--%>
 			$("#ThtmlGrid").css("width", $("#popMode").width() - 17); <%-- 세로스크롤바(17px) 만큼 줄인다...아래 있는 htmlGrid의 세로 스크롤바를 보이게 하기위해... --%>
 			<%-- 통계표 상단 틀고정 끝 --%>
-			
+
 			<%--2017.11.24 크로미움 기반 웹브라우져에서 스크롤이 있다 사라지면 수치영역 사라지는 버그로 인해 사이즈를 px단위로 픽스--%>
 			if(g_chartActive !="Y"){
 				$("#htmlGrid").css("width", $("#popMode").width()-2);
@@ -653,11 +653,11 @@ $(document).ready(function(){
 							 tmpObj.dataCnt  = item.dataCnt;
 							 g_classEachCnt.push(tmpObj);										<%--fn_countView 에서 분류 갯수를 나누어서 view../g_classEachCnt에 다시 push 그 이유는 tabClass.visible == false인 경우도 있기 때문에..--%>
  							$("#tabClassText_"+classSn+" span").html("<font title='"+str+"'>"+str+"</font>");
- 							
+
  							if(tabTotalCnt == tabSetCnt){ <%--2014 04.08 분류별 default갯수와 전체 갯수가 같으면--%>
 	 							var h3_arrowChk = "checked";
 	 							<%--분류의 전체레벨 선택 상태--%>
-	 							
+
 	 							<%--
 	 							classDepth정보로 해당분류의 레벨 수 만큼 1레벨 전체선택,2레벨 전체선택..classLvlChk1_1,classLvlChk1_2 체크상태로 만들어주기
 	 							처음 레이아웃 그릴때는 체크상태가 아니므로 true세팅
@@ -1081,9 +1081,9 @@ $(document).ready(function(){
 
 
 		fn_chartColorSet();
-		
+
 		<%--
-			2016.02.16 통계표 상단 틀고정 시작 
+			2016.02.16 통계표 상단 틀고정 시작
 		--%>
 		$("#ThtmlGrid").css("overflow", "hidden");
 		$("#ThtmlGrid").css("border-bottom", "none");
@@ -1095,7 +1095,7 @@ $(document).ready(function(){
 			$("#ThtmlGrid").css("overflow-x", "hidden");
 		});
 		<%-- 통계표 상단 틀고정 끝 --%>
-    	
+
 });
 		function fn_browser(){
 			<%--jquery 1.9.0버전 부터 broswer 확인 함수 없어짐...--%>
@@ -1229,20 +1229,20 @@ $(document).ready(function(){
 						if( $("#searchImg2").css("display") == "none" ){
 							alert("<pivot:msg code='confirm.Download.msg'/>");
 						}
-						
+
 						$("#searchImg1").css("display", "none");
 						$("#searchImg2").css("display", "block");
 
-						$("#ico_swap").addClass("off");	
-						$("#ico_addfunc").addClass("off");	
+						$("#ico_swap").addClass("off");
+						$("#ico_addfunc").addClass("off");
 
 						<c:if test="${statInfo.downloadable}">
-							$("#ico_download").addClass("off");	
-							$("#ico_myscrap").addClass("off");	
+							$("#ico_download").addClass("off");
+							$("#ico_myscrap").addClass("off");
 						</c:if>
 
 						<c:if test="${statInfo.analyzable}">
-							$("#ico_analysis").addClass("off");	
+							$("#ico_analysis").addClass("off");
 						</c:if>
 
 						$("#changeSpanRed").attr("class","f_gray");
@@ -1638,7 +1638,7 @@ $(document).ready(function(){
 				 + "&itm_id=" + $("#itm_id").val()
  				 + "&useAddFuncLog=1_A"
  				 + "&maxCellOver=" + $("#maxCellOver").val();
- 				
+
 				 if(g_mode == 'tab'){
 					paramUrl += "&mode=tab";
 				 }
@@ -1651,7 +1651,7 @@ $(document).ready(function(){
 				 if("${ParamInfo.language}" == "en"){
 					 paramUrl +="&language=en";
 				 }
-				 
+
 				 if("${ParamInfo.viewType}" == "H" || "${ParamInfo.viewType}" == "B"){
 
 					 paramUrl +="&st=" + $("#st").val();
@@ -1722,7 +1722,7 @@ $(document).ready(function(){
 								g_chartMsg		= g_chart.msg;				<%--챠트 조합 생성 여부--%>
 								g_remarkH = g_chart.remarkH;
 								g_remarkB = g_chart.remarkB;
-								
+
 								$("#block"+g_hideId).css("display","none");
 								$("#"+g_TabGubun).attr("class","menu_off");
 								$("#textShow").hide();
@@ -1744,28 +1744,28 @@ $(document).ready(function(){
 								$("#htmlGrid").scrollTop(0);
 
 								$("#htmlGrid").html(g_htmlGrid);
-								
+
 								g_cmmt = g_cmmt.replace(/null/g, "");
-								
+
 								if(g_cmmt != ""){ //2020.10.13 추가
 									$("#cmmtAll").html(g_cmmt);
 									$("#btn002").css("display","");
 								}
-								
+
 								<%--
-								   2016.02.16 통계표 상단 틀고정 시작 
+								   2016.02.16 통계표 상단 틀고정 시작
 								--%>
 								$("#ThtmlGrid").html(g_ThtmlGrid);
-								
-								$("#mainTableT tr:last th").css("border-bottom", "none"); 
-								
+
+								$("#mainTableT tr:last th").css("border-bottom", "none");
+
  								if(g_chartActive == "Y"){	<%-- 차트조회일 경우는 통계표 상단 틀고정부분을 보여주지 않기 --%>
  									$("#ThtmlGrid").css("display","none");
 								}else{
 									adjustThtmlGrid(); <%-- ThtmlGrid 위치조정 --%>
 								}
  								<%-- 통계표 상단 틀고정 끝 --%>
-								
+
 								<%--통계표 조회후 class속성 변경--%>
 								$("#changeAttribute").attr("class","cont_line");
 								$("#popMode").css("display","block");
@@ -1810,14 +1810,14 @@ $(document).ready(function(){
 										$("#analysisText").attr("title", analText);
 									}
 									if(g_chartActive != "Y"){ <%-- 2020.09.14 분석명이 단위 아래로 내려가면서 추가해줌, 차트조회가 아닐때만 적용 --%>
-										adjustThtmlGrid();	
+										adjustThtmlGrid();
 										$("#htmlGrid").css("height","585px");
 									}
 								}else{
 									$("#analysisText").html("");
 									$("#analText").val("");
 									if(g_chartActive != "Y"){ <%-- 2020.09.14 분석명이 단위 아래로 내려가면서 추가해줌, 차트조회가 아닐때만 적용 --%>
-										adjustThtmlGrid();	
+										adjustThtmlGrid();
 										$("#htmlGrid").css("height","606px");
 									}
 								}
@@ -1867,7 +1867,7 @@ $(document).ready(function(){
 								g_parentIconArr = response.parentResult;
 
 								if(g_parentIconArr!=null && g_parentIconArr.length >0){
-									
+
 									var isFirst = $("#isFirst").val();
 									for(var i=0;i<g_parentIconArr.length; i++){
 										var tmpId = g_parentIconArr[i].objVarId;
@@ -1883,7 +1883,7 @@ $(document).ready(function(){
 													<%--맨 처음 조회 일 경우 1레벨만 변경 --%>
 													if(isFirst != "N"){
 														$('#classList'+classSn+"_1 li").each(function(index){
-															
+
 															var parentId = $(this).find('input').val().split("=")[0];	<%-- 2018.06.14 선택안됨으로 인해 수정 - 김경호 --%>
 															if($.inArray(parentId,parentArr) > -1){
 																$(this).find('img').attr("src","images/ico_fd_chk_blue1.png");
@@ -1926,7 +1926,7 @@ $(document).ready(function(){
 											<%--맨 처음 조회 일 경우 --%>
 											if(isFirst != "N"){
 												$('#classList'+classSn+"_1 li").each(function(index){
-														
+
 													var parentId = $(this).find('input').val().split("=")[0];	<%-- 2018.06.14 선택안됨으로 인해 수정 - 김경호 --%>
 													if($.inArray(parentId,parentArr) > -1){
 														$(this).find('img').attr("src","images/ico_fd_chk_blue1.png");
@@ -1937,11 +1937,11 @@ $(document).ready(function(){
 												<%-- 마지막 depth레벨 보다 1작은 레벨까지 --%>
 												var parentDepth = classDepth-1;
 												for(var ii=1; ii<=parentDepth; ii++){
-													
+
 													$('#classList'+classSn+"_"+ii+" li").each(function(index){
 														var leaf = $(this).find('input:last').val();
 														if(leaf == 0){
-															
+
 															var parentId = $(this).find('input').val().split("=")[0];	<%-- 2018.06.14 선택안됨으로 인해 수정 - 김경호 --%>
 															if($.inArray(parentId,parentArr) > -1){
 																$(this).find('img').attr("src","images/ico_fd_chk_blue1.png");
@@ -1967,7 +1967,7 @@ $(document).ready(function(){
 								<%--메세지 처리 해줄려면--%>
 							}
 						}
-						//2020.08.20 선택 로우 색상 변경 
+						//2020.08.20 선택 로우 색상 변경
 						$("#mainTable").children("tbody").children("tr").click(rowClick);
 					},
 					error : function(error){
@@ -1990,18 +1990,18 @@ $(document).ready(function(){
  						if(inFlag == 0){ <%--체크가 되었고 inFlag가 0일경우 조회하려고하는 시점이 있고 해당 주기에 대해서 처음이다...그럼 주기를 셋팅하자...2017-08-10 김경호 --%>
  							strPrd+=g_result[i]+","; 			<%--맨 처음 년도세팅오류--%>
  						}
- 						
+
 						inFlag++;
 						strPrd+=$(this).val()+",";
 					}
 				});
-				
+
 				<%-- 선택된 시점이 한개도 없는데 해당 주기의 체크박스는 체크가 되어있다...그럼 해당 주기의 체크박스를 체크해제해주자... 2017-08-10 김경호 --%>
 				if(inFlag == 0 && $("input:checkbox[id='check"+g_result[i]+"']").is(":checked")){
 					$("input:checkbox[id='check"+g_result[i]+"']").prop('checked', false);
 					fn_Headenable(g_result[i]);
 				}
-				
+
 				if(inFlag >0){
 					strPrd+="@";
 				}
@@ -2080,14 +2080,14 @@ $(document).ready(function(){
 				$("#"+tabGubun).attr("class","menu_on");
 				$("#block"+g_hideId).css("display","none");
 				$("#popMode").css("display","none");
-				
+
 				<%--2020.09.14 텍스트 버튼으로 변경되면서 생기는 문제 때문에 ;;--%>
 				if($("#analysisText").height() > 0){
 					$("#popMode").css("height","585px");
 				}else{
 					$("#popMode").css("height","604px");
-				}				
-				
+				}
+
 				$("#block"+Cnt).css("display","block");
 				<%--체인지 class속성--%>
 				$("#changeAttribute").attr("class","cont_lay");
@@ -2110,8 +2110,8 @@ $(document).ready(function(){
 						$("#popMode").css("height","585px");
 					}else{
 						$("#popMode").css("height","604px");
-					}	
-					
+					}
+
 					$("#popMode").css("display","block");
 					$("#changeAttribute").attr("class","cont_line");
 					$("#Divchart").css("height","0px");
@@ -2516,7 +2516,7 @@ $(document).ready(function(){
 			}
 
 			fn_analysisChk(g_analyzable);
-			
+
 			if(timeEnableChk == true){
 				fn_searchPeriod(type);	<%--2017-08-16 주기선택시 시점 자동 조회--%>
 			}
@@ -2531,7 +2531,7 @@ $(document).ready(function(){
 			}else{
 				if(g_analyzable == "true"){
 					if(g_multiplication > g_maxCell){									<%--단일 시점선택 분석이 가능해도 조합 셀수 체크해야함--%>
-						$("#ico_analysis").addClass("off");	
+						$("#ico_analysis").addClass("off");
 					}else{
 						$("#ico_analysis").removeClass("off");
 					}
@@ -2664,7 +2664,7 @@ $(document).ready(function(){
 				}else if(divName =="pop_detailfunc"){
 					$("#ifr_pop_selectAll2, #ifrSearchDetail").css("visibility", "hidden");
 				}else if(divName =="pop_assay"){
-					<%--2020.09.14 이미지 버튼에서 텍스트 버튼으로 변경되면서 클래스 유무로 팝업 컨트롤 --%>					
+					<%--2020.09.14 이미지 버튼에서 텍스트 버튼으로 변경되면서 클래스 유무로 팝업 컨트롤 --%>
 					if($("#ico_analysis").hasClass("off") == true){
 						return;
 					}
@@ -2699,7 +2699,7 @@ $(document).ready(function(){
 						}
 						return;
 					}
-				}else if(divName =="pop_addfunc"){		<%--2020.09.14 이미지 버튼에서 텍스트 버튼으로 변경되면서 클래스 유무로 팝업 컨트롤 --%>	
+				}else if(divName =="pop_addfunc"){		<%--2020.09.14 이미지 버튼에서 텍스트 버튼으로 변경되면서 클래스 유무로 팝업 컨트롤 --%>
 					if($("#ico_addfunc").hasClass("off") == true){
 						return;
 					}
@@ -2759,7 +2759,7 @@ $(document).ready(function(){
 					form.target="ifrStatInfo";
 					form.submit();
 				}
-				
+
 				if(modal == 'modal'){
 					$("#modal").css("visibility", "visible");
 				}
@@ -2767,13 +2767,13 @@ $(document).ready(function(){
 				$("#" + divName).css("display", "block");
 
 				if(divName == "pop_cmmtInfoAll"){
-					
+
 					<%--2019.03.05 주석창의 제목이 길 경우 두줄로 보여지는 현상 방지 --%>
 					var buff = g_tableNm;
 					if(g_tableNm.length > 50){
-						buff = g_tableNm.substring(0, 50) + "...";		
+						buff = g_tableNm.substring(0, 50) + "...";
 					}
-				
+
 					$("#pop_cmmtInfoAll .bu_circle3").text(buff);
 				}
 
@@ -2858,7 +2858,7 @@ $(document).ready(function(){
 
 						var buff = response.result;
 						buff = buff.replace(/null/g, "");
-						
+
 						$("#cmmt").html(buff);
 						var cmmtDivHeight = $("#cmmt").css('height');
 						cmmtDivHeight = Number(cmmtDivHeight.replace('px', ''));
@@ -2906,7 +2906,7 @@ $(document).ready(function(){
 			s_status = "location=yes,toolbar=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=1024,height=768";
 			window.open( url,"inquire",s_status);
 		}
-		
+
 		<c:if test="${statInfo.massYn == 'Y'}">
 			<%--2013.12.27 대용량 파일 서비스(국문 서비스용)--%>
 			function openMass(val) {
@@ -2916,7 +2916,7 @@ $(document).ready(function(){
 				if(val == 'E'){
 					url = "http://${pageContext.request.serverName}/statisticsList/mass/mass_list_e.jsp?org_id=${ParamInfo.orgId}&tbl_id=${ParamInfo.tblId}&vw_cd=${ParamInfo.vwCd}&list_id=${ParamInfo.listId}&process=statHtml";
 				}
-				
+
 			    var s_status ;
 				s_status = "location=no,toolbar=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=646,height=570";
 
@@ -3059,7 +3059,7 @@ $(document).ready(function(){
 				<%--2015.11.20 남규옥 추가 끝 --%>
 				return;
 			}
-			
+
 			var dataOpt2 = $("#dataOpt2 option:selected").val();
 
 			if( dataOpt2 == "en"){
@@ -3103,13 +3103,13 @@ $(document).ready(function(){
 			$("#jqGrid").css("height","260px");
 			$("#jqGrid").css("visibility","visible");
 			$("#Legend").css("top","1px");
-			
+
 			if($("#analysisText").height() > 0){
 				$("#Legend").css("height","230px");
 			}else{
 				$("#Legend").css("height","250px");
 			}
-			
+
 			$("#Legend").css("visibility","visible");
 
 			<%--2015.08.03 차트 조회시 아이콘 비활성화--%>
@@ -3142,7 +3142,7 @@ $(document).ready(function(){
 			fn_chart2014(chartViewCnt);
 
 			g_ChartGubun = strGubun;			//챠트타입
-			
+
 			<%--chart 옵션--%>
 			var sPalette,sRotateLabels,sAnimation,sNumdivlines,sBaseFont;
 			var sBaseFontSize,sBorderAlpha,sFontSize,labelDisplay, yAxisValueDecimals;
@@ -3155,13 +3155,13 @@ $(document).ready(function(){
 		    sRotateLabels = '0';
 		    sAnimation = '1'; <%--그래프 애니메이션 켜기 : 1, 끄기 : 0 --%>
 		    sNumdivlines = '4';
-			
+
 			if( g_dataOpt.indexOf("en") >= 0){//2014.10.01 영문차트 폰트변경 - 김경호
 				sBaseFont = 'Verdana';
 			}else{
 				sBaseFont = '굴림체';
 			}
-			
+
 			sBaseFontSize = '12';
 	    	sBorderAlpha = '30';
 			sFontSize = '12';
@@ -3179,32 +3179,32 @@ $(document).ready(function(){
 			if( g_ChartGubun == "MsColumn2D" || g_ChartGubun == "msline" || g_ChartGubun == "ScrollLine2D" || g_ChartGubun == "MSBar2D" ||
 				g_ChartGubun == "StackedBar2D" || g_ChartGubun == "MSArea" || g_ChartGubun == "StackedArea2D"){
 				sDrawcrossline = '1';
-			}			
-			
+			}
+
 	    	<%-- 2016.08.09 차트제목에 홀따옴표가 있으면 차트에러발생 - 김경호 --%>
-	    	g_tableNm = g_tableNm.replace(new RegExp("'",'gi'),""); 
-	    	
+	    	g_tableNm = g_tableNm.replace(new RegExp("'",'gi'),"");
+
 		    if(strGubun == "Pie3D"){
 		    	var pieTitle = g_tableNm+"("+g_chartLableArr[0]+")";			<%--기존챠트도 표두 첫번째 이름만 출력--%>
-		    	
+
 		    	var dataArry = new Array();
 		    	var dataMap = {};
-		    	
+
 				$.each(g_chartDataArr,function(index,item){
 					var dataValueArr = item.rowData;
 					var unitArr = item.rowUnit;
-					
+
 					if(index < chartViewCnt){
 						dataMap = {};
-						
+
 						dataMap.value = dataValueArr[0];
 						dataMap.tooltext = numberFormat(dataValueArr[0]) + unitArr[0]+""; <%-- tooltip을 이용한 단위 표현 --%>
 						dataMap.color = g_chartColor[index];
 						dataMap.link = "javascript:selChartGird(\"" + item + "\","+index+","+chartViewCnt+")";
 						dataArry.push(dataMap);
 					}
-				});		    	
-		    	
+				});
+
 		    	chartInstance = new FusionCharts({
 					type: g_ChartGubun,
 					width: g_otherChartWidth,
@@ -3213,11 +3213,11 @@ $(document).ready(function(){
 					renderAt: 'Chartcontent',
 					dataSource:{
 						"chart" :{
-							"palette": sPalette, "rotateLabels": sRotateLabels, "animation": sAnimation, "numdivlines": sNumdivlines, "baseFont": sBaseFont, 
+							"palette": sPalette, "rotateLabels": sRotateLabels, "animation": sAnimation, "numdivlines": sNumdivlines, "baseFont": sBaseFont,
 							"baseFontSize": sBaseFontSize, "borderAlpha": sBorderAlpha, "captionFontSize": lFontSize,"labelFontSize":sFontSize,
 							"caption": g_tableNm, "exportFileName": g_tblId, "bgColor" : sBgcolor, "showLegend": "1",
 							"canvasPadding": '20', "adjustDiv": '0', "numDivLines": '3',
-							"decimals": '1', "numberScaleValue": '1', "showhovereffect": "1", "exportShowMenuItem" : "0", 
+							"decimals": '1', "numberScaleValue": '1', "showhovereffect": "1", "exportShowMenuItem" : "0",
 						    "exportEnabled": '1', "exportAtClientSide": '1', "enableSmartLabels":"1","exportFormats":"PNG|JPG|PDF",
 							"theme": "fusion"
 						},
@@ -3226,8 +3226,8 @@ $(document).ready(function(){
 		    	});
 
 		    	chartInstance.render();
-		    	
-		    	
+
+
 		    }else{
 				<%--최소,최대 세팅시작--%>
 		    	var yAxisArr = new Array();
@@ -3264,7 +3264,7 @@ $(document).ready(function(){
 		    	var cateMainMap = {};
 		    	var cateArry = new Array();
 		    	var cateMap = {};
-		    	
+
 				$.each(g_chartLableArr,function(index,item){
 					cateMap = {};
 					cateMap.label = item;
@@ -3272,20 +3272,20 @@ $(document).ready(function(){
 				});
 				cateMainMap.category = cateArry;
 				<%-- 차트 카테고리 등록끝 --%>
-				
+
 				var dataSetArry = new Array();
 		    	var dataSetMap = {};
 		    	var dataArry = new Array();
 		    	var dataMap = {};
-		    	
+
 		    	var dataMapTest = {};
 
 				$.each(g_chartDataArr,function(index,item){
 					if(index < chartViewCnt){
-						
+
 						var dataValueArr = item.rowData;
 						var unitArr = item.rowUnit;
-						
+
 						dataArry = new Array();
 						$.each(dataValueArr,function(index2,item2){
 							dataMap = {};
@@ -3298,17 +3298,17 @@ $(document).ready(function(){
 
 						dataSetMap = {};
 						dataSetMap.data = dataArry;
-						
+
 						<%-- 범례 만들기 시작 - 김경호 --%>
 						var ids = $("#tbl_data_view").jqGrid('getDataIDs');
 						var colModel = $("#tbl_data_view").jqGrid('getGridParam', 'colModel');
-						
+
 						dataMapTest[index] = "";
 
 						for(x=0; x < colModel.length ; x++){
 							if( x > 0){
 								dataMapTest[index] += $("#tbl_data_view").getCell(ids[index], x);
-								
+
 								if( x+1 < colModel.length){
 									dataMapTest[index] += ", ";
 								}
@@ -3316,11 +3316,11 @@ $(document).ready(function(){
 						}
 						dataSetMap.seriesname = dataMapTest[index];
 						<%-- 범례 만들기 끝 - 김경호 --%>
-						
+
 						dataSetArry.push(dataSetMap);
 					}
 				});
-				
+
 				<%-- showLegend : (1 : 범례 보이기, 0 : 범례 안보이기) --%>
 		    	chartInstance = new FusionCharts({
 					type: g_ChartGubun,
@@ -3330,7 +3330,7 @@ $(document).ready(function(){
 					renderAt: 'Chartcontent',
 					dataSource:{
 						"chart" :{
-							"palette": sPalette, "rotateLabels": sRotateLabels, "animation": sAnimation, "numdivlines": sNumdivlines, "baseFont": sBaseFont, 
+							"palette": sPalette, "rotateLabels": sRotateLabels, "animation": sAnimation, "numdivlines": sNumdivlines, "baseFont": sBaseFont,
 							"baseFontSize": sBaseFontSize, "borderAlpha": sBorderAlpha, "captionFontSize": lFontSize,"labelFontSize":sFontSize, "yAxisValueDecimals": yAxisValueDecimals,
 							"yAxisMinValue": yAxisMinValue, "yAxisMaxValue": yAxisMaxValue, "showValues" : sShowValues, "drawcrossline" : sDrawcrossline,
 							"caption": g_tableNm, "exportFileName": g_tblId, "showLegend": "1",
@@ -3343,9 +3343,9 @@ $(document).ready(function(){
 						"dataset": dataSetArry
 					}
 		    	});
-				
+
 		    	chartInstance.render();
-		    	
+
 			}
 			$("#Chartcontent").css("display","block");
 		}
@@ -3416,9 +3416,9 @@ $(document).ready(function(){
 		</c:if>
 
 		<c:if test="${statInfo.analyzable}">
-			$("#ico_analysis").removeClass("off");	
+			$("#ico_analysis").removeClass("off");
 		</c:if>
-			
+
 			var dataOpt2 = $("#dataOpt2 option:selected").val();
 
 			if( dataOpt2 == "en"){
@@ -3440,17 +3440,17 @@ $(document).ready(function(){
 			}else{
 				$("#htmlGrid").css("height","604px");
 			}
-			
+
 			$("#htmlGrid").css("width","100%");
 			$("#popMode").css("display","block");
 
 			g_chartActive = "N";
 			<%-- 챠트 범례 jqGrid 수정 후 htmlGrid border 겹치는 현상--%>
 			$("#htmlGrid").css("border","1px solid #b1b1b1");
-			
-			<%-- 2016.03.24 차트조회후 닫았을때 통계표 상단 틀고정 시작  --%>			
+
+			<%-- 2016.03.24 차트조회후 닫았을때 통계표 상단 틀고정 시작  --%>
 			adjustThtmlGrid();
-			<%-- 틀고정 끝  --%>	
+			<%-- 틀고정 끝  --%>
 		}
 
 		function fn_metaDown(downType){
@@ -3488,11 +3488,11 @@ $(document).ready(function(){
 		}
 
 		function popupPrint(){
-			
+
 			if($("#ico_print").hasClass("off") == true){
 				return;
-			}	
-			
+			}
+
 			var orgId = $('#orgId').val();
 			var tblId = $('#tblId').val();
 
@@ -3772,14 +3772,14 @@ $(document).ready(function(){
 			$("#tailExplain").hide();
 			$("#popMode").css("height","606px");
 			$("#htmlGrid").css("height","604px");
-			$("#htmlGrid").css("width","100%");			
-			$("#Divchart").css("height","0");			
+			$("#htmlGrid").css("width","100%");
+			$("#Divchart").css("height","0");
 			$("#popMode").css("display","block");
 			g_flag = true;
 
 			$("#changeAttribute").attr("class","cont_line");
-			
-			<%-- 2016.03.24 차트조회후 닫았을때 통계표 상단 틀고정 시작 --%>			
+
+			<%-- 2016.03.24 차트조회후 닫았을때 통계표 상단 틀고정 시작 --%>
 			adjustThtmlGrid();	<%-- ThtmlGrid 위치조정 --%>
 			<%-- 틀고정 끝 --%>
 		}
@@ -4301,7 +4301,7 @@ $(document).ready(function(){
 
 			<%--2020.03.05 처음 로딩후에 계층컬럼구분같은 기능을 사용하여 컬럼명이 변경되었음에도 기존 컬럼명을 유지 하여 차트 범례가 안나오는 현상 수정 - 김경호--%>
 			$('#'+tbl_id).jqGrid('GridUnload');
-			
+
 	    	$('#'+tbl_id).jqGrid({
 				datatype: 'local',
 				useColSpanStyle : true,
@@ -4337,18 +4337,18 @@ $(document).ready(function(){
 		    			gColNm += col_name_arrays[i]
 		  	    	}
 	    		}
-	    		
+
 	    	}
 	    	$("#clsNm").text(gColNm);
 	    	var data_cnt = g_remarkB.length;
 	    	<%-- 챠트보기 숫자 콤보박스에 선택된 값에 따라 출력해줘야 함 연동대기 --%>
-	    	
+
 	    	<%--2020.02.27 차트범례 누적으로 인한 범레 출력 오류 수정 - 김경호 --%>
 	    	$("#tbl_data_view").jqGrid('clearGridData');
-	    	
+
 	    	for(var i=0; i<chartViewCnt;i++){
 	    		var obj = g_remarkB[i];
-	    		
+
 	    		$("#tbl_data_view").jqGrid('addRowData',i,g_remarkB[i]);
 	    		$("#"+i+" td:eq(0)").css("color","#"+g_chartColor[i]);
 	    		$("#"+i+" td:eq(0)").css("text-align","center");
@@ -4413,10 +4413,10 @@ $(document).ready(function(){
 
 			if(g_chartActive =="Y"){
 				$('#Legned').empty();
-				
+
 				var legendHtml = "";
 				legendHtml +='<div class="legend"><p id="liClsNm" class="right"><pivot:msg code="ui.label.chart.class" /><span id="clsNm" style="color:blue"></span></p><span class="f_bold"><pivot:msg code="ui.label.chart.legend" /><br/><pivot:msg code="ui.label.chart.legend2" /></span></div>';
-				
+
 				$('#Legend').html(legendHtml);
 				$('#Legend').css("visibility","hidden");
 				$('#Legend').css("top","1px");
@@ -4433,28 +4433,28 @@ $(document).ready(function(){
 		function adjustThtmlGrid(){
 			var x = $("#htmlGrid").position().left + "px";
 			var y = $("#htmlGrid").position().top + "px";
-			
+
 			<%-- 2017.11.06 항목,분류,시점에서 하단 스크롤바 이동후 조회시 틀고정 틀어지는 문제 수정 - 김경호 --%>
 			if($("#htmlGrid").position().left < 0){
-				x = "0px";				
+				x = "0px";
 			}
-			
+
 			$("#ThtmlGrid").css("left",x);	<%--div 위치 잡기--%>
-			$("#ThtmlGrid").css("top",y);	
-			
+			$("#ThtmlGrid").css("top",y);
+
 			$("#ThtmlGrid").css("display","block");
 			var mainTableT_H = $("#mainTableT").height();
 			$("#ThtmlGrid").css("height",mainTableT_H);
-			
+
 			$("#ThtmlGrid").scrollLeft($("#htmlGrid").scrollLeft()); <%-- 통계표의 가로 스크롤 위치와 틀고정되는 표두와의 스크롤 위치를 다시 맞춰준다...--%>
 		}
-		
+
 		<%--
 		/************************************************************************
 		함수명 : fn_timeAllSelect()
 		설   명 : 시점에서의 전체선택 및 해제
 		 ************************************************************************/
-		--%>		
+		--%>
 		function fn_timeAllSelect(val){
 			$('[name=timeChk'+val+']').each(function(index){
 				if($("input:checkbox[id='selectAll"+val+"']").is(":checked")){
@@ -4475,61 +4475,61 @@ $(document).ready(function(){
 		함수명 : openKosis()
 		설   명 : kosis 새창 열기
 		 ************************************************************************/
-		--%>	
+		--%>
 		function openKosis(){
 			var cw = screen.availWidth;
 			var ch = screen.availHeight;
-			
+
 			window.open("http://kosis.kr", "KOSIS", "width="+cw+",height="+ch +" , location=yes, status=yes, directories=yes, menubar=yes, toolbar=yes, scrollbars=yes, resizable=yes");
 		}
-		
+
 		<%--
 		/************************************************************************
 		함수명 : chartDown()
 		설   명 : 차트이미지 다운로드 버튼 이벤트
 		 ************************************************************************/
-		--%>	
+		--%>
 		function chartDown(){
 			var format='JPG';
 			chartInstance.exportChart({
 				exportFormat: format
 			});
 		};
-		
+
 		<%--
 		/************************************************************************
 		함수명 : chartPrint()
 		설   명 : 차트다운로드 이벤트
 		 ************************************************************************/
-		--%>	
+		--%>
     	function chartPrint(){
     		var features = "menubar=no,toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=yes,width=1100,height=600,left=0,top=0";
     		var printPage = window.open("about:blank", "",features);
-    		
+
     		printPage.document.open();
     		printPage.document.write("<html><head><title></title><style type='text/css'>body,tr,td,input,textarea{font-family:Tahoma;Font-size:9pt;}</style>\n</head>\n<body>"+Chartcontent.innerHTML+"<br>"+liClsNm.innerHTML+"\n</body></html>");
     		printPage.document.close();
     		printPage.print();
     		printPage.location.reload();
     	}
-    	
+
 		function rowClick(){
 			$("#mainTable").children("tbody").children("tr").removeClass("rowClick");
-		
+
 			$(this).addClass("rowClick");
 		}
-		
+
 		function openStat() {
 		    var s_status ;
 			s_status = "location=yes,toolbar=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width=1024,height=768";
 			window.open( "https://kosis.kr/statisticsList/statisticsListIndex.do?publicationYN=Y&statId=${statInfo.statId}","",s_status);
 		}
-		
+
 		function fn_addBookmark(){
 		    var bookmarkURL = window.location.href;
 		    var bookmarkTitle = document.title;
 		    var triggerDefault = false;
-		    
+
 		    if (window.sidebar && window.sidebar.addPanel) {
 		        // Firefox version &lt; 23
 		        window.sidebar.addPanel(bookmarkTitle, bookmarkURL, '');
@@ -4538,7 +4538,7 @@ $(document).ready(function(){
 		        var $this = $(this);
 		        $this.attr('href', bookmarkURL);
 		        $this.attr('title', bookmarkTitle);
-		        $this.attr('rel', 'sidebar'); 
+		        $this.attr('rel', 'sidebar');
 		        $this.off(e);
 		        triggerDefault = true;
 		    } else if (window.external && ('AddFavorite' in window.external)) {
@@ -4764,7 +4764,7 @@ $(document).ready(function(){
 									<li><!-- 2017.08.11 호환성보기때문에 li추가... ul안에 li가 없을때가 있어서 오류라고 나옴  --></li>
 									<%-- <c:if test="${statInfo.statLinkInfo.existMoreBtn}">
 										<li class="none">
-											<!-- 2015.01.06 파라미터중 kosisYn=Y 추가 --> 
+											<!-- 2015.01.06 파라미터중 kosisYn=Y 추가 -->
 											<a href="javascript:openNewWin('${statInfo.statLinkInfo.linkStatComment}?orgId=${ParamInfo.orgId}&amp;confmNo=${statInfo.statLinkInfo.confmNo}&amp;kosisYn=Y', '6_1')" style="color: #000000">
 												<pivot:msg code="ui.label.stat.desc" />
 											</a>
@@ -4776,7 +4776,7 @@ $(document).ready(function(){
 											<li><a href="javascript:openNewWin('${statInfo.statLinkInfo.pubLink}', '6_2')" style="color: #000000"><pivot:msg code="ui.label.pub" /></a>
 											</li>
 										</c:if>
-	
+
 										<c:if test="${statInfo.statLinkInfo.newsLink != null}">
 											<li>
 												<a href="javascript:openNewWin('${statInfo.statLinkInfo.newsLink}', '6_3')" style="color: #000000">
@@ -4805,12 +4805,12 @@ $(document).ready(function(){
 						<c:if test="${fn:indexOf(ParamInfo.dataOpt, 'en') < 0  }">
 									출처 :
 						</c:if>
-						${statInfo.statLinkInfo.exprStatNm}					
-					
-					
-										
+						${statInfo.statLinkInfo.exprStatNm}
+
+
+
 						<c:if test="${statInfo.statLinkInfo.existMoreBtn}">
-							
+
 							<a href="javascript:popupControl('pop_statGrid','show','modal')" style="color: #000000">
 								<c:choose>
 									<c:when test="${fn:indexOf(ParamInfo.dataOpt, 'en') < 0  }">
@@ -4872,7 +4872,7 @@ $(document).ready(function(){
 							<!-- 통계표 파일 서비스 -->
 							<p class="bigGreen">통계표 파일서비스</p>
 							<div class="fileService">
-								<span class="smallGreen">자료량이 많은 통계표로 미리 생성한 파일을 제공합니다.</span> 
+								<span class="smallGreen">자료량이 많은 통계표로 미리 생성한 파일을 제공합니다.</span>
 									<a href="javascript:openMass('K');"><img src="images/shortcutBtn.gif" alt="바로가기" /></a>
 							</div>
 							<!-- //통계표 파일 서비스 끝 -->
@@ -4910,9 +4910,9 @@ $(document).ready(function(){
 
 						<!--  무조건 있음 -->
 						<li id="tabTimeText" class="menu_off">
-							<input name="naviInfo" type="hidden" value="tabTimeText" /> 
+							<input name="naviInfo" type="hidden" value="tabTimeText" />
 							<a href="javascript:fn_disPlay('tabTimeText',${fn:length(statInfo.classInfoList)+1})"></a>
-							<img id="sortImg" src="images/ico_time_up.png" style="padding: 0 0 0 10px; cursor: pointer;" onclick="fn_time_sort(0);" alt="<pivot:msg code="ui.label.asc" />" title="<pivot:msg code="ui.label.asc"/>" /> 
+							<img id="sortImg" src="images/ico_time_up.png" style="padding: 0 0 0 10px; cursor: pointer;" onclick="fn_time_sort(0);" alt="<pivot:msg code="ui.label.asc" />" title="<pivot:msg code="ui.label.asc"/>" />
 							<img id="sortImg2" src="images/ico_time_down.png" style="cursor: pointer;" onclick="fn_time_sort(1);" alt="<pivot:msg code="ui.label.desc" />" title="<pivot:msg code="ui.label.desc"/>" />
 						</li>
 					</ul>
@@ -4923,13 +4923,13 @@ $(document).ready(function(){
 								alt="<pivot:msg code="ui.label.btnSearch"/>"
 								title="<pivot:msg code="ui.label.btnSearch"/>"
 								onclick="fn_search();" />
-						</c:if> 
+						</c:if>
 						<c:if test="${fn:indexOf(ParamInfo.dataOpt, 'en') >= 0  }">
 							<img id="searchImg1" src="images/btn_tableSearch_en.gif"
 								alt="<pivot:msg code="ui.label.btnSearch"/>"
 								title="<pivot:msg code="ui.label.btnSearch"/>"
 								onclick="fn_search();" />
-						</c:if> 
+						</c:if>
 						<c:if test="${fn:indexOf(ParamInfo.dataOpt, 'en') < 0  }">
 							<img id="searchImg2" src="images/btn_downLoad.gif"
 								alt="<pivot:msg code="ui.label.btnDownload"/>"
@@ -4962,7 +4962,7 @@ $(document).ready(function(){
 						</p>
 						<!-- 통계표목록 버튼 S -->
 						<div class="BtnGroup">
-							<!--  <button id="btn000" type="button" class="Btn_scrap" onclick="fn_addBookmark();" alt="<pivot:msg code="ui.label.bookmark"/>" title="<pivot:msg code="ui.label.bookmark"/>"><pivot:msg code="ui.label.bookmark"/></button>  -->
+							<button id="btn000" type="button" class="Btn_scrap" onclick="fn_addBookmark();" alt="<pivot:msg code="ui.label.bookmark"/>" title="<pivot:msg code="ui.label.bookmark"/>"><pivot:msg code="ui.label.bookmark"/></button>
 						<c:if test="${ParamInfo.mode == 'tab'}">
 							<button id="btn001" type="button" class="Btn_newwin" onclick="fn_newWindow();" alt="<pivot:msg code="ui.label.newwin"/>" title="<pivot:msg code="ui.label.newwin"/>"><pivot:msg code="ui.label.newwin"/></button>
 						</c:if>
@@ -4972,13 +4972,17 @@ $(document).ready(function(){
 						</c:if>
 							<span class="Partition">구분선</span>
 							<button id="ico_swap" type="button" class="Btn_swap" onclick="popupControl('pop_pivotfunc', 'show', 'modal');" alt="<pivot:msg code="ui.label.pivot"/>" title="<pivot:msg code="ui.label.pivot"/>" ><pivot:msg code="ui.label.pivot"/></button>
-							<%-- <button id="ico_analysis" type="button" class="Btn_analysis <c:if test="${statInfo.analyzable != 'true'}">off</c:if>"  <c:if test="${statInfo.analyzable == 'true'}">onclick="popupControl('pop_assay','show','modal');"</c:if> alt="<pivot:msg code="ui.label.analysis"/>" title="<pivot:msg code="ui.label.analysis"/>" ><pivot:msg code="ui.label.analysis"/></button>
-							<button id="chartEnable" type="button" class="Btn_chart" onclick="fn_fusionChartCtrl();" alt="<pivot:msg code="ui.label.chart"/>" title="<pivot:msg code="ui.label.chart"/>" ><pivot:msg code="ui.label.chart"/></button> --%>
+							<button id="ico_analysis" type="button" class="Btn_analysis <c:if test="${statInfo.analyzable != 'true'}">off</c:if>"  <c:if test="${statInfo.analyzable == 'true'}">onclick="popupControl('pop_assay','show','modal');"</c:if> alt="<pivot:msg code="ui.label.analysis"/>" title="<pivot:msg code="ui.label.analysis"/>" >
+								<pivot:msg code="ui.label.analysis"/>
+							</button>
+							<button id="chartEnable" type="button" class="Btn_chart" onclick="fn_fusionChartCtrl();" alt="<pivot:msg code="ui.label.chart"/>" title="<pivot:msg code="ui.label.chart"/>" >
+								<pivot:msg code="ui.label.chart"/>
+							</button>
 							<button id="ico_addfunc" type="button" class="Btn_setting" onclick="popupControl('pop_addfunc', 'show', 'modal');" alt="<pivot:msg code="ui.label.optionSetting"/>" title="<pivot:msg code="ui.label.optionSetting"/>" ><pivot:msg code="ui.label.optionSetting"/></button>
 							<%-- 스크랩 영문모드인경우 제외 --%>
 							<%-- <c:if test="${fn:indexOf(statInfo.serverType, 'service') >=0 && fn:indexOf(statInfo.serverUrl, 'kosis.kr') >=0 && ParamInfo.language != 'en'}">
 								<button id="ico_myscrap" type="button" class="Btn_scrap <c:if test="${statInfo.downloadable != 'true'}">off</c:if>" <c:if test="${statInfo.downloadable == 'true'}">onclick="popupControl('pop_myscrap', 'show', 'modal');"</c:if> alt="<pivot:msg code="ui.label.clipping"/>" title="<pivot:msg code="ui.label.clipping"/>" ><pivot:msg code="ui.label.clipping"/></button>
-							</c:if> --%>						
+							</c:if> --%>
 							<button id="ico_download" type="button" class="Btn_download <c:if test="${statInfo.downloadable != 'true'}">off</c:if>" <c:if test="${statInfo.downloadable == 'true'}">onclick="popupControl('pop_downgrid', 'show', 'modal');"</c:if>alt="<pivot:msg code="ui.label.download"/>" title="<pivot:msg code="ui.label.download"/>" ><pivot:msg code="ui.label.download"/></button>
 							<button id="ico_print" type="button" class="Btn_print" onclick="popupPrint();" alt="<pivot:msg code="ui.label.print"/>" title="<pivot:msg code="ui.label.print"/>" ><pivot:msg code="ui.label.print"/></button>
 						<%-- <c:if test="${ParamInfo.language != 'en'}">
@@ -5003,12 +5007,12 @@ $(document).ready(function(){
 								<span id="changeDownText"><pivot:msg code="ui.label.notDownloadable" /></span> <span class="f_bold">] </span>
 							</li>
 							<li class="btn_r">
-								<a href="javascript:popupControl('pop_selectAll', 'show', 'modal')"><pivot:msg code="ui.label.selectInfo" /></a> 
+								<a href="javascript:popupControl('pop_selectAll', 'show', 'modal')"><pivot:msg code="ui.label.selectInfo" /></a>
 								<a href="javascript:fn_gridOpen();"><img src="images/charts/gbtn_close.bmp" alt="<pivot:msg code="ui.label.close" />" /></a>
 							</li>
 						</ul>
 					</div>
-					
+
 					<div id="Divchart" class="chart" style="visibility: hidden; height: 0px;">
 						<div class="chartTop">
 							<div class="chartBtn">
@@ -5076,13 +5080,13 @@ $(document).ready(function(){
 									src="images/charts/gbtn_pie.bmp"
 									alt="<pivot:msg code="ui.btn.chart.Pie3D"/>"
 									title="<pivot:msg code="ui.btn.chart.Pie3D"/>" /></a>
-									
+
 							</div>
 								<div class="alignRight">
 									<%-- 2019.08.05 차트 저장, 인쇄기능 추가 --%>
 									<p class="PrintBtn">
 										<button title="<pivot:msg code="ui.label.chartdown" />" id="export" class="ImageDownload" type="button" onclick="chartDown()"><pivot:msg code="ui.label.chartdown" /></button>
-										<button title="<pivot:msg code="ui.label.chartprint" />" id="showPrint" class="GraphPrint" type="button" onclick="chartPrint()"><pivot:msg code="ui.label.chartprint" /></button>		
+										<button title="<pivot:msg code="ui.label.chartprint" />" id="showPrint" class="GraphPrint" type="button" onclick="chartPrint()"><pivot:msg code="ui.label.chartprint" /></button>
 									</p>
 									<select id="chartViewCnt" title="${ParamInfo.language == 'en' ? 'View Count' : '조회 카운트'}" style="margin : 0 0 0 10px;">
 										<c:forEach var="i" begin="1" end="20" step="1" varStatus="status">
@@ -5097,7 +5101,7 @@ $(document).ready(function(){
 								<span id="saveCharts"></span>
 							</div>
 						</div>
-						
+
 						<div id="Chartcontent" style="display: none; margin: 2px 0 0 1px;"></div>
 						<div id="Legend" class="remark" style="visibility: hidden; margin: -2px 0 0 -1px;">
 							<div class="legend">
@@ -5108,12 +5112,12 @@ $(document).ready(function(){
 								</span>
 							</div>
 						</div>
-						
+
 						<!-- chart저장 추가 -->
 					</div>
-					
+
 					<div id="jqGrid" class="remark" style="visibility: hidden; float: left; height: 0px; display:none;">
-						 <table id="tbl_data_view" style="table-layout: fixed;"><tr><td></td></tr></table> 
+						 <table id="tbl_data_view" style="table-layout: fixed;"><tr><td></td></tr></table>
 						<div class="legend">
 							<span class="f_bold">
 								<pivot:msg code="ui.label.chart.legend" />
@@ -5121,7 +5125,7 @@ $(document).ready(function(){
 							</span>
 						</div>
 					</div>
-					
+
 					<div id="popMode" class="popMode">
 						<div id="htmlGrid" class="inner"></div>
 						<div id="ThtmlGrid" class="inner" style="display: none; position: absolute;"></div>
@@ -5197,7 +5201,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthD"
 															value="${fn:length(statInfo.periodInfo.listD)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('D');" title="<pivot:msg code="ui.label.startTime"/>" 
+															<select class="box" onchange="fn_searchPeriod('D');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listD}"
 																	varStatus="status">
@@ -5207,7 +5211,7 @@ $(document).ready(function(){
 																		<c:out value="${fn:substring(comboD,0,4)}.${fn:substring(comboD,4,6)}.${fn:substring(comboD,6,8)}" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('D');" title="<pivot:msg code="ui.label.endTime"/>" 
+															</select>~ <select class="box" onchange="fn_searchPeriod('D');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listD}" varStatus="status">
 																	<c:set var="comboD" value="${statInfo.periodInfo.listD[timeLengthD - status.count]}" />
@@ -5234,7 +5238,7 @@ $(document).ready(function(){
 																	</li>
 																</c:forEach>
 																<%--ie7 마지막 체크박스 사라짐 더미 li 	--%>
-																<li><label for="ie7bugD"></label> 
+																<li><label for="ie7bugD"></label>
 																	<input id="ie7bugD" type="checkbox" style="visibility: hidden" name="ie7bug" value="ie7bug" />
 																</li>
 															</c:if>
@@ -5283,7 +5287,7 @@ $(document).ready(function(){
 
 														<c:set var="timeLengthT" value="${fn:length(statInfo.periodInfo.listT)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('T');" title="<pivot:msg code="ui.label.startTime"/>"  
+															<select class="box" onchange="fn_searchPeriod('T');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listT}"
 																	varStatus="status">
@@ -5294,7 +5298,7 @@ $(document).ready(function(){
 																		<c:out value="${comboT}" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('T');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('T');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listT}" varStatus="status">
 																	<c:set var="comboT" value="${statInfo.periodInfo.listT[timeLengthT - status.count]}" />
@@ -5370,7 +5374,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthM"
 															value="${fn:length(statInfo.periodInfo.listM)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('M');" title="<pivot:msg code="ui.label.startTime"/>" 
+															<select class="box" onchange="fn_searchPeriod('M');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listM}"
 																	varStatus="status">
@@ -5382,7 +5386,7 @@ $(document).ready(function(){
 																			value="${fn:substring(comboM,0,4)}.${fn:substring(comboM,4,6)}" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('M');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('M');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listM}"
 																	varStatus="status">
@@ -5463,7 +5467,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthB"
 															value="${fn:length(statInfo.periodInfo.listB)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('B');" title="<pivot:msg code="ui.label.startTime"/>"  
+															<select class="box" onchange="fn_searchPeriod('B');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listB}"
 																	varStatus="status">
@@ -5475,7 +5479,7 @@ $(document).ready(function(){
 																			value="${fn:substring(comboB,0,4)}.${fn:substring(comboB,4,6)}" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('B');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('B');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listB}"
 																	varStatus="status">
@@ -5554,7 +5558,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthQ"
 															value="${fn:length(statInfo.periodInfo.listQ)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('Q');" title="<pivot:msg code="ui.label.startTime"/>" 
+															<select class="box" onchange="fn_searchPeriod('Q');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listQ}"
 																	varStatus="status">
@@ -5566,7 +5570,7 @@ $(document).ready(function(){
 																			value="${fn:substring(comboQ,0,4)} ${fn:substring(comboQ,5,6)}/4" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('Q');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('Q');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listQ}"
 																	varStatus="status">
@@ -5584,7 +5588,7 @@ $(document).ready(function(){
 															<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)>-1}">
 																<c:forEach var="timeListQ"
 																	items="${statInfo.periodInfo.defaultListQ}"
-																	varStatus="status">																	
+																	varStatus="status">
 																	<li><input id="timeChQ${status.index}"
 																		type="checkbox" name="timeChkQ" value="${timeListQ}" title="${timeListQ}"
 																		<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)>-1}">checked="checked"</c:if> />
@@ -5643,7 +5647,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthH"
 															value="${fn:length(statInfo.periodInfo.listH)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('H');" title="<pivot:msg code="ui.label.startTime"/>"  
+															<select class="box" onchange="fn_searchPeriod('H');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listH}"
 																	varStatus="status">
@@ -5655,7 +5659,7 @@ $(document).ready(function(){
 																			value="${fn:substring(comboH,0,4)} ${fn:substring(comboH,5,6)}/2" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('H');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('H');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listH}"
 																	varStatus="status">
@@ -5671,8 +5675,8 @@ $(document).ready(function(){
 														</h2>
 														<ul id="searchPeriodH" class="selectList">
 															<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)>-1}">
-																<c:forEach var="timeListH" 
-																	items="${statInfo.periodInfo.defaultListH}">																	
+																<c:forEach var="timeListH"
+																	items="${statInfo.periodInfo.defaultListH}">
 																	<li><input id="timeChH${status.index}"
 																		type="checkbox" name="timeChkH"
 																		onclick="fn_timeCountChk(this,'H');"
@@ -5729,7 +5733,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthY"
 															value="${fn:length(statInfo.periodInfo.listY)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('Y');" title="<pivot:msg code="ui.label.startTime"/>"  
+															<select class="box" onchange="fn_searchPeriod('Y');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listY}"
 																	varStatus="status">
@@ -5740,7 +5744,7 @@ $(document).ready(function(){
 																		<c:out value="${comboY}" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('Y');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('Y');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listY}"
 																	varStatus="status">
@@ -5757,7 +5761,7 @@ $(document).ready(function(){
 															<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)>-1}">
 																<c:forEach var="timeListY"
 																	items="${statInfo.periodInfo.defaultListY}"
-																	varStatus="status">																	
+																	varStatus="status">
 																	<li><input type="checkbox"
 																		id="timeChY${status.index}" name="timeChkY"
 																		onclick="fn_timeCountChk(this,'Y');"
@@ -5813,7 +5817,7 @@ $(document).ready(function(){
 														<c:set var="timeLengthF"
 															value="${fn:length(statInfo.periodInfo.listF)}" />
 														<h2 class="top">
-															<select class="box" onchange="fn_searchPeriod('F');" title="<pivot:msg code="ui.label.startTime"/>" 
+															<select class="box" onchange="fn_searchPeriod('F');" title="<pivot:msg code="ui.label.startTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listF}"
 																	varStatus="status">
@@ -5824,7 +5828,7 @@ $(document).ready(function(){
 																		<c:out value="${comboF}" />
 																	</option>
 																</c:forEach>
-															</select>~ <select class="box" onchange="fn_searchPeriod('F');" title="<pivot:msg code="ui.label.endTime"/>"  
+															</select>~ <select class="box" onchange="fn_searchPeriod('F');" title="<pivot:msg code="ui.label.endTime"/>"
 																<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)<0}">disabled="disabled"</c:if>>
 																<c:forEach items="${statInfo.periodInfo.listF}"
 																	varStatus="status">
@@ -5841,7 +5845,7 @@ $(document).ready(function(){
 															<c:if test="${fn:indexOf(statInfo.defaultPeriodStr,time)>-1}">
 																<c:forEach var="timeListF"
 																	items="${statInfo.periodInfo.defaultListF}"
-																	varStatus="status">																	
+																	varStatus="status">
 																	<li><input type="checkbox"
 																		id="timeChF${status.index}" name="timeChkF"
 																		onclick="fn_timeCountChk(this,'F');"
@@ -5873,7 +5877,7 @@ $(document).ready(function(){
 											<h2 class="top">
 												<span style="line-height: 25px;"><input type="checkbox" id="itemChk" onclick="fn_selectItemAll();" />
 													<label for="itemChk"><pivot:msg code="ui.label.selectAll" /></label>
-												</span>												
+												</span>
 											</h2>
 											<ul class="selectList">
 												<c:set var="selectionList" value="itmList${status.index}" />
@@ -5930,7 +5934,7 @@ $(document).ready(function(){
 																			<img src="images/ico_folder.png" alt="폴더" /> <!-- i는 레벨 값 -->
 																			<c:out value="${selection.scrKor}"></c:out>
 																		</a>
-																	</c:if> 
+																	</c:if>
 																	<c:if test="${selection.leaf eq 1}">
 																		<img src="images/ico_doc.png" alt="문서" />
 																		<c:out value="${selection.scrKor}"></c:out>
@@ -5951,7 +5955,7 @@ $(document).ready(function(){
 					</c:forEach>
 
 					<p class="exemple" id="tailExplain" style="display: none;">
-						<span><img src="images/ico_doc.png" alt="" /> <pivot:msg code="text.level.icon.file" /></span> 
+						<span><img src="images/ico_doc.png" alt="" /> <pivot:msg code="text.level.icon.file" /></span>
 						<span><img src="images/ico_folder.png" alt="" /> <img src="images/ico_fd_chk_blue1.png" alt="" /> <pivot:msg code="text.level.icon.folder" /></span>
 					</p>
 				</div>
