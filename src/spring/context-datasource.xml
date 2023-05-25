@@ -5,18 +5,9 @@
     <!-- 개발서버배포 시 사용 -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
-        <property name="url" value="jdbc:oracle:thin:@(DESCRIPTION =
-														(FAIL_OVER=on)
-					    								(LOAD_BALANCE=off)
-					    								(ADDRESS_LIST =
-					      									(ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1522))
-					    								)
-					    								(CONNECT_DATA =
-					      									(SERVICE_NAME = ORCL)
-					    								)
-  													)"/>
-        <property name="username" value="NSI_IN_005"/>
-        <property name="password" value="NSI_IN_005"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1523:ORCLCDB"/>
+        <property name="username" value="NSI_IN_010"/>
+        <property name="password" value="NSI_IN_010"/>
         <property name="maxActive" value="50"/>
         <property name="minIdle" value="10"/>
         <property name="maxIdle" value="50"/>
@@ -27,27 +18,20 @@
     </bean>
 
     <!--  로컬환경 시 사용  -->
-    <!--    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
-            <property name="url" value="jdbc:log4jdbc:oracle:thin:@(DESCRIPTION =
-                                                            (FAIL_OVER=on)
-                                                            (LOAD_BALANCE=off)
-                                                            (ADDRESS_LIST =
-                                                                  (ADDRESS = (PROTOCOL = TCP)(HOST = 221.158.185.26)(PORT = 1522))
-                                                            )
-                                                            (CONNECT_DATA =
-                                                                  (SERVICE_NAME = ORCL)
-                                                            )
-                                                          )"/>
-            <property name="username" value="NSI_IN_005"/>
-            <property name="password" value="NSI_IN_005"/>
-            <property name="maxActive" value="50" />
-            <property name="minIdle" value="10" />
-            <property name="maxIdle" value="50" />
-            <property name="maxWait" value="30000" />
-            <property name="validationQuery" value="select 1 from dual" />
-            <property name="testWhileIdle" value="true"/>
-            <property name="timeBetweenEvictionRunsMillis" value="300000"/>
-        </bean>-->
+<!--
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+        <property name="url" value="jdbc:log4jdbc:oracle:thin:@221.158.185.26:1523:ORCLCDB"/>
+        <property name="username" value="NSI_IN_010"/>
+        <property name="password" value="NSI_IN_010"/>
+        <property name="maxActive" value="50" />
+        <property name="minIdle" value="10" />
+        <property name="maxIdle" value="50" />
+        <property name="maxWait" value="30000" />
+        <property name="validationQuery" value="select 1 from dual" />
+        <property name="testWhileIdle" value="true"/>
+        <property name="timeBetweenEvictionRunsMillis" value="300000"/>
+    </bean>
+-->
 
 </beans>
