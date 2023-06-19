@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+</head>
+
+<body>
+    <div class="btnIcon" id="btnShow" style="display: inline-block">
+        <!-- 태그에 직접 부여된 스타일 삭제하였습니다. / 230602 SY Edit -->
+        <p id="stblUnit" class="text">
+            (단위 : <span id="tblUnit" title="%">%</span>)
+        </p>
+
+        <p class="text" style="width: 30%;">
+            <span id="analysisText"></span>
+        </p>
+
+        <!-- 통계표목록 버튼 S -->
+        <div class="BtnGroup">
+
+            <button id="btn000" type="button" class="Btn_scrap" onclick="fn_addBookmark();" alt="즐겨찾기" title="즐겨찾기">즐겨찾기</button>
+
+            <button id="btn001" type="button" class="Btn_newwin" onclick="fn_newWindow();" alt="새창보기" title="새창보기">새창보기</button>
+
+            <button id="btn002" style="" ;="" type="button" class="Btn_comment" onclick="popupControl('pop_cmmtInfoAll','show','modal');" alt="주석정보" title="주석정보">주석정보</button>
+
+            <button id="btn003" type="button" class="Btn_url" onclick="popupControl('pop_url', 'show', 'modal');" alt="주소정보" title="주소정보">주소정보</button>
+
+            <span class="Partition">구분선</span>
+
+            <button id="ico_swap" type="button" class="Btn_swap" onclick="popupControl('pop_pivotfunc', 'show', 'modal');" alt="행렬전환" title="행렬전환">행렬전환</button>
+
+            <button id="ico_analysis" type="button" class="Btn_analysis" onclick="popupControl('pop_assay','show','modal');" alt="분석" title="분석">분석</button>
+
+            <button id="chartEnable" type="button" class="Btn_chart" onclick="fn_fusionChartCtrl();" alt="차트" title="차트">차트</button>
+            
+            <button id="ico_addfunc" type="button" class="Btn_setting" onclick="popupControl('pop_addfunc', 'show', 'modal');" alt="부가기능설정" title="부가기능설정">부가기능설정</button>
+            
+            <!-- 박지연 부장님 지시사항에 따라 임시 주석처리 / 230602 SY Edit  -->
+            <!--            <button id="ico_download" type="button" class="Btn_download" onclick="popupControl('pop_downgrid', 'show', 'modal');" alt="다운로드" title="다운로드">다운로드</button>-->
+
+            <button id="ico_print" type="button" class="Btn_print" onclick="popupPrint();" alt="인쇄" title="인쇄">인쇄</button>
+            
+
+            <!-- 다운로드 버튼 추가 S / 개발에 사용하실 id값, onclick 이벤트 추가해주세요. 230602 SY Add  -->
+
+            <button type="button" id="" class="r_btn_download rBtn_01" onclick="" alt="XLSX 다운로드" title="XLSX 다운로드">XLSX</button>
+
+            <button type="button" id="" class="r_btn_download rBtn_02" onclick="" alt="XLS 다운로드" title="XLS 다운로드">XLS</button>
+
+            <button type="button" id="" class="r_btn_download rBtn_03" onclick="" alt="CSV 다운로드" title="CSV 다운로드">CSV</button>
+
+            <button type="button" id="" class="r_btn_download rBtn_04" onclick="" alt="TXT 다운로드" title="TXT 다운로드">TXT</button>
+
+            <button type="button" id="" class="r_btn_download rBtn_05" onclick="" alt="XML 다운로드" title="XML 다운로드">XML</button>
+
+            <button type="button" id="" class="r_btn_download rBtn_06" onclick="" alt="JSON 다운로드" title="JSON 다운로드">JSON</button>
+            <!-- 다운로드 버튼 추가 E / 230602 SY Add  -->
+
+        </div>
+        <!-- 통계표목록 버튼 E -->
+
+
+    </div>
+
+
+
+
+
+
+</body>
+
+</html>

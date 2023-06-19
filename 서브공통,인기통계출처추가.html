@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="author" content="정보통신정책연구원 방송통신위원회">
+    <meta name="keywords" content="정보통신정책연구원 방송통신위원회,방송통계포털">
+    <meta name="description" lang="ko" content="정보통신정책연구원 방송통신위원회,방송통계포털">
+    <meta name="copyright" content="27872 충청북도 진천군 덕산면 정통로 18 정보통신정책연구원">
+
+    <meta name="_csrf" content="1af8e54a-cfb7-41c3-a7e1-e2cad7dda5ef">
+    <meta name="_csrf_header" content="X-CSRF-TOKEN">
+
+    <title>방송통계포털</title>
+
+    <!-- css -->
+    <link rel="stylesheet" href="css/sub.css">
+    <link rel="stylesheet" href="js/slick/slick.css">
+    <link rel="stylesheet" href="js/slick/slick-theme.css">
+
+    <!--jquery  -->
+    <script
+        src="https://cr.acecounter.com/Web/AceCounter_AW.js?gc=AH6A45742191408&amp;py=0&amp;gd=gtp9&amp;gp=8080&amp;up=NaPm_Ncisy&amp;rd=1686805175512"></script>
+    <script src="js/jquery-3.7.0.js" charset="UTF-8"></script>
+    <script src="js/layout.js" charset="UTF-8"></script>
+    <script src="js/slick/slick.js" charset="UTF-8"></script>
+    <script src="js/common.js" charset="UTF-8"></script>
+    <script src="js/print.js" charset="UTF-8"></script>
+
+    <style type="text/css">
+        #Progress_Loading {
+            z-index: 999;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #Progress_Loading img {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -25px;
+            margin-left: -25px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $(document).ready(function () {
+            $('#Progress_Loading').hide();
+
+        });			
+    </script>
+</head>
+
+<body class="zoom_size">
+    <div class="wrap">
+        <div id="skipnavi">
+            <a href="#sub_section">본문 바로가기</a>
+        </div>
+
+        <!-- header : top_navi  -->
+        <header id="header">
+            <!-- security -->
+
+            <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+            <script type="text/javascript">
+                if (!wcs_add) var wcs_add = {};
+                wcs_add["wa"] = "a29cb077683128";
+                if (window.wcs) {
+                    wcs_do();
+                }
+            </script>
+
+            <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-NYTYTZGR4H"></script>
+
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag("js", new Date());
+
+                gtag("config", "G-NYTYTZGR4H");
+            </script>
+            <script type="text/javascript">
+                //운영반영
+                if (document.location.protocol == "http:") {
+                    document.location.href = document.location.href.replace(
+                        "http:",
+                        "https:"
+                    );
+                }
+
+                $(function () {
+                    // 메뉴별 방문자 수 체크 통신 함수
+                    fn_ajax_menuVisitCntChk();
+
+                    //IE 브라우저 여부 확인
+                    var agent = navigator.userAgent.toLowerCase();
+                    if (
+                        ("" == "" &&
+                            navigator.appName == "Netscape" &&
+                            agent.indexOf("trident") != -1) ||
+                        agent.indexOf("msie") != -1
+                    ) {
+                        // 세션 저장
+                        $.ajax({
+                            type: "POST",
+                            url: "/IeYn.html",
+                            dataType: "json",
+                            data: { ieYn: "Y" },
+                            error: function (request, status, error) {
+                                console.log(
+                                    "code = " +
+                                    request.status +
+                                    " message = " +
+                                    request.responseText +
+                                    " error = " +
+                                    error
+                                ); // 실패 시 처리
+                            },
+                        });
+
+                        alert(
+                            "Internet Explorer은 2021년 8월 17일 이후로 서비스 지원이 종료됩니다. \n서비스 지원이 중단 된 후에는 다양한 웹 서비스 사용이 제한되고, 악성코드 및 정보보안에 매우 취약해집니다.\n크롬, 파이어폭스 등 다른 브라우저를 사용을 권장합니다."
+                        );
+                    }
+                });
+
+                function moveSubMenu(menuUrl, menuId, rootId) {
+                    var url = "" + menuUrl;
+
+                    $("#menuId").val(menuId);
+                    $("#rootId").val(rootId);
+
+                    $("#topfrm").attr("action", url);
+                    $("#topfrm").submit();
+                }
+
+                // 메뉴별 방문자 수 체크 통신 함수
+                function fn_ajax_menuVisitCntChk() {
+                    var form = $("#topfrm");
+                    var domain =
+                        window.document.location.protocol +
+                        "//" +
+                        window.document.location.host;
+                    var uri = window.document.location.href;
+                    var currUri = "";
+                    var currUri2 = uri.replace(domain, "");
+                    var menuid = "";
+                    if (currUri2 != "" && currUri2 != null) {
+                        if (currUri2.indexOf("/main.html") > -1) {
+                            //메인
+
+                            currUri += "/main.html";
+                            menuid = "2010101";
+                        } else {
+                            //서브
+                            var currUriArr = currUri2.split("/");
+
+                            for (var i = 2; i < currUriArr.length; i++) {
+                                currUri += "/" + currUriArr[i];
+                            }
+
+                            menuid = $("#menuId").val();
+                        }
+
+                        $.ajax({
+                            url: "/sysUseStat/insertMenuPageView.html",
+                            //					url : "../../sysUseStat/insertMenuPageView.html",
+                            type: "post",
+                            data: {
+                                currUri: currUri,
+                                currUri2: currUri2,
+                                menu_id: menuid,
+                            },
+                            success: function (data) {
+                                if (data != null) {
+                                    if (data.isTrue == "false") {
+                                        console.log("MenuPageViewChk error");
+                                    }
+                                }
+                            },
+                            error: function (request, status, error) {
+                                console.log(
+                                    "code:" +
+                                    request.status +
+                                    "\n" +
+                                    "message:" +
+                                    request.responseText +
+                                    "\n" +
+                                    "error:" +
+                                    error
+                                );
+                            },
+                        });
+                    }
+                }
+            </script>
+
+            <form name="topfrm" id="topfrm" method="post">
+                <input type="hidden" name="_csrf" value="c9194708-64e6-4dd8-b63f-0815fc03d9b3" />
+                <input type="hidden" id="menuId" name="menuId" value="" />
+                <input type="hidden" id="rootId" name="rootId" value="" />
+                <input type="hidden" id="statKind" name="statKind" value="R" />
+
+                <!-- quick navi / 230614 SY Add -->
+                <div class="quick_nav">
+                    <div class="center main_c clearfix">
+
+                        <ul class="quick_list">
+                            <li class="quick_list_li"><a href="#" class="quick_list_a">통계시각화</a></li>
+                            <li class="quick_list_li"><a href="#" class="quick_list_a">이용자가이드</a></li>
+                            <li>
+                                <div class="aside_fsize_btn">
+                                    <span>글씨크기</span>
+                                    <a href="javascript:void(0);" onclick="zoomIn('plus'); return false;"
+                                        class="plus_btn" title="reduction icon">
+                                        <div class="i_plus"><span></span><span></span></div>
+                                    </a>
+                                    <a href="javascript:void(0);" onclick="zoomIn('minus'); return false;"
+                                        class="minus_btn" title="expansion icon">
+                                        <div class="i_minus"><span></span></div>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <!-- class 'main_c' add / 230612 SY -->
+                <div class="center main_c">
+                    <nav>
+                        <a href="/main.html" class="top_logo"><img src="img/top_logo.png" alt="방송통계포털 로고" /></a>
+
+                        <ul>
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+                                <a href="javascript:void(0);" class="top_navi"
+                                    onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002');  return false;">
+                                    <span>통계DB</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002'); return false;">
+                                            조사별 통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002'); return false;">
+                                            주제별 통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/tblInfo/MultiTblInfo.html', '2010120', '2010002'); return false;">
+                                            복합통계표
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE&amp;api_status=Y', '2010122', '2010002'); return false;">
+                                            OpenAPI
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+                                <a href="javascript:void(0);" class="top_navi"
+                                    onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003');  return false;">
+                                    <span>통계시각화</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003'); return false;">
+                                            주요지표트랜드
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/map/mapList.html', '2009002', '2010003'); return false;">
+                                            지도시각화
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/infoGrp/infoGrpList.html?board_class=BOARD07', '2009001', '2010003'); return false;">
+                                            인포그래픽
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/motionChart/motionChartList.html', '2009003', '2010003'); return false;">
+                                            모션차트
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+                                <a href="javascript:void(0);" class="top_navi"
+                                    onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001');  return false;">
+                                    <span>통계자료</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001'); return false;">
+                                            이달의 인기통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD21', '2006104', '2010001'); return false;">
+                                            보고서
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/contents/ContentsList.html', '2010104', '2010001'); return false;">
+                                            통계원시자료
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/wordBeffat/wordBeffatList.html', '2010119', '2010001'); return false;">
+                                            용어사전
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+                                <a href="javascript:void(0);" class="top_navi"
+                                    onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000');  return false;">
+                                    <span>통계알리미</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000'); return false;">
+                                            공지사항
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD03', '2006103', '2006000'); return false;">
+                                            문의사항
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/event/EventInfoDetail.html', '2006101', '2006000'); return false;">
+                                            퀴즈이벤트
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+                                <a href="javascript:void(0);" class="top_navi"
+                                    onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000');  return false;">
+                                    <span>소개</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000'); return false;">
+                                            시스템 소개
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/introduce/introduceKisdistat.html', '2007106', '2007000'); return false;">
+                                            유관포털 소개
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/introduce/userGuide.html', '2007104', '2007000'); return false;">
+                                            이용자가이드
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/introduce/introduceLocation.html', '2007103', '2007000'); return false;">
+                                            찾아오시는 길
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                            onclick="moveSubMenu('/kor/introduce/privacyPolicy.html', '2007105', '2007000'); return false;">
+                                            개인정보처리방침
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <!-- right icons (search, sitemap) / 230614 SY Add -->
+                        <div class="right_icons">
+                            <a href="javascript:void(0);" title="search icon" class="aside_search_btn"></a>
+                            <a href="javascript:void(0);" title="site map" class="aside_sitemap_btn">
+                                <div class="i_sitemap"><span></span><span></span><span></span></div>
+                            </a>
+                        </div>
+
+                    </nav>
+                    <!--top_navi_end-->
+                </div>
+                <!-- center_end-->
+
+                <div class="gnb_bg"></div>
+            </form>
+        </header>
+
+        <!-- sub_top_section : sub_top_title, sub_location  -->
+        <!-- 
+            sub_top_bg_0 : 공통
+            sub_top_bg_1 : 통계 DB
+            sub_top_bg_2 : 통계시각화
+            sub_top_bg_3 : 통계자료
+            sub_top_bg_4 : 통계알리미
+            sub_top_bg_5 : 소개
+        -->
+
+
+        <section id="sub_top_section" class="sub_top_bg_3">
+            <div class="center">
+                <div class="sub_top_title">
+                    <h2 id="menunmsub">이달의 인기통계</h2>
+                    <p id="menudescsub"></p>
+                </div>
+            </div><!--center_end-->
+
+            <div class="sub_location">
+                <div class="center">
+                    <div class="sub_l_left">
+                        <ul>
+                            <li class="sub_l_btn">
+                                <a href="/main.html"><img src="img/icon/icon_sub_l_home.png" alt="홈" title="홈으로 이동"></a>
+                            </li>
+
+
+                            <li class="sub_l_menu">
+                                <a href="#none">통계자료</a>
+
+                                <ul class="sub_l_sub">
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002');">
+                                            통계DB
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003');">
+                                            통계시각화
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001');">
+                                            통계자료
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000');">
+                                            통계알리미
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000');">
+                                            소개
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="sub_l_menu">
+                                <a href="#none" id="menunmsub_l">이달의 인기통계</a>
+                                <ul class="sub_l_sub">
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001'); return false;">
+                                            이달의 인기통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD21', '2006104', '2010001'); return false;">
+                                            보고서
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/contents/ContentsList.html', '2010104', '2010001'); return false;">
+                                            통계원시자료
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;"
+                                            onclick="moveSubMenu('/kor/wordBeffat/wordBeffatList.html', '2010119', '2010001'); return false;">
+                                            용어사전
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!--sub_l_left_end-->
+
+                    <div class="sub_l_right">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <ul>
+                            <li class="sub_l_btn">
+                                <a href="javascript:;"
+                                    onclick="copyUrlInfo($(this), encodeURIComponent('https://www.mediastat.or.kr/kor/stat/PopularityStat.html?rootId=2010001|menuId=2010121|statKind=R'), 'sns_url');"
+                                    id="share_url"><img src="img/icon/icon_sub_l_share.png" alt="공유"></a>
+                            </li>
+
+
+                        </ul>
+                    </div><!--sub_l_right_end-->
+                </div><!--center_end-->
+            </div><!--sub_location_end-->
+        </section>
+
+        <!-- aside : right aside menu -->
+
+
+
+
+
+        <!-- security -->
+
+
+
+
+
+
+
+
+
+        <script type="text/javascript">
+            zoom_firfx();
+
+            var R_span = fnHtmlObjectCreate("span", {}, "STATISTICS BY SURVEY");		//조사별 통계 span
+            var R_p = fnHtmlObjectCreate("p", {}, "조사별통계");							//조사별 통계 p
+
+            var S_span = fnHtmlObjectCreate("span", {}, "STATISTICS BY TOPIC");		//주제별 통계 span
+            var S_p = fnHtmlObjectCreate("p", {}, "주제별통계");							//주제별 통계 p
+
+            $(document).ready(function () {
+
+                if ('R' == 'S') {
+                    $("#aside .aside_top").append(S_span); // SY Edit 230615
+                    $("#aside .aside_top").append(S_p); // SY Edit 230615
+                    $("#aside .aside_btn .aside_title").prepend(R_p);
+                    $("#aside .aside_btn .aside_title").prepend(R_span);
+                } else if ('R' == 'R') {
+                    $("#aside .aside_top").append(R_span); // SY Edit 230615
+                    $("#aside .aside_top").append(R_p); // SY Edit 230615
+                    $("#aside .aside_btn .aside_title").prepend(S_p);
+                    $("#aside .aside_btn .aside_title").prepend(S_span);
+                }
+
+                $("#btnSearchKeyword").click(function () {
+                    var form = $("#asideForm");
+
+                    if ($("#searchWord").val() == "") {
+                        alert("검색어를 입력해주세요.");
+                    }
+
+                    form.attr("action", "/kor/search/SearchList.html");
+                    form.submit();
+                });
+
+                // 검색 키워드 이벤트
+                $("#search_kyword").keyup(function (key) {
+                    $("#searchWord").val($(this).val());
+
+                    if (key.keyCode == 13) {
+                        $("#btnSearchKeyword").click();
+                    }
+                });
+            });
+            // 리스트 변경
+            function changeInfoFuc(statKind) {
+                $("#statKind").val(statKind);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ChangeInfoList.html",
+                    data: { "statKind": statKind },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.result != "null" && data.result != "" && data.result != null) {
+                            //상단 타이틀
+                            var menu_a = "";
+                            if (statKind == 'R') {
+                                menu_a = fnHtmlObjectCreate("a", { class: "aside_menu_top", href: "javascript:void(0);", onclick: "moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002' ) " }, "");
+                            } else if (statKind == 'S') {
+                                menu_a = fnHtmlObjectCreate("a", { class: "aside_menu_top", href: "javascript:void(0);", onclick: "moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002' ) " }, "");
+                            }
+
+                            var menu_div = fnHtmlObjectCreate("div", { class: "aside_title" }, "");
+                            $("#aside .aside_menu").html(menu_a);
+                            $(menu_a).append(menu_div);
+
+
+                            //하단 버튼 div
+                            var btn_menu_a = fnHtmlObjectCreate("a", { class: "aside_menu_top", href: "javascript:void(0);", onclick: "changeInfoFuc('S')" }, "");
+                            var btn_menu_div = fnHtmlObjectCreate("div", { class: "aside_title" }, "");
+
+                            if (statKind == 'R') {
+                                $(menu_div).append(R_span);
+                                $(menu_div).append(R_p);
+
+                                //하단버튼
+                                $("#aside .aside_btn").html(btn_menu_a);
+                                $(btn_menu_a).append(btn_menu_div);
+                                $(btn_menu_div).append(S_span);
+                                $(btn_menu_div).append(S_p);
+                            } else if (statKind == 'S') {
+                                $(menu_div).append(S_span);
+                                $(menu_div).append(S_p);
+
+                                //하단버튼
+                                btn_menu_a = fnHtmlObjectCreate("a", { class: "aside_menu_top", href: "javascript:void(0);", onclick: "changeInfoFuc('R')" }, "");
+                                btn_menu_div = fnHtmlObjectCreate("div", { class: "aside_title" }, "");
+
+                                $("#aside .aside_btn").html(btn_menu_a);
+                                $(btn_menu_a).append(btn_menu_div);
+                                $(btn_menu_div).append(R_span);
+                                $(btn_menu_div).append(R_p);
+                            }
+
+                            var vObj_btn_link_div = fnHtmlObjectCreate("div", { class: "aside_link" }, "펼쳐보기");
+                            $(btn_menu_div).append(vObj_btn_link_div);
+
+                            //상단 타이틀 하단 리스트
+                            var menu_ul = fnHtmlObjectCreate("ul", {}, "");
+                            $("#aside .aside_menu").append(menu_ul);
+                            $.each(data.result, function (index, arrjson) {
+                                var menu_li = fnHtmlObjectCreate("li", {}, "");
+                                var url = "/kor/tblInfo/TblInfoList.html?vw_cd=" + arrjson.vw_cd + "";
+                                var rootid = '2010002';
+                                if (arrjson.vw_cd == 'MT_ATITLE') {
+                                    var menuid = '2010118';
+                                } else {
+                                    var menuid = '2010106';
+                                }
+                                var menu_li_a = fnHtmlObjectCreate("a", { href: "javascript:void(0);", onclick: "fnSubDetail('" + arrjson.tbl_id + "','" + url + "','" + menuid + "','" + rootid + "')" }, arrjson.list_nm);
+
+                                $(menu_ul).append(menu_li);
+                                $(menu_li).append(menu_li_a);
+                            });
+                            $("#aside .aside_menu").append(menu_ul);
+
+                        } else {
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+
+            /*
+            * HTML 객체 생성1
+            * objTag   : 태그 명
+            * attrArry : 속성 배열
+            */
+            function fnHtmlObjectCreate(objTag, attrArry, val) {
+                var object = document.createElement(objTag);
+                for (var attr in attrArry) {
+                    $(object).attr(attr, attrArry[attr]);
+                }
+
+                if (val != undefined && val.toString().length > 0) {
+                    $(object).html(val);
+                }
+
+                return object;
+            }
+
+            function zoomIn(state) {
+                var num = ($("body").attr("class").substring(10)) * 1;
+                if (state == "plus") {
+                    if (num >= 5) { return; }
+                    $("body").removeClass().addClass("zoom_size_" + (num + 1));
+                } else if (state == "minus") {
+                    if (num <= 1) {
+                        $("body").removeClass().addClass("zoom_size");
+                    } else {
+                        $("body").removeClass().addClass("zoom_size_" + (num - 1));
+                    }
+                }
+                zoom_firfx();
+
+                // 세션 저장
+                $.ajax({
+                    type: "POST",
+                    url: "/ZoomIn.html",
+                    dataType: "json",
+                    data: { "state_name": $("body").attr("class") },
+                    error: function (request, status, error) {
+                        console.log("code = " + request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+                    }
+                });
+            }
+
+            function zoom_firfx() {
+                var agent = navigator.userAgent.toLowerCase();
+                if (agent.indexOf("firefox") != -1) {
+                    //firefox 브라우저 글자크기
+                    var num = ($("body").attr("class").substring(10)) * 1;
+                    var zoom_size;
+                    num *= 0.1; zoom_size = 1 + num;
+
+                    $("body").css({
+                        "webkitTransform": "scale(" + zoom_size + ")",
+                        "webkitTransformOrigin": "50% 0 0",
+                        "MozTransform": "scale(" + zoom_size + ")",
+                        "MozTransformOrigin": "50% 0 0",
+                        "msTransform": "scale(" + zoom_size + ")",
+                        "msTransformOrigin": "50% 0 0",
+                        "OTransform": "scale(" + zoom_size + ")",
+                        "OTransformOrigin": "50% 0 0",
+                        "transform": "scale(" + zoom_size + ")",
+                        "transformOrigin": "50% 0 0",
+                    });
+                }
+            }
+            function fnSubDetail(id, url, menuid, rootid) {
+                $('#menuId_m').val(menuid);
+                $('#rootId_m').val(rootid);
+                $('#up_list_id_m').val(id);
+                $("#asideForm").attr("action", url);
+                $("#asideForm").submit();
+            }
+
+            //통계 DB 클릭
+            function getInfoFuc() {
+                $("#aside").css("display", "block");
+                $("#my_his_aside").css("display", "none");
+            }
+
+        </script>
+
+        <form id="asideForm" method="post">
+            <input type="hidden" name="_csrf" value="1af8e54a-cfb7-41c3-a7e1-e2cad7dda5ef">
+            <input type="hidden" id="up_list_id_m" name="up_list_id" value="">
+            <input type="hidden" id="menuId_m" name="menuId" value="">
+            <input type="hidden" id="rootId_m" name="rootId" value="">
+            <input type="hidden" id="searchWord" name="srchwrd" value="">
+        </form>
+
+        <aside id="aside">
+            <!-- class 'clearfix' Add / 230615 SY -->
+            <div class="aside_top clearfix">
+                <!-- 230615 SY Delete -->
+                <!-- <div class="aside_fsize_btn">
+                    <span>글씨크기</span>
+                    <a href="javascript:void(0);" onclick="zoomIn('plus'); return false;" class="plus_btn"
+                        title="reduction icon">
+                        <div class="i_plus"><span></span><span></span></div>
+                    </a>
+                    <a href="javascript:void(0);" onclick="zoomIn('minus'); return false;" class="minus_btn"
+                        title="expansion icon">
+                        <div class="i_minus"><span></span></div>
+                    </a>
+                </div>
+
+                <a href="javascript:void(0);" title="search icon" class="aside_search_btn"><img
+                        src="/img/icon/icon_search.png" alt="search icon"></a>
+                <a href="javascript:void(0);" title="site map" class="aside_sitemap_btn">
+                    <div class="i_sitemap"><span></span><span></span><span></span></div>
+                </a> -->
+            </div>
+
+
+            <div class="aside_menu">
+                <a href="javascript:void(0);"
+                    onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')"
+                    class="aside_menu_top">
+                    <!-- 230616 SY Delete -->
+                    <!-- <div class="aside_title"></div> -->
+                </a>
+
+                <ul>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_001','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송매체 이용행태조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_002','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            시청점유율 기초조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_003','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            KI시청자평가지수 조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_004','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송산업 실태조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_005','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송시장 경쟁상황 평가
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_006','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송사업자 재산상황 공표
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_007','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송사업자 편성현황 조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_008','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송평가
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_010','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            고정형TV(실시간·VOD) 조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                            onclick="fnSubDetail('005_011','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            스마트폰·PC 시청기록 조사
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="aside_btn">
+                <a href="javascript:void(0);" onclick="changeInfoFuc('S'); return false;" class="aside_menu_top">
+                    <div class="aside_title">
+                        <div class="aside_link">펼쳐보기</div>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- my_his_aside : my history aside -->
+        <aside id="my_his_aside">
+            <div class="aside_top">
+
+                <a href="javascript:void(0);" title="검색" class="aside_search_btn"><img src="/img/icon/icon_search.png"
+                        alt="검색"></a>
+                <a href="javascript:;" onclick="getInfoFuc();" title="마이히스토리 닫기" class="modal_close"><span
+                        class="f_s_0">bar</span><span class="f_s_0">bar</span></a>
+            </div>
+
+            <div class="aside_menu">
+                <a href="javascript:;" class="aside_menu_top">
+                    <div class="aside_title"><span>MY HISTORY</span>
+                        <p>마이히스토리</p>
+                    </div>
+                </a>
+                <ul id="stored_table_ul">
+                    <li class="his_title"><span class="no_result">조회 이력이 없습니다.</span></li>
+                </ul>
+            </div>
+
+            <div class="aside_btn">
+                <a href="javascript:void(0);" onclick="changeInfoFuc('S'); return false;" class="aside_menu_top">
+                    <div class="aside_title">
+                        <div class="aside_link">펼쳐보기</div>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- site_search -->
+        <div class="site_search">
+            <div class="center">
+                <div class="search_box">
+                    <p class="search_title">통합검색</p>
+                    <div class="placeholder_box">
+                        <label for="search_kyword">검색어를 입력해주세요.</label>
+                        <input type="text" title="통합검색" id="search_kyword" name="search_kyword" class="blank_search">
+                    </div>
+                    <a href="javascript:;" class="search_btn btn black_btn" id="btnSearchKeyword">검색</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- site_map modal popup -->
+        <div class="modal modal_sitemap" id="modalPopup">
+            <div class="modal_div">
+                <a href="#" title="사이트맵 닫기" class="modal_close f_s_0">사이트맵 닫기</a>
+                <div class="sitemap_list">
+                    <ul>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big"
+                                onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002');  return false;">통계DB</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002'); return false;">조사별
+                                        통계</a></li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002'); return false;">주제별
+                                        통계 </a></li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/tblInfo/MultiTblInfo.html', '2010120', '2010002'); return false;">복합통계표</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE&amp;api_status=Y', '2010122', '2010002'); return false;">OpenAPI</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big"
+                                onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003');  return false;">통계시각화</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003'); return false;">주요지표트랜드</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/map/mapList.html', '2009002', '2010003'); return false;">지도시각화</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/infoGrp/infoGrpList.html?board_class=BOARD07', '2009001', '2010003'); return false;">인포그래픽</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/motionChart/motionChartList.html', '2009003', '2010003'); return false;">모션차트</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big"
+                                onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001');  return false;">통계자료</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001'); return false;">이달의
+                                        인기통계</a></li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD21', '2006104', '2010001'); return false;">보고서</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/contents/ContentsList.html', '2010104', '2010001'); return false;">통계원시자료</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/wordBeffat/wordBeffatList.html', '2010119', '2010001'); return false;">용어사전</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big"
+                                onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000');  return false;">통계알리미</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000'); return false;">공지사항</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD03', '2006103', '2006000'); return false;">문의사항</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/event/EventInfoDetail.html', '2006101', '2006000'); return false;">퀴즈이벤트</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big"
+                                onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000');  return false;">소개</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000'); return false;">시스템
+                                        소개</a></li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/introduce/introduceKisdistat.html', '2007106', '2007000'); return false;">유관포털
+                                        소개</a></li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/introduce/userGuide.html', '2007104', '2007000'); return false;">이용자가이드</a>
+                                </li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/introduce/introduceLocation.html', '2007103', '2007000'); return false;">찾아오시는
+                                        길</a></li>
+
+                                <li><a href="javascript:void(0);"
+                                        onclick="moveSubMenu('/kor/introduce/privacyPolicy.html', '2007105', '2007000'); return false;">개인정보처리방침</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="Progress_Loading" style="display: none;"><!-- 로딩바 -->
+            <img src="/img/loading.gif" alt="loading">
+        </div>
+
+        <!-- section : contents-->
+        <section id="sub_section">
+
+            <form id="bodyForm" name="bodyForm" method="post">
+                <div class="contents center" id="contents_body">
+                    <input type="hidden" id="sec_seq" name="sec_seq" value="">
+                    <input type="hidden" id="menu_id" name="menuId" value="2010121">
+                    <input type="hidden" id="root_id" name="rootId" value="2010001">
+                    <input type="hidden" name="_csrf" value="1af8e54a-cfb7-41c3-a7e1-e2cad7dda5ef">
+
+
+
+
+
+
+                    <!-- security -->
+
+
+
+
+
+
+
+
+
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            var form = $("#bodyForm");
+
+                            var src_st_dt;
+                            var src_ed_dt;
+
+                            const today = new Date();
+                            const year = today.getFullYear();
+                            const fake_month = today.getMonth() + 1;
+                            const month = ("00" + fake_month.toString()).slice(-2);
+                            const date = today.getDate();
+
+                            const realtime = year + '' + month + '' + date;
+
+                            $("[name=btn_year]").click(function () {
+                                if ($(this).attr("data-a") > year || $(this).attr("data-a") <= 2019) {
+                                    alert("조회할 수 없습니다.");
+
+                                    return;
+                                }
+
+                                if ($(this).attr("data-a") == "2020") {
+                                    src_st_dt = $(this).attr("data-a") + "1101"
+                                    src_ed_dt = $(this).attr("data-a") + "1130"
+
+                                    $("#src_st_dt").val(src_st_dt);
+                                    $("#src_ed_dt").val(src_ed_dt);
+                                    $('#bodyForm').attr("action", "/kor/stat/PopularityStat.html?statKind=R");
+                                    $('#bodyForm').submit();
+                                } else if ($(this).attr("data-a") != "2020") {
+                                    src_st_dt = $(this).attr("data-a") + "0101"
+                                    src_ed_dt = $(this).attr("data-a") + "0131"
+
+                                    $("#src_st_dt").val(src_st_dt);
+                                    $("#src_ed_dt").val(src_ed_dt);
+                                    $('#bodyForm').attr("action", "/kor/stat/PopularityStat.html?statKind=R");
+                                    $('#bodyForm').submit();
+                                }
+                            });
+
+                            $("[name=btn_month]").click(function () {
+                                const searchTime = $(this).attr("data-a") + $(this).attr("data-b");
+                                const realTime = year + '' + month;
+
+                                if (searchTime >= realTime || searchTime < "202011") {
+                                    alert("조회할 수 없습니다.");
+
+                                    $(this).blur();
+                                    return;
+                                }
+
+                                if ($(this).attr("data-b") == "01" || $(this).attr("data-b") == "03" || $(this).attr("data-b") == "05" || $(this).attr("data-b") == "07" || $(this).attr("data-b") == "08" ||
+                                    $(this).attr("data-b") == "10" || $(this).attr("data-b") == "12") {
+                                    src_st_dt = $(this).attr("data-a") + $(this).attr("data-b") + "01"
+                                    src_ed_dt = $(this).attr("data-a") + $(this).attr("data-b") + "31"
+                                    $("#src_st_dt").val(src_st_dt);
+                                    $("#src_ed_dt").val(src_ed_dt);
+
+                                    $('#bodyForm').attr("action", "/kor/stat/PopularityStat.html?statKind=R");
+                                    $('#bodyForm').submit();
+                                } else if ($(this).attr("data-b") == "04" || $(this).attr("data-b") == "06" || $(this).attr("data-b") == "09" || $(this).attr("data-b") == "11") {
+                                    src_st_dt = $(this).attr("data-a") + $(this).attr("data-b") + "01"
+                                    src_ed_dt = $(this).attr("data-a") + $(this).attr("data-b") + "30"
+                                    $("#src_st_dt").val(src_st_dt);
+                                    $("#src_ed_dt").val(src_ed_dt);
+
+                                    $('#bodyForm').attr("action", "/kor/stat/PopularityStat.html?statKind=R");
+                                    $('#bodyForm').submit();
+                                } else if ($(this).attr("data-b") == "02") {
+                                    src_st_dt = $(this).attr("data-a") + $(this).attr("data-b") + "01"
+                                    src_ed_dt = $(this).attr("data-a") + $(this).attr("data-b") + "28"
+                                    $("#src_st_dt").val(src_st_dt);
+                                    $("#src_ed_dt").val(src_ed_dt);
+
+                                    $('#bodyForm').attr("action", "/kor/stat/PopularityStat.html?statKind=R");
+                                    $('#bodyForm').submit();
+                                }
+
+                            });
+
+
+                        });
+                    </script>
+                    <input type="hidden" id="src_st_dt" name="src_st_dt" value="">
+                    <input type="hidden" id="src_ed_dt" name="src_ed_dt" value="">
+
+                    <!-- 이달의 인기통계 Start -->
+                    <div class="calenderWrap">
+                        <div class="calender_year">
+                            <ul>
+                                <li class="prevYear"><a name="btn_year" data-a="2022" href="#"
+                                        title="이전"><span>2022</span></a></li>
+                                <li class="nowYear">2023</li>
+                                <li class="nextYear"><a name="btn_year" data-a="2024" href="#"
+                                        title="다음"><span>2024</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="calender_month">
+                            <ul>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="01" href="#"><span
+                                            class="dis_i_block">1월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="02" href="#"><span
+                                            class="dis_i_block">2월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="03" href="#"><span
+                                            class="dis_i_block">3월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="04" href="#"><span
+                                            class="dis_i_block">4월</span></a></li>
+                                <li class="monSelect"><a name="btn_month" data-a="2023" data-b="05" href="#"><span
+                                            class="dis_i_block">5월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="06" href="#"><span
+                                            class="dis_i_block">6월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="07" href="#"><span
+                                            class="dis_i_block">7월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="08" href="#"><span
+                                            class="dis_i_block">8월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="09" href="#"><span
+                                            class="dis_i_block">9월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="10" href="#"><span
+                                            class="dis_i_block">10월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="11" href="#"><span
+                                            class="dis_i_block">11월</span></a></li>
+                                <li class=""><a name="btn_month" data-a="2023" data-b="12" href="#"><span
+                                            class="dis_i_block">12월</span></a></li>
+                            </ul>
+                        </div>
+                    </div><!-- End calenderWrap -->
+                    <div class="search_box">
+                        <p class="search_box_ele w100pct">
+                        </p>
+                        <p>※ 방송통계포털은 월별로 사용빈도가 높은 상위10개 통계표를 한눈에 볼 수 있는 서비스를 제공합니다.</p>
+                        <p></p>
+                    </div>
+                    <div class="table_list monthStat">
+                        <table>
+                            <caption>월별 인기통계표 목록</caption>
+                            <colgroup>
+                                <col class="w8pct">
+                                <col class="w50pct">
+                                <col class="w16pct">
+                                <col class="w5pct">
+                                <col class="w16pct">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>통계표명</th>
+                                    <th>출처</th>
+                                    <th>주기</th>
+                                    <th>수록시점</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr onclick="stat_view2('DT_BCMC_015' , 'ko');">
+                                    <td>
+                                        1
+                                    </td>
+                                    <td class="t_a_l">
+                                        OTT 서비스 유형별 시청빈도
+                                    </td>
+                                    <td>
+                                        방송매체 이용행태조사
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2013(년) ~ 2021(년)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_BCSTAT_A000072' , 'ko');">
+                                    <td>
+                                        2
+                                    </td>
+                                    <td class="t_a_l">
+                                        방송프로그램별 시청시간(2021년 11월)
+                                    </td>
+                                    <td>
+                                        시청점유율 기초조사
+                                    </td>
+                                    <td>
+                                        월
+                                    </td>
+                                    <td>
+                                        2021.11(월) ~ 2021.11(월)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_MEDIA01_0001' , 'ko');">
+                                    <td>
+                                        3
+                                    </td>
+                                    <td class="t_a_l">
+                                        방송사업자 시청점유율
+                                    </td>
+                                    <td>
+                                        KI시청자평가지수 조사
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2012(년) ~ 2020(년)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_BCSTAT_A000182' , 'ko');">
+                                    <td>
+                                        4
+                                    </td>
+                                    <td class="t_a_l">
+                                        방송프로그램별 시청시간(2023년 2월)
+                                    </td>
+                                    <td>
+                                        방송산업 실태조사
+                                    </td>
+                                    <td>
+                                        월
+                                    </td>
+                                    <td>
+                                        2023.02(월) ~ 2023.02(월)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_BCSTAT_A000052' , 'ko');">
+                                    <td>
+                                        5
+                                    </td>
+                                    <td class="t_a_l">
+                                        방송사업자 합산시청점유율
+                                    </td>
+                                    <td>
+                                        방송시장 경쟁상황 평가
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2020(년) ~ 2020(년)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_MEDIA03_A001' , 'ko');">
+                                    <td>
+                                        6
+                                    </td>
+                                    <td class="t_a_l">
+                                        지상파 재무상태표
+                                    </td>
+                                    <td>
+                                        방송사업자 재산상황 공표
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2011(년) ~ 2021(년)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_920010_0012' , 'ko');">
+                                    <td>
+                                        7
+                                    </td>
+                                    <td class="t_a_l">
+                                        유료방송 가입자 현황
+                                    </td>
+                                    <td>
+                                        방송사업자 편성현황 조사
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2001(년) ~ 2021(년)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_BCSTAT_A000172' , 'ko');">
+                                    <td>
+                                        8
+                                    </td>
+                                    <td class="t_a_l">
+                                        방송프로그램별 시청시간(2022년 11월)
+                                    </td>
+                                    <td>
+                                        방송평가
+                                    </td>
+                                    <td>
+                                        월
+                                    </td>
+                                    <td>
+                                        2022.11(월) ~ 2022.11(월)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_MEDIA03_A002' , 'ko');">
+                                    <td>
+                                        9
+                                    </td>
+                                    <td class="t_a_l">
+                                        지상파 손익계산서
+                                    </td>
+                                    <td>
+                                        고정형TV(실시간·VOD) 조사
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2011(년) ~ 2021(년)
+                                    </td>
+                                </tr>
+
+                                <tr onclick="stat_view2('DT_KCCI_001' , 'ko');">
+                                    <td>
+                                        10
+                                    </td>
+                                    <td class="t_a_l">
+                                        지상파 시청자평가지수
+                                    </td>
+                                    <td>
+                                        스마트폰·PC 시청기록 조사
+                                    </td>
+                                    <td>
+                                        년
+                                    </td>
+                                    <td>
+                                        2012(년) ~ 2021(년)
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div><!-- End table_list monthStat -->
+                </div>
+            </form>
+        </section>
+
+        <!-- footer : banner, copyright -->
+        <footer id="footer">
+
+
+
+
+
+            <!-- security -->
+
+
+
+
+
+
+
+
+
+            <!-- AceCounter Log Gathering Script V.8.0.AMZ2019080601 -->
+            <script language="javascript">
+                var _AceGID = (function () { var Inf = ['gtp9.acecounter.com', '8080', 'AH6A45742191408', 'AW', '0', 'NaPm,Ncisy', 'ALL', '0']; var _CI = (!_AceGID) ? [] : _AceGID.val; var _N = 0; var _T = new Image(0, 0); if (_CI.join('.').indexOf(Inf[3]) < 0) { _T.src = "https://" + Inf[0] + '/?cookie'; _CI.push(Inf); _N = _CI.length; } return { o: _N, val: _CI }; })();
+                var _AceCounter = (function () { var G = _AceGID; var _sc = document.createElement('script'); var _sm = document.getElementsByTagName('script')[0]; if (G.o != 0) { var _A = G.val[G.o - 1]; var _G = (_A[0]).substr(0, _A[0].indexOf('.')); var _C = (_A[7] != '0') ? (_A[2]) : _A[3]; var _U = (_A[5]).replace(/\,/g, '_'); _sc.src = 'https:' + '//cr.acecounter.com/Web/AceCounter_' + _C + '.js?gc=' + _A[2] + '&py=' + _A[4] + '&gd=' + _G + '&gp=' + _A[1] + '&up=' + _U + '&rd=' + (new Date().getTime()); _sm.parentNode.insertBefore(_sc, _sm); return _sc.src; } })();
+            </script>
+            <!-- AceCounter Log Gathering Script End -->
+
+            <script>
+                function windowOpen(url) {
+                    window.open(url, "_blank");
+                }
+            </script>
+            <div class="footer_banner">
+                <div class="center">
+                    <p>배너모음</p>
+                    <div class="f_b_btn">
+                        <a href="javascript:void(0);" title="일시정지" class="f_b_btn_stop"></a>
+                        <a href="javascript:void(0);" title="재생" class="f_b_btn_play"></a>
+                    </div>
+                    <div class="f_b_wrap">
+                        <div class="f_b_slide slick-initialized slick-slider"><button class="slick-prev slick-arrow"
+                                aria-label="Previous" type="button" style="">Previous</button>
+                            <div class="slick-list draggable">
+                                <div class="slick-track"
+                                    style="opacity: 1; width: 25000px; transform: translate3d(-1298px, 0px, 0px);">
+                                    <div class="slick-slide slick-cloned" data-slick-index="-4" aria-hidden="true"
+                                        tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://www.kobaco.co.kr/site/adstat/home');"
+                                                    tabindex="-1">
+                                                    kobaco
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="-3" aria-hidden="true"
+                                        tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('http://www.index.go.kr/main.do');"
+                                                    tabindex="-1">
+                                                    e-나라지표
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="-2" aria-hidden="true"
+                                        tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('http://kosis.kr/index/index.do');"
+                                                    tabindex="-1">
+                                                    KOSIS 국가통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="-1" aria-hidden="true"
+                                        tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://www.racoi.or.kr/kobaco/main.do?racoi');"
+                                                    tabindex="-1">
+                                                    RACOI
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide" data-slick-index="0" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://stat.kisdi.re.kr');"
+                                                    tabindex="-1">
+                                                    미디어통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide" data-slick-index="1" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://www.kobaco.co.kr/site/adstat/home');"
+                                                    tabindex="-1">
+                                                    kobaco
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide" data-slick-index="2" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('http://www.index.go.kr/main.do');"
+                                                    tabindex="-1">
+                                                    e-나라지표
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide" data-slick-index="3" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('http://kosis.kr/index/index.do');"
+                                                    tabindex="-1">
+                                                    KOSIS 국가통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-current slick-active" data-slick-index="4"
+                                        aria-hidden="false">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://www.racoi.or.kr/kobaco/main.do?racoi');"
+                                                    tabindex="0">
+                                                    RACOI
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned slick-active" data-slick-index="5"
+                                        aria-hidden="false" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://stat.kisdi.re.kr');"
+                                                    tabindex="0">
+                                                    미디어통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned slick-active" data-slick-index="6"
+                                        aria-hidden="false" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://www.kobaco.co.kr/site/adstat/home');"
+                                                    tabindex="0">
+                                                    kobaco
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned slick-active" data-slick-index="7"
+                                        aria-hidden="false" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('http://www.index.go.kr/main.do');"
+                                                    tabindex="0">
+                                                    e-나라지표
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="8" aria-hidden="true"
+                                        tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('http://kosis.kr/index/index.do');"
+                                                    tabindex="-1">
+                                                    KOSIS 국가통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="9" aria-hidden="true"
+                                        tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;"
+                                                    onclick="javascript: windowOpen('https://www.racoi.or.kr/kobaco/main.do?racoi');"
+                                                    tabindex="-1">
+                                                    RACOI
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><button class="slick-next slick-arrow" aria-label="Next" type="button"
+                                style="">Next</button>
+                        </div>
+                    </div>
+                </div><!--center_end-->
+            </div>
+            <div class="footer_copyright">
+                <div class="center">
+                    <ul class="f_c_link">
+                        <li><a href="/kor/introduce/privacyPolicy.html?rootId=2007000&amp;menuId=2007105">개인정보처리방침</a>
+                        </li>
+                        <li><a href="/kor/introduce/introduceLocation.html?rootId=2007000&amp;menuId=2007103">찾아오시는
+                                길</a></li>
+                        <li><a href="http://www.kisdi.re.kr/kisdi/jsp/fp/kr/help/KK_79000.jsp?ordTxt=M001008"
+                                title="저작권정책" target="_blank">저작권정책</a></li>
+                    </ul>
+                    <p>(27872) 충청북도 진천군 덕산읍 정통로 18 정보통신정책연구원</p>
+                    <span>COPYRIGHT © 2020 KOREA COMMUNICATIONS COMMISSION. ALL RIGHTS RESERVED.</span>
+                    <a href="https://www.kogl.or.kr/info/license.do#01-tab" target="_blank" class="open_mark"
+                        title="공공누리 제1유형 인증마크"><img src="img/img_opentype01.png" alt="공공누리 제 1유형 인증마크"></a>
+
+                </div><!--center_end-->
+            </div>
+        </footer>
+
+    </div>
+
+
+</body>
+
+</html>

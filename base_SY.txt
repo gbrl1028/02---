@@ -1,0 +1,13 @@
+/* 230602 SY Add */
+.BtnGroup_warpper {  }
+
+.download_BtnGroup {  }
+
+.r_btn_download { font-family:dotum, '돋움', sans-serif; font-size:12px; font-weight:bold; color:#555; height:23px; padding:0 6px 0 22px; background:#fff; border:#ccc solid 1px; border-radius:2px; vertical-align: middle; cursor: pointer; line-height:23px; position:relative; letter-spacing:-1px; }
+
+.r_btn_download.rBtn_01 { color: #3a90ce !important; border: #3a90ce solid 1px !important; }
+.r_btn_download.rBtn_02 { color: #00adef !important; border: #00adef solid 1px !important; }
+.r_btn_download.rBtn_03 { color: #ff8b3c !important; border: #ff8b3c solid 1px !important; }
+.r_btn_download.rBtn_04 { color: #39c177 !important; border: #39c177 solid 1px !important; }
+.r_btn_download.rBtn_05 { color: #69279c !important; border: #69279c solid 1px !important; }
+.r_btn_download.rBtn_06 { color: #3b5485 !important; border: #3b5485 solid 1px !important; }

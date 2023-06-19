@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="author" content="정보통신정책연구원 방송통신위원회">
+    <meta name="keywords" content="정보통신정책연구원 방송통신위원회,방송통계포털">
+    <meta name="description" lang="ko" content="정보통신정책연구원 방송통신위원회,방송통계포털">
+    <meta name="copyright" content="27872 충청북도 진천군 덕산면 정통로 18 정보통신정책연구원">
+
+    <meta name="_csrf" content="2bb0105e-8b56-4844-b720-96fce57ccc5f">
+    <meta name="_csrf_header" content="X-CSRF-TOKEN">
+
+    <title>방송통계포털</title>
+
+    <!-- css -->
+    <link rel="stylesheet" href="css/sub.css">
+    <link rel="stylesheet" href="js/slick/slick.css">
+    <link rel="stylesheet" href="js/slick/slick-theme.css">
+
+    <!--jquery  -->
+    <script src="https://cr.acecounter.com/Web/AceCounter_AW.js?gc=AH6A45742191408&amp;py=0&amp;gd=gtp9&amp;gp=8080&amp;up=NaPm_Ncisy&amp;rd=1685670678285"></script>
+    <script src="js/jquery-3.4.1.js" charset="UTF-8"></script>
+    <script src="js/layout.js" charset="UTF-8"></script>
+    <script src="js/slick/slick.js" charset="UTF-8"></script>
+    <script src="js/common.js" charset="UTF-8"></script>
+    <script src="js/print.js" charset="UTF-8"></script>
+
+    <style type="text/css">
+        #Progress_Loading {
+            z-index: 999;
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #Progress_Loading img {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -25px;
+            margin-left: -25px;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $(document).ready(function() {
+            $('#Progress_Loading').hide();
+
+        });
+
+    </script>
+</head>
+
+<body class="zoom_size">
+    <div class="wrap">
+        <div id="skipnavi">
+            <a href="#sub_section">본문 바로가기</a>
+        </div>
+
+        <!-- header : top_navi  -->
+        <header id="header" class="">
+
+
+
+
+
+            <!-- security -->
+
+
+
+
+
+
+
+
+
+            <script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+            <script type="text/javascript">
+                if (!wcs_add) var wcs_add = {};
+                wcs_add["wa"] = "a29cb077683128";
+                if (window.wcs) {
+                    wcs_do();
+                }
+
+            </script>
+            <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-NYTYTZGR4H"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+
+                gtag('config', 'G-NYTYTZGR4H');
+
+            </script>
+            <script type="text/javascript">
+                //운영반영
+                if (document.location.protocol == 'http:') {
+                    document.location.href = document.location.href.replace('http:', 'https:');
+                }
+
+                $(function() {
+
+                    // 메뉴별 방문자 수 체크 통신 함수
+                    fn_ajax_menuVisitCntChk();
+
+                    //IE 브라우저 여부 확인
+                    var agent = navigator.userAgent.toLowerCase();
+                    if ("" == "" && (navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || (agent.indexOf("msie") != -1)) {
+                        // 세션 저장
+                        $.ajax({
+                            type: "POST",
+                            url: "/IeYn.html",
+                            dataType: "json",
+                            data: {
+                                "ieYn": "Y"
+                            },
+                            error: function(request, status, error) {
+                                console.log("code = " + request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+                            }
+                        });
+
+                        alert('Internet Explorer은 2021년 8월 17일 이후로 서비스 지원이 종료됩니다. \n서비스 지원이 중단 된 후에는 다양한 웹 서비스 사용이 제한되고, 악성코드 및 정보보안에 매우 취약해집니다.\n크롬, 파이어폭스 등 다른 브라우저를 사용을 권장합니다.');
+                    }
+                });
+
+                function moveSubMenu(menuUrl, menuId, rootId) {
+                    var url = "" + menuUrl;
+
+                    $("#menuId").val(menuId);
+                    $("#rootId").val(rootId);
+
+                    $("#topfrm").attr("action", url);
+                    $("#topfrm").submit();
+                }
+
+                // 메뉴별 방문자 수 체크 통신 함수
+                function fn_ajax_menuVisitCntChk() {
+                    var form = $("#topfrm");
+                    var domain = window.document.location.protocol + "//" + window.document.location.host;
+                    var uri = window.document.location.href;
+                    var currUri = "";
+                    var currUri2 = uri.replace(domain, '');
+                    var menuid = "";
+                    if (currUri2 != "" && currUri2 != null) {
+
+                        if (currUri2.indexOf("/main.html") > -1) { //메인
+
+                            currUri += "/main.html";
+                            menuid = '2010101';
+                        } else { //서브
+                            var currUriArr = currUri2.split("/");
+
+                            for (var i = 2; i < currUriArr.length; i++) {
+                                currUri += "/" + currUriArr[i];
+                            }
+
+                            menuid = $("#menuId").val();
+                        }
+
+                        $.ajax({
+                            url: "/sysUseStat/insertMenuPageView.html",
+                            //					url : "../../sysUseStat/insertMenuPageView.html",
+                            type: "post",
+                            data: {
+                                'currUri': currUri,
+                                'currUri2': currUri2,
+                                'menu_id': menuid
+                            },
+                            success: function(data) {
+                                if (data != null) {
+                                    if (data.isTrue == "false") {
+                                        console.log("MenuPageViewChk error");
+                                    }
+                                }
+                            },
+                            error: function(request, status, error) {
+                                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                            }
+                        });
+
+                    }
+                }
+
+            </script>
+
+            <form name="topfrm" id="topfrm" method="post">
+                <input type="hidden" name="_csrf" value="2bb0105e-8b56-4844-b720-96fce57ccc5f">
+                <input type="hidden" id="menuId" name="menuId" value="2010118">
+                <input type="hidden" id="rootId" name="rootId" value="2010002">
+                <input type="hidden" id="statKind" name="statKind" value="R">
+
+                <div class="center">
+                    <nav>
+                        <a href="/main.html" class="top_logo"><img src="img/top_logo.png" alt="방송통계포털 로고"></a>
+
+                        <ul>
+
+
+
+
+
+
+
+
+
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+
+
+
+
+                                <a href="javascript:void(0);" class="top_navi top_navi_on" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002');  return false;">
+                                    <span>통계DB</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002'); return false;">
+                                            조사별 통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002'); return false;">
+                                            주제별 통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/MultiTblInfo.html', '2010120', '2010002'); return false;">
+                                            복합통계표
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE&amp;api_status=Y', '2010122', '2010002'); return false;">
+                                            OpenAPI
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+
+
+
+
+
+
+
+
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+
+
+                                <a href="javascript:void(0);" class="top_navi " onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003');  return false;">
+                                    <span>통계시각화</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003'); return false;">
+                                            주요지표트랜드
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/map/mapList.html', '2009002', '2010003'); return false;">
+                                            지도시각화
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/infoGrp/infoGrpList.html?board_class=BOARD07', '2009001', '2010003'); return false;">
+                                            인포그래픽
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/motionChart/motionChartList.html', '2009003', '2010003'); return false;">
+                                            모션차트
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+
+
+
+
+
+
+
+
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+
+
+                                <a href="javascript:void(0);" class="top_navi " onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001');  return false;">
+                                    <span>통계자료</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001'); return false;">
+                                            이달의 인기통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD21', '2006104', '2010001'); return false;">
+                                            보고서
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/contents/ContentsList.html', '2010104', '2010001'); return false;">
+                                            통계원시자료
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/wordBeffat/wordBeffatList.html', '2010119', '2010001'); return false;">
+                                            용어사전
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+
+
+
+
+
+
+
+
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+
+
+                                <a href="javascript:void(0);" class="top_navi " onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000');  return false;">
+                                    <span>통계알리미</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000'); return false;">
+                                            공지사항
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD03', '2006103', '2006000'); return false;">
+                                            문의사항
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/event/EventInfoDetail.html', '2006101', '2006000'); return false;">
+                                            퀴즈이벤트
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+
+
+
+
+
+
+
+
+
+                            <!-- 대메뉴  -->
+                            <li class="top_navi_li">
+
+
+                                <a href="javascript:void(0);" class="top_navi " onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000');  return false;">
+                                    <span>소개</span>
+                                </a>
+
+                                <!-- 소메뉴 -->
+                                <ul class="sub_navi">
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000'); return false;">
+                                            시스템 소개
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/introduceKisdistat.html', '2007106', '2007000'); return false;">
+                                            유관포털 소개
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/userGuide.html', '2007104', '2007000'); return false;">
+                                            이용자가이드
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/introduceLocation.html', '2007103', '2007000'); return false;">
+                                            찾아오시는 길
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/privacyPolicy.html', '2007105', '2007000'); return false;">
+                                            개인정보처리방침
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+                        </ul>
+
+                    </nav>
+                    <!--top_navi_end-->
+                </div><!-- center_end-->
+                <div class="gnb_bg"></div>
+            </form>
+        </header>
+
+        <!-- sub_top_section : sub_top_title, sub_location  -->
+        <!-- 
+		        sub_top_bg_0 : 공통
+		        sub_top_bg_1 : 통계 DB
+		        sub_top_bg_2 : 통계시각화
+		        sub_top_bg_3 : 통계자료
+		        sub_top_bg_4 : 통계알리미
+		        sub_top_bg_5 : 소개
+		    -->
+
+
+        <section id="sub_top_section" class="sub_top_bg_1">
+            <div class="center">
+                <div class="sub_top_title">
+                    <h2 id="menunmsub">조사별 통계</h2>
+                    <p id="menudescsub"></p>
+                </div>
+            </div>
+            <!--center_end-->
+
+            <div class="sub_location">
+                <div class="center">
+                    <div class="sub_l_left">
+                        <ul>
+                            <li class="sub_l_btn">
+                                <a href="/main.html"><img src="img/icon/icon_sub_l_home.png" alt="홈" title="홈으로 이동"></a>
+                            </li>
+
+
+                            <li class="sub_l_menu">
+                                <a href="#none">통계DB</a>
+
+                                <ul class="sub_l_sub">
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002');">
+                                            통계DB
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003');">
+                                            통계시각화
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001');">
+                                            통계자료
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000');">
+                                            통계알리미
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000');">
+                                            소개
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="sub_l_menu">
+                                <a href="#none" id="menunmsub_l">조사별 통계</a>
+                                <ul class="sub_l_sub">
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002'); return false;">
+                                            조사별 통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002'); return false;">
+                                            주제별 통계
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/tblInfo/MultiTblInfo.html', '2010120', '2010002'); return false;">
+                                            복합통계표
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="javascript:;" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE&amp;api_status=Y', '2010122', '2010002'); return false;">
+                                            OpenAPI
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--sub_l_left_end-->
+
+                    <div class="sub_l_right">
+
+
+
+
+
+
+
+
+
+
+                        <ul>
+                            <li class="sub_l_btn">
+                                <a href="javascript:;" onclick="copyUrlInfo($(this), encodeURIComponent('https://www.mediastat.or.kr/kor/tblInfo/TblInfoList.html?rootId=2010002&amp;vw_cd=MT_ATITLE&amp;menuId=2010118&amp;statKind=R'), 'sns_url');" id="share_url"><img src="img/icon/icon_sub_l_share.png" alt="공유"></a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <!--sub_l_right_end-->
+                </div>
+                <!--center_end-->
+            </div>
+            <!--sub_location_end-->
+        </section>
+
+        <!-- aside : right aside menu -->
+
+
+
+
+
+        <!-- security -->
+
+
+
+
+
+
+
+
+
+        <script type="text/javascript">
+            zoom_firfx();
+
+            var R_span = fnHtmlObjectCreate("span", {}, "STATISTICS BY SURVEY"); //조사별 통계 span
+            var R_p = fnHtmlObjectCreate("p", {}, "조사별통계"); //조사별 통계 p
+
+            var S_span = fnHtmlObjectCreate("span", {}, "STATISTICS BY TOPIC"); //주제별 통계 span
+            var S_p = fnHtmlObjectCreate("p", {}, "주제별통계"); //주제별 통계 p
+
+            $(document).ready(function() {
+
+                if ('R' == 'S') {
+                    $("#aside .aside_menu .aside_title").append(S_span);
+                    $("#aside .aside_menu .aside_title").append(S_p);
+                    $("#aside .aside_btn .aside_title").prepend(R_p);
+                    $("#aside .aside_btn .aside_title").prepend(R_span);
+                } else if ('R' == 'R') {
+                    $("#aside .aside_menu .aside_title").append(R_span);
+                    $("#aside .aside_menu .aside_title").append(R_p);
+                    $("#aside .aside_btn .aside_title").prepend(S_p);
+                    $("#aside .aside_btn .aside_title").prepend(S_span);
+                }
+
+                $("#btnSearchKeyword").click(function() {
+                    var form = $("#asideForm");
+
+                    if ($("#searchWord").val() == "") {
+                        alert("검색어를 입력해주세요.");
+                    }
+
+                    form.attr("action", "/kor/search/SearchList.html");
+                    form.submit();
+                });
+
+                // 검색 키워드 이벤트
+                $("#search_kyword").keyup(function(key) {
+                    $("#searchWord").val($(this).val());
+
+                    if (key.keyCode == 13) {
+                        $("#btnSearchKeyword").click();
+                    }
+                });
+            });
+            // 리스트 변경
+            function changeInfoFuc(statKind) {
+                $("#statKind").val(statKind);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ChangeInfoList.html",
+                    data: {
+                        "statKind": statKind
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.result != "null" && data.result != "" && data.result != null) {
+                            //상단 타이틀
+                            var menu_a = "";
+                            if (statKind == 'R') {
+                                menu_a = fnHtmlObjectCreate("a", {
+                                    class: "aside_menu_top",
+                                    href: "javascript:void(0);",
+                                    onclick: "moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002' ) "
+                                }, "");
+                            } else if (statKind == 'S') {
+                                menu_a = fnHtmlObjectCreate("a", {
+                                    class: "aside_menu_top",
+                                    href: "javascript:void(0);",
+                                    onclick: "moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002' ) "
+                                }, "");
+                            }
+
+                            var menu_div = fnHtmlObjectCreate("div", {
+                                class: "aside_title"
+                            }, "");
+                            $("#aside .aside_menu").html(menu_a);
+                            $(menu_a).append(menu_div);
+
+
+                            //하단 버튼 div
+                            var btn_menu_a = fnHtmlObjectCreate("a", {
+                                class: "aside_menu_top",
+                                href: "javascript:void(0);",
+                                onclick: "changeInfoFuc('S')"
+                            }, "");
+                            var btn_menu_div = fnHtmlObjectCreate("div", {
+                                class: "aside_title"
+                            }, "");
+
+                            if (statKind == 'R') {
+                                $(menu_div).append(R_span);
+                                $(menu_div).append(R_p);
+
+                                //하단버튼
+                                $("#aside .aside_btn").html(btn_menu_a);
+                                $(btn_menu_a).append(btn_menu_div);
+                                $(btn_menu_div).append(S_span);
+                                $(btn_menu_div).append(S_p);
+                            } else if (statKind == 'S') {
+                                $(menu_div).append(S_span);
+                                $(menu_div).append(S_p);
+
+                                //하단버튼
+                                btn_menu_a = fnHtmlObjectCreate("a", {
+                                    class: "aside_menu_top",
+                                    href: "javascript:void(0);",
+                                    onclick: "changeInfoFuc('R')"
+                                }, "");
+                                btn_menu_div = fnHtmlObjectCreate("div", {
+                                    class: "aside_title"
+                                }, "");
+
+                                $("#aside .aside_btn").html(btn_menu_a);
+                                $(btn_menu_a).append(btn_menu_div);
+                                $(btn_menu_div).append(R_span);
+                                $(btn_menu_div).append(R_p);
+                            }
+
+                            var vObj_btn_link_div = fnHtmlObjectCreate("div", {
+                                class: "aside_link"
+                            }, "펼쳐보기");
+                            $(btn_menu_div).append(vObj_btn_link_div);
+
+                            //상단 타이틀 하단 리스트
+                            var menu_ul = fnHtmlObjectCreate("ul", {}, "");
+                            $("#aside .aside_menu").append(menu_ul);
+                            $.each(data.result, function(index, arrjson) {
+                                var menu_li = fnHtmlObjectCreate("li", {}, "");
+                                var url = "/kor/tblInfo/TblInfoList.html?vw_cd=" + arrjson.vw_cd + "";
+                                var rootid = '2010002';
+                                if (arrjson.vw_cd == 'MT_ATITLE') {
+                                    var menuid = '2010118';
+                                } else {
+                                    var menuid = '2010106';
+                                }
+                                var menu_li_a = fnHtmlObjectCreate("a", {
+                                    href: "javascript:void(0);",
+                                    onclick: "fnSubDetail('" + arrjson.tbl_id + "','" + url + "','" + menuid + "','" + rootid + "')"
+                                }, arrjson.list_nm);
+
+                                $(menu_ul).append(menu_li);
+                                $(menu_li).append(menu_li_a);
+                            });
+                            $("#aside .aside_menu").append(menu_ul);
+
+                        } else {}
+                    },
+                    error: function() {}
+                });
+            }
+
+            /*
+             * HTML 객체 생성1
+             * objTag   : 태그 명
+             * attrArry : 속성 배열
+             */
+            function fnHtmlObjectCreate(objTag, attrArry, val) {
+                var object = document.createElement(objTag);
+                for (var attr in attrArry) {
+                    $(object).attr(attr, attrArry[attr]);
+                }
+
+                if (val != undefined && val.toString().length > 0) {
+                    $(object).html(val);
+                }
+
+                return object;
+            }
+
+            function zoomIn(state) {
+                var num = ($("body").attr("class").substring(10)) * 1;
+                if (state == "plus") {
+                    if (num >= 5) {
+                        return;
+                    }
+                    $("body").removeClass().addClass("zoom_size_" + (num + 1));
+                } else if (state == "minus") {
+                    if (num <= 1) {
+                        $("body").removeClass().addClass("zoom_size");
+                    } else {
+                        $("body").removeClass().addClass("zoom_size_" + (num - 1));
+                    }
+                }
+                zoom_firfx();
+
+                // 세션 저장
+                $.ajax({
+                    type: "POST",
+                    url: "/ZoomIn.html",
+                    dataType: "json",
+                    data: {
+                        "state_name": $("body").attr("class")
+                    },
+                    error: function(request, status, error) {
+                        console.log("code = " + request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+                    }
+                });
+            }
+
+            function zoom_firfx() {
+                var agent = navigator.userAgent.toLowerCase();
+                if (agent.indexOf("firefox") != -1) {
+                    //firefox 브라우저 글자크기
+                    var num = ($("body").attr("class").substring(10)) * 1;
+                    var zoom_size;
+                    num *= 0.1;
+                    zoom_size = 1 + num;
+
+                    $("body").css({
+                        "webkitTransform": "scale(" + zoom_size + ")",
+                        "webkitTransformOrigin": "50% 0 0",
+                        "MozTransform": "scale(" + zoom_size + ")",
+                        "MozTransformOrigin": "50% 0 0",
+                        "msTransform": "scale(" + zoom_size + ")",
+                        "msTransformOrigin": "50% 0 0",
+                        "OTransform": "scale(" + zoom_size + ")",
+                        "OTransformOrigin": "50% 0 0",
+                        "transform": "scale(" + zoom_size + ")",
+                        "transformOrigin": "50% 0 0",
+                    });
+                }
+            }
+
+            function fnSubDetail(id, url, menuid, rootid) {
+                $('#menuId_m').val(menuid);
+                $('#rootId_m').val(rootid);
+                $('#up_list_id_m').val(id);
+                $("#asideForm").attr("action", url);
+                $("#asideForm").submit();
+            }
+
+            //통계 DB 클릭
+            function getInfoFuc() {
+                $("#aside").css("display", "block");
+                $("#my_his_aside").css("display", "none");
+            }
+
+        </script>
+
+        <form id="asideForm" method="post">
+            <input type="hidden" name="_csrf" value="2bb0105e-8b56-4844-b720-96fce57ccc5f">
+            <input type="hidden" id="up_list_id_m" name="up_list_id" value="">
+            <input type="hidden" id="menuId_m" name="menuId" value="">
+            <input type="hidden" id="rootId_m" name="rootId" value="">
+            <input type="hidden" id="searchWord" name="srchwrd" value="">
+        </form>
+
+        <aside id="aside">
+            <div class="aside_top">
+
+                <div class="aside_fsize_btn">
+                    <span>글씨크기</span>
+                    <a href="javascript:void(0);" onclick="zoomIn('plus'); return false;" class="plus_btn" title="reduction icon">
+                        <div class="i_plus"><span></span><span></span></div>
+                    </a>
+                    <a href="javascript:void(0);" onclick="zoomIn('minus'); return false;" class="minus_btn" title="expansion icon">
+                        <div class="i_minus"><span></span></div>
+                    </a>
+                </div>
+
+                <a href="javascript:void(0);" title="search icon" class="aside_search_btn"><img src="img/icon/icon_search.png" alt="search icon"></a>
+                <a href="javascript:void(0);" title="site map" class="aside_sitemap_btn">
+                    <div class="i_sitemap"><span></span><span></span><span></span></div>
+                </a>
+            </div>
+
+
+            <div class="aside_menu">
+                <a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')" class="aside_menu_top">
+                    <div class="aside_title">
+                        <!--<span>STATISTICS BY SURVEY</span>
+                        <p>조사별통계</p>-->
+                    </div>
+                </a>
+
+                <ul>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_001','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송매체 이용행태조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_002','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            시청점유율 기초조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_003','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            KI시청자평가지수 조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_004','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송산업 실태조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_005','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송시장 경쟁상황 평가
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_006','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송사업자 재산상황 공표
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_007','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송사업자 편성현황 조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_008','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            방송평가
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_010','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            고정형TV(실시간·VOD) 조사
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" onclick="fnSubDetail('005_011','/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE','2010118','2010002')">
+                            스마트폰·PC 시청기록 조사
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="aside_btn">
+                <a href="javascript:void(0);" onclick="changeInfoFuc('S'); return false;" class="aside_menu_top">
+                    <div class="aside_title">
+                        <!--<span>STATISTICS BY TOPIC</span>
+                        <p>주제별통계</p>-->
+                        <div class="aside_link">펼쳐보기</div>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- my_his_aside : my history aside -->
+        <aside id="my_his_aside">
+            <div class="aside_top">
+
+                <a href="javascript:void(0);" title="검색" class="aside_search_btn"><img src="img/icon/icon_search.png" alt="검색"></a>
+                <a href="javascript:;" onclick="getInfoFuc();" title="마이히스토리 닫기" class="modal_close"><span class="f_s_0">bar</span><span class="f_s_0">bar</span></a>
+            </div>
+
+            <div class="aside_menu">
+                <a href="javascript:;" class="aside_menu_top">
+                    <div class="aside_title"><span>MY HISTORY</span>
+                        <p>마이히스토리</p>
+                    </div>
+                </a>
+                <ul id="stored_table_ul">
+                    <li class="his_title"><span class="no_result">조회 이력이 없습니다.</span></li>
+                </ul>
+            </div>
+
+            <div class="aside_btn">
+                <a href="javscript:;" onclick="getInfoFuc();" class="aside_menu_top">
+                    <div class="aside_title"><span>STATISTICS DB</span>
+                        <p>통계 DB</p>
+                        <div class="aside_link">펼쳐보기</div>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- site_search -->
+        <div class="site_search">
+            <div class="center">
+                <div class="search_box">
+                    <p class="search_title">통합검색</p>
+                    <div class="placeholder_box">
+                        <label for="search_kyword">검색어를 입력해주세요.</label>
+                        <input type="text" title="통합검색" id="search_kyword" name="search_kyword" class="blank_search">
+                    </div>
+                    <a href="javascript:;" class="search_btn btn black_btn" id="btnSearchKeyword">검색</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- site_map modal popup -->
+        <div class="modal modal_sitemap" id="modalPopup">
+            <div class="modal_div">
+                <a href="#" title="사이트맵 닫기" class="modal_close f_s_0">사이트맵 닫기</a>
+                <div class="sitemap_list">
+                    <ul>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002');  return false;">통계DB</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE', '2010118', '2010002'); return false;">조사별 통계</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_BTITLE', '2010106', '2010002'); return false;">주제별 통계 </a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/MultiTblInfo.html', '2010120', '2010002'); return false;">복합통계표</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/tblInfo/TblInfoList.html?vw_cd=MT_ATITLE&amp;api_status=Y', '2010122', '2010002'); return false;">OpenAPI</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big" onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003');  return false;">통계시각화</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/stat/StatList.html', '2009000', '2010003'); return false;">주요지표트랜드</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/map/mapList.html', '2009002', '2010003'); return false;">지도시각화</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/infoGrp/infoGrpList.html?board_class=BOARD07', '2009001', '2010003'); return false;">인포그래픽</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/motionChart/motionChartList.html', '2009003', '2010003'); return false;">모션차트</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big" onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001');  return false;">통계자료</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/stat/PopularityStat.html', '2010121', '2010001'); return false;">이달의 인기통계</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD21', '2006104', '2010001'); return false;">보고서</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/contents/ContentsList.html', '2010104', '2010001'); return false;">통계원시자료</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/wordBeffat/wordBeffatList.html', '2010119', '2010001'); return false;">용어사전</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000');  return false;">통계알리미</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD02', '2006102', '2006000'); return false;">공지사항</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/board/BoardList.html?board_class=BOARD03', '2006103', '2006000'); return false;">문의사항</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/event/EventInfoDetail.html', '2006101', '2006000'); return false;">퀴즈이벤트</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0);" class="menu_big" onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000');  return false;">소개</a>
+                            <ul class="menu_sub">
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/introduceSystem.html', '2007101', '2007000'); return false;">시스템 소개</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/introduceKisdistat.html', '2007106', '2007000'); return false;">유관포털 소개</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/userGuide.html', '2007104', '2007000'); return false;">이용자가이드</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/introduceLocation.html', '2007103', '2007000'); return false;">찾아오시는 길</a></li>
+
+                                <li><a href="javascript:void(0);" onclick="moveSubMenu('/kor/introduce/privacyPolicy.html', '2007105', '2007000'); return false;">개인정보처리방침</a></li>
+
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="Progress_Loading" style="display: none;">
+            <!-- 로딩바 -->
+            <img src="img/loading.gif" alt="loading">
+        </div>
+
+        <!-- section : contents-->
+        <section id="sub_section">
+
+            <form id="bodyForm" name="bodyForm" method="post">
+                <div class="contents center" id="contents_body">
+                    <input type="hidden" id="sec_seq" name="sec_seq" value="">
+                    <input type="hidden" id="menu_id" name="menuId" value="2010118">
+                    <input type="hidden" id="root_id" name="rootId" value="2010002">
+                    <input type="hidden" name="_csrf" value="2bb0105e-8b56-4844-b720-96fce57ccc5f">
+
+
+
+
+
+
+                    <!-- security -->
+
+
+
+
+
+
+
+
+
+                    <link rel="stylesheet" href="css/basic.css">
+                    <script src="/js/svcTblInfo.js"></script>
+                    <script>
+                        var tblInfoArr = new Array();
+
+                        $(document).ready(function() {
+                            var sessionArr = JSON.parse(sessionStorage.getItem("tblInfo"));
+
+                            // 새로고침 및 메뉴 이동시 배열 값 초기화로 인해 세션값 다시 추가
+                            if (sessionArr != null && sessionArr != "") {
+                                if (tblInfoArr.length < 1 && sessionArr.length > 0) {
+
+                                    tblInfoArr = sessionArr;
+                                }
+                            }
+
+                            let api_status = $("#api_status").val()
+                            if (api_status == 'Y') {
+                                $("#005_001 > .showApi").click()
+                            }
+
+                        });
+
+                        $(document).on("click", "[id=api_help_btn]", function() {
+                            $(".modal_api_help").addClass("dis_block")
+                        })
+
+                        // 마이히스토리 통계 목록 클릭 함수
+                        $(document).on("click", "[name=btn_histClk]", function() {
+                            stat_view($(this).attr("data-id"), $(this).attr("data-lang"));
+                        });
+
+                        // 마이히스토리 통계 목록 닫기 버튼 클릭 함수
+                        $(document).on("click", "[name=btn_cancel]", function() {
+                            fn_delete_array($(this).attr("data-id"));
+                            fn_get_session();
+                        });
+
+                        // OPENAPI 활용신청 버튼 클릭 함수
+                        $(document).on("click", "[id=btn_application]", function() {
+                            let up_list_id = $("#up_list_id").val()
+
+                            let api_list_id = $("#up_list_id_sample").text()
+
+                            api_list_id = api_list_id.substr(0, 7)
+
+                            if (up_list_id == "005_001" || api_list_id == "005_001") {
+                                window.open("https://www.data.go.kr/data/15108061/openapi.do", "_blank")
+                            } else if (up_list_id == "005_003" || api_list_id == "005_003") {
+                                window.open("https://www.data.go.kr/data/15108103/openapi.do", "_blank")
+                            } else if (up_list_id == "005_004" || api_list_id == "005_004") {
+                                window.open("https://www.data.go.kr/data/15108104/openapi.do", "_blank")
+                            }
+
+                        })
+
+                        // 통계 테이블 세션 값 불러오기 함수
+                        function fn_get_session() {
+                            var sessionArr = JSON.parse(sessionStorage.getItem("tblInfo"));
+
+                            var html = "";
+
+                            $(sessionArr).each(function(idx, item) {
+                                html += "<li>";
+                                html += "<a href='javascript:void(0);' class='his_title' name='btn_histClk' data-id='" + item.tbl_id + "' data-lang='" + item.lang + "'>" + item.tbl_title + "</a>";
+                                html += "<a href='javascript:void(0);' class='his_close' name='btn_cancel' data-id='" + item.tbl_id + "'>x</a>";
+                                html += "</li>";
+                            });
+
+                            if (sessionArr != null) {
+                                if (sessionArr.length < 1) {
+                                    $("#stored_table_ul").html("<li class='his_title'><span class='no_result'>조회 이력이 없습니다.<span></li>");
+                                } else {
+                                    $("#stored_table_ul").html(html);
+                                }
+                            }
+
+                        }
+
+                        // 세션 관련 배열값 제거 함수
+                        function fn_delete_array(tbl_id) {
+                            /* 	var sessionArr = JSON.parse(sessionStorage.getItem("tblInfo"));
+                            	
+                            	const idx = sessionArr.findIndex(function(item){return item.tbl_id == tbl_id});
+                            	const idx2 = tblInfoArr.findIndex(function(item){return item.tbl_id == tbl_id}); */
+
+                            sessionArr.splice(idx, 1);
+                            tblInfoArr.splice(idx2, 1);
+
+                            sessionStorage.setItem("tblInfo", JSON.stringify(sessionArr));
+
+                            if (sessionArr.length < 1) {
+                                $("#stored_table_ul").html("<li class='his_title'><span class='no_result'>조회 이력이 없습니다.<span></li>");
+                            }
+                        }
+
+                    </script>
+
+
+                    <input type="hidden" id="vw_cd" name="vw_cd" value="MT_ATITLE">
+                    <input type="hidden" id="up_list_id" name="up_list_id" value="0">
+                    <input type="hidden" id="up_up_list_id" name="up_up_list_id" value="">
+                    <input type="hidden" id="lvl" name="lvl" value="">
+                    <input type="hidden" id="max_lvl" name="max_lvl" value="3">
+                    <input type="hidden" id="siteGb" name="siteGb" value="">
+                    <input type="hidden" id="api_status" name="api_status" value="">
+                    <input type="hidden" id="menuId2" name="menuId" value="2010118">
+                    <input type="hidden" id="rootId2" name="rootId" value="2010002">
+
+
+                    <div class="stat_db_wrap">
+                        <div class="stat_top">
+
+                            <div id="tblLeftMenu" class="quiz_tab db_tab">
+                                <ul>
+                                    <li>
+                                        <a href="javascript:;" id="a_tab" data-a="MT_ATITLE" data-b="조사별" data-c="2010118" class="select">조사별 통계</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" id="b_tab" data-a="MT_BTITLE" data-b="주제별" data-c="2010106" class="">주제별 통계</a>
+                                    </li>
+                                    <li class="position_r">
+                                        <a href="javascript:;" id="c_tab" data-a="MT_ATITLE" data-b="OPENAPI" data-c="2010122" class="">OpenAPI</a>
+                                        <button type="button" id="api_help_btn" class="api_help_btn" title="OpenAPI 도움말"><span class="txt_hidden">OpenAPI 도움말</span></button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--quiz_tab-end-->
+                            <div class="list_search" id="search_tap">
+                                <label class="f_s_0 dis_n" for="keyword_s">검색어</label>
+                                <input type="text" id="keyword_s" name="keyword" value="" title="검색하실 내용을 입력하세요" class="w240">
+                                <a href="javascript:;" class="pnt_btn search_btn btn" id="btn_search">검색</a>
+                            </div>
+
+                            <a href="javascript:;" id="btn_his" class="pnt_btn btn his_btn">My History</a>
+                        </div>
+                        <!--stat_top-end-->
+
+                        <div class="stat_box">
+
+                            <div class="stat_tab">
+                                <ul id="tbl_title">
+                                    <li class="list_btn "><a href="javascript:;" id="tab_list">목록으로</a></li>
+                                    <li id="tabDT_BCSTAT_A000052" name="top_tab" class="top_tab tab_on"> <a href="javascript:;" class="title" id="db_ListTitle">방송사업자 합산시청점유율</a> <a href="javascript:;" class="close f_s_0 tab_x" id="delete">x</a></li>
+                                </ul>
+                            </div>
+                            <!--stat_tab-end-->
+                            <div class="stat_grid" id="tbl_list">
+                                <!-- 			<div class="grid_box dis_n" id="tbl_list"></div> -->
+
+                                <div class="stat_search stSearch" style="display: none;">
+                                    <div class="stat_search_title">
+                                        <span class="result"></span>
+                                        <span class="close"><a href="javascript:;" class="search_close f_s_0" id="search_close">검색결과 닫기</a></span>
+                                    </div>
+                                    <div class="stat_search_list">
+                                        <ul id="srcResultList"></ul>
+                                    </div>
+                                    <!--stat_search_list-end-->
+                                </div>
+                                <!--stat_search-end-->
+
+                                <div class="stat_list stat_01 stWrap" style="display: none;">
+                                    <!-- stat_01 : 조사별 통계 , stat_02 : 주제별 통계 -->
+                                    <div class="stat_list_01 db_content">
+                                        <ul id="fldList">
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_001" data-b="방송매체 이용행태조사">
+                                                    방송매체 이용행태조사
+                                                </a>
+
+
+
+
+                                                <a class="btnLink btn_api" href="javascript:;" id="btn_api" data-a="005_001">OpenAPI</a>
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_001" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu tab_on">
+                                                <a href="javascript:;" data-a="005_002" data-b="시청점유율 기초조사">
+                                                    시청점유율 기초조사
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_002" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_003" data-b="KI시청자평가지수 조사">
+                                                    KI시청자평가지수 조사
+                                                </a>
+
+
+
+
+
+                                                <a class="btnLink btn_api" href="javascript:;" id="btn_api" data-a="005_003">OpenAPI</a>
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_003" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_004" data-b="방송산업 실태조사">
+                                                    방송산업 실태조사
+                                                </a>
+
+
+
+
+
+
+                                                <a class="btnLink btn_api" href="javascript:;" id="btn_api" data-a="005_004">OpenAPI</a>
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_004" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_005" data-b="방송시장 경쟁상황 평가">
+                                                    방송시장 경쟁상황 평가
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_005" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_006" data-b="방송사업자 재산상황 공표">
+                                                    방송사업자 재산상황 공표
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_006" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_007" data-b="방송사업자 편성현황 조사">
+                                                    방송사업자 편성현황 조사
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_007" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_008" data-b="방송평가">
+                                                    방송평가
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_008" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_010" data-b="고정형TV(실시간·VOD) 조사">
+                                                    고정형TV(실시간·VOD) 조사
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_010" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                            <li class="tabmenu">
+                                                <a href="javascript:;" data-a="005_011" data-b="스마트폰·PC 시청기록 조사">
+                                                    스마트폰·PC 시청기록 조사
+                                                </a>
+
+
+
+
+
+
+
+                                                <a href="javascript:;" class="f_s_0 icon_meta" title="메타정보" data-a="005_011" data-b="MT_ATITLE">메타정보</a>
+
+
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="stat_list_02 db_content">
+                                        <ul id="fldDtList">
+                                            <li class="tab_on"><a href="javascript:;" data-a="005_002_001" data-b="채널별 시청 점유율" data-c="MT_ATITLE" data-d="005_002_001" data-e="ko" data-z="null">채널별 시청 점유율</a></li>
+                                            <li class=""><a href="javascript:;" data-a="005_002_002" data-b="시청점유율 기초조사_가구대표" data-c="MT_ATITLE" data-d="005_002_002" data-e="ko" data-z="null">시청점유율 기초조사_가구대표</a></li>
+                                            <li class=""><a href="javascript:;" data-a="005_002_003" data-b="시청점유율 기초조사_가구원" data-c="MT_ATITLE" data-d="005_002_003" data-e="ko" data-z="null">시청점유율 기초조사_가구원</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="stat_list_03 db_content">
+                                        <ul id="fldDtList2"></ul>
+                                    </div>
+                                    <div class="stat_list_04 db_content">
+                                        <ul id="tblList">
+                                            <li><a href="javascript:;" id="showTblInfo" data-a="DT_BCSTAT_A000052" data-b="방송사업자 합산시청점유율" data-c="MT_ATITLE" data-d="DT_BCSTAT_A000052" data-e="ko" data-z="null">방송사업자 합산시청점유율</a></li>
+                                            <li><a href="javascript:;" id="showTblInfo" data-a="DT_MEDIA01_0001" data-b="방송사업자 시청점유율" data-c="MT_ATITLE" data-d="DT_MEDIA01_0001" data-e="ko" data-z="null">방송사업자 시청점유율</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!--stat_list-end-->
+                                <div id="tblDT_BCSTAT_A000052" name="tbl" class="db_stats grid_box"> <iframe id="tblInfoFrame" name="tblInfoFrame" frameborder="0" width="100%" height="800" scrolling="yes" title="통계DB" src="https://www.mediastat.or.kr/statHtml/statHtml.do?mode=tab&amp;orgId=005&amp;tblId=DT_BCSTAT_A000052&amp;vw_cd=MT_ATITLE&amp;list_id=DT_BCSTAT_A000052&amp;scrId=&amp;seqNo=&amp;language=ko&amp;obj_var_id=undefined&amp;itm_id=undefined&amp;conn_path=MT_ATITLE&amp;path="></iframe>
+                                </div>
+                            </div>
+                            <!--stat_grid-end-->
+
+                            <div class="stat_grid api_grid" id="api_list" style="display: none;">
+                                <!-- 			<div class="grid_box dis_n" id="tbl_list"></div> -->
+
+                                <div class="stat_search stSearch" style="display: none;">
+                                    <div class="stat_search_title">
+                                        <span class="result"></span>
+                                        <span class="close"><a href="javascript:;" class="search_close f_s_0" id="search_close">검색결과 닫기</a></span>
+                                    </div>
+                                    <div class="stat_search_list">
+                                        <ul id="srcResultList">
+                                        </ul>
+                                    </div>
+                                    <!--stat_search_list-end-->
+                                </div>
+                                <!--stat_search-end-->
+
+                                <div class="stat_list stat_01 stWrap" style="display: none;">
+                                    <!-- stat_01 : 조사별 통계 , stat_02 : 주제별 통계 -->
+                                    <div class="stat_list_01 db_content">
+                                        <ul id="api_fldList">
+
+                                            <li id="005_001" class="tabmenu api_tapmenu  tab_on">
+                                                <a href="javascript:;" class="showApi" data-a="005_001" data-b="방송매체 이용행태조사">
+                                                    방송매체 이용행태조사
+                                                </a>
+                                            </li>
+
+                                            <li id="005_003" class="tabmenu api_tapmenu  ">
+                                                <a href="javascript:;" class="showApi" data-a="005_003" data-b="KI시청자평가지수 조사">
+                                                    KI시청자평가지수 조사
+                                                </a>
+                                            </li>
+
+                                            <li id="005_004" class="tabmenu api_tapmenu  ">
+                                                <a href="javascript:;" class="showApi" data-a="005_004" data-b="방송산업 실태조사">
+                                                    방송산업 실태조사
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    <div class="stat_list_02 db_content dis_n">
+                                        <!-- *YP openAPI 탭에서 클래스 dis_n 추가 (주석삭제)-->
+                                        <ul id="fldDtList">
+
+                                        </ul>
+                                    </div>
+                                    <div class="stat_list_03 db_content dis_n">
+                                        <!-- *YP openAPI 탭에서 클래스 dis_n 추가 (주석삭제)-->
+                                        <ul id="fldDtList2">
+
+                                        </ul>
+                                    </div>
+                                    <div class="stat_list_04 db_content dis_n">
+                                        <!-- *YP openAPI 탭에서 클래스 dis_n 추가 (주석삭제)-->
+                                        <ul id="tblList">
+
+                                        </ul>
+                                    </div>
+
+                                    <div class="api_wrap">
+                                        <!-- *YP openAPI 위치 이동 (주석삭제)  -->
+                                        <div class="api_top over_h">
+                                            <h3 class="f_l">방송매체 이용행태조사</h3>
+                                            <div class="f_r">
+                                                <a href="javascript:;" class="pnt_btn btn f_l" id="btn_application">활용신청</a>
+                                                <!-- 							<a href="javascript:;" class="search_close f_l" id="api_close"><span class="txt_hidden">닫기</span></a> -->
+                                            </div>
+                                        </div>
+
+                                        <ul class="api_info">
+                                            <li class="tbl_th">데이터포맷</li>
+                                            <li id="encodingFormat">JSON</li>
+                                            <li class="tbl_th">수정</li>
+                                            <li id="dateModified">2022-11-29</li>
+                                        </ul>
+
+                                        <div class="table_list api_tbl">
+                                            <h3 class="">요청변수(Request Parameter)</h3>
+                                            <table>
+                                                <caption>요청변수(Request Parameter) 목록</caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w15pct">항목명(국문)</th>
+                                                        <th class="w15pct">항목명(영문)</th>
+                                                        <th class="w10pct">항목크기</th>
+                                                        <th class="w10pct">항목구분</th>
+                                                        <th class="w20pct">샘플데이터</th>
+                                                        <th class="w30pct">항목설명</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>인증키</td>
+                                                        <td>ServiceKey</td>
+                                                        <td>100</td>
+                                                        <td>필</td>
+                                                        <td>인증키 (UTL - Encode)</td>
+                                                        <td>공공데이터포털에서 발급받은 인증키</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>페이지 번호</td>
+                                                        <td>pageNo</td>
+                                                        <td>4</td>
+                                                        <td>필</td>
+                                                        <td>10</td>
+                                                        <td>페이지 번호</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>한 페이지 결과 수</td>
+                                                        <td>numOfRows</td>
+                                                        <td>4</td>
+                                                        <td>필</td>
+                                                        <td>10</td>
+                                                        <td>한 페이지 결과 수</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="table_list api_tbl">
+                                            <h3 class="">출력결과(Response Element)</h3>
+                                            <table>
+                                                <caption>출력결과(Response Element) 목록</caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th class="w15pct">항목명(국문)</th>
+                                                        <th class="w15pct">항목명(영문)</th>
+                                                        <th class="w10pct">항목크기</th>
+                                                        <th class="w10pct">항목구분</th>
+                                                        <th class="w35pct">샘플데이터</th>
+                                                        <th class="w15pct">항목설명</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>결과코드</td>
+                                                        <td>resultCode</td>
+                                                        <td>3</td>
+                                                        <td>필</td>
+                                                        <td>00</td>
+                                                        <td>결과코드</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>결과메세지</td>
+                                                        <td>resultMsg</td>
+                                                        <td>50</td>
+                                                        <td>필</td>
+                                                        <td>NORMAL_CODE</td>
+                                                        <td>결과메세지</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>전체 결과 수</td>
+                                                        <td>totalCount</td>
+                                                        <td>4</td>
+                                                        <td>필</td>
+                                                        <td id="totalCountSample">329</td>
+                                                        <td>전체 결과 수</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>페이지 번호</td>
+                                                        <td>pageNo</td>
+                                                        <td>4</td>
+                                                        <td>필</td>
+                                                        <td>1</td>
+                                                        <td>페이지 번호</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>한 페이지 결과 수 </td>
+                                                        <td>numOfRows</td>
+                                                        <td>4</td>
+                                                        <td>필</td>
+                                                        <td>10</td>
+                                                        <td>한 페이지 결과 수 </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>서비스 뷰 코드</td>
+                                                        <td>vw_cd</td>
+                                                        <td>9</td>
+                                                        <td>필</td>
+                                                        <td>MT_ATITLE</td>
+                                                        <td>서비스 뷰 코드</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>통계표 ID</td>
+                                                        <td>tbl_id</td>
+                                                        <td>25</td>
+                                                        <td>필</td>
+                                                        <td id="tbl_id_sample">DT_164002_A001</td>
+                                                        <td>통계표 ID</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>목록 ID</td>
+                                                        <td>list_id</td>
+                                                        <td>25</td>
+                                                        <td>필</td>
+                                                        <td id="list_id_sample">005_001_001</td>
+                                                        <td>목록 ID</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>상위목록 ID</td>
+                                                        <td>up_list_id</td>
+                                                        <td>11</td>
+                                                        <td>필</td>
+                                                        <td id="up_list_id_sample">005_001</td>
+                                                        <td>상위목록 ID</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>목록명</td>
+                                                        <td>list_nm</td>
+                                                        <td>50</td>
+                                                        <td>필</td>
+                                                        <td id="list_nm_sample">가구별 설문 통계표</td>
+                                                        <td>목록명</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>상위목록명</td>
+                                                        <td>up_list_nm</td>
+                                                        <td>50</td>
+                                                        <td>필</td>
+                                                        <td id="up_list_nm_sample">방송매체 이용행태조사</td>
+                                                        <td>상위목록명</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>통계표명</td>
+                                                        <td>tbl_nm</td>
+                                                        <td>100</td>
+                                                        <td>필</td>
+                                                        <td id="tbl_nm_sample">[가구]응답자 분포표</td>
+                                                        <td>통계표명</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>시점</td>
+                                                        <td>prd_de</td>
+                                                        <td>21</td>
+                                                        <td>필</td>
+                                                        <td id="prd_de_sample">2011~2020</td>
+                                                        <td>시점</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>주기</td>
+                                                        <td>prd_se</td>
+                                                        <td>3</td>
+                                                        <td>필</td>
+                                                        <td id="prd_se_sample">년</td>
+                                                        <td>주기</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>출처</td>
+                                                        <td>stat_nm</td>
+                                                        <td>21</td>
+                                                        <td>필</td>
+                                                        <td id="stat_nm_sample">방송통신위원회, 방송매체 이용행태 조사</td>
+                                                        <td>출처</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>통계표 조회 URL</td>
+                                                        <td>tbl_url</td>
+                                                        <td>150</td>
+                                                        <td>필</td>
+                                                        <td id="tbl_url_sample">https://www.mediastat.or.kr/statHtml/statHtml.do?orgId=005&amp;tblId=DT_164002_A001</td>
+                                                        <td>통계표 조회 URL</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!--api_wrap-end-->
+
+                                </div>
+                                <!--stat_list-end-->
+
+                            </div>
+                            <!--stat_grid-end-->
+
+                        </div>
+                        <!--stat_box-end-->
+
+                    </div>
+                    <!--stat_db_wrap-end-->
+
+
+
+
+
+
+
+
+                    <!-- security -->
+
+
+
+
+
+
+
+
+
+                    <script>
+                        $(document).ready(function() {
+                            var form = $("#bodyForm");
+
+                            $(".modal_close").on('click', function() {
+                                $(".modal_title").empty();
+                                $(".table_meta table tbody").empty();
+                                $('.modal_meta').hide();
+                            });
+
+                            // 파일 다운로드
+                            $(".modal_title").on("click", "a", function() {
+                                fn_download(form, $(this).attr("data-fileSeq"), $(this).attr("data-fileNm"), $(this).attr("data-realNm"));
+                            });
+                        });
+
+                    </script>
+
+                    <input type="hidden" id="file_seq" name="file_seq" value="">
+                    <input type="hidden" id="real_name" name="real_name" value="">
+                    <input type="hidden" id="file_name" name="file_name" value="">
+
+                    <div class="modal modal_list modal_meta">
+                        <div class="modal_div">
+                            <a href="javascript:void(0);" title="닫기" class="modal_close f_s_0 modal_meta_cl">닫기</a>
+                            <div class="survey_div"></div>
+                            <div class="list_wrap">
+                                <div class="modal_title"></div>
+
+                                <div class="table_meta">
+                                    <table>
+                                        <caption>통계표 메타정보</caption>
+                                        <colgroup id="colGroup">
+                                            <col class="w20pct">
+                                            <col>
+                                        </colgroup>
+
+                                        <tbody>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <!--list_wrap_end-->
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!-- security -->
+
+
+
+
+
+
+
+
+
+                    <script>
+                        $(document).ready(function() {
+                            var form = $("#bodyForm");
+
+                            $("#modal_close2").on('click', function() {
+                                $('.modal_api_help').removeClass("dis_block")
+                            });
+
+                        });
+
+                    </script>
+
+                    <input type="hidden" id="file_seq" name="file_seq" value="">
+                    <input type="hidden" id="real_name" name="real_name" value="">
+                    <input type="hidden" id="file_name" name="file_name" value="">
+
+                    <div class="modal modal_list modal_api_help" id="">
+                        <div class="modal_div">
+                            <div class="api_help_wrap">
+                                <h3>OpenAPI 서비스 소개</h3>
+                                <h4>OpenAPI는 여러 사람들이 공동으로 사용할 필요가 있는 자원에 대하여 누구나 접근 및 사용할 수 있도록 외부에 공개된 API를 말합니다. <br>(API란? Application Programming Interface)</h4>
+                                <h4>방송통계포털에서는 누구나 쉽게 공공데이터셋을 활용하여 직접 웹서비스 및 어플리케이션 등 다양한 컨텐츠를 개발할 수 있도록<br> OpenAPI 형태로 데이터를 공개하고 있습니다.</h4>
+                                <div class="modal_api_img">
+                                    <img src="img/sub/modal_openAPI.png" alt="샘플이미지">
+                                </div>
+                            </div>
+                            <!--list_wrap_end-->
+                            <a href="javascript:void(0);" title="닫기" class="modal_close" id="modal_close2"><span class="txt_hidden"></span></a>
+                        </div>
+                        <!--modal_div_end-->
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- footer : banner, copyright -->
+        <footer id="footer">
+
+
+
+
+
+            <!-- security -->
+
+
+
+
+
+
+
+
+
+            <!-- AceCounter Log Gathering Script V.8.0.AMZ2019080601 -->
+            <script language="javascript">
+                var _AceGID = (function() {
+                    var Inf = ['gtp9.acecounter.com', '8080', 'AH6A45742191408', 'AW', '0', 'NaPm,Ncisy', 'ALL', '0'];
+                    var _CI = (!_AceGID) ? [] : _AceGID.val;
+                    var _N = 0;
+                    var _T = new Image(0, 0);
+                    if (_CI.join('.').indexOf(Inf[3]) < 0) {
+                        _T.src = "https://" + Inf[0] + '/?cookie';
+                        _CI.push(Inf);
+                        _N = _CI.length;
+                    }
+                    return {
+                        o: _N,
+                        val: _CI
+                    };
+                })();
+                var _AceCounter = (function() {
+                    var G = _AceGID;
+                    var _sc = document.createElement('script');
+                    var _sm = document.getElementsByTagName('script')[0];
+                    if (G.o != 0) {
+                        var _A = G.val[G.o - 1];
+                        var _G = (_A[0]).substr(0, _A[0].indexOf('.'));
+                        var _C = (_A[7] != '0') ? (_A[2]) : _A[3];
+                        var _U = (_A[5]).replace(/\,/g, '_');
+                        _sc.src = 'https:' + '//cr.acecounter.com/Web/AceCounter_' + _C + '.js?gc=' + _A[2] + '&py=' + _A[4] + '&gd=' + _G + '&gp=' + _A[1] + '&up=' + _U + '&rd=' + (new Date().getTime());
+                        _sm.parentNode.insertBefore(_sc, _sm);
+                        return _sc.src;
+                    }
+                })();
+
+            </script>
+            <!-- AceCounter Log Gathering Script End -->
+
+            <script>
+                function windowOpen(url) {
+                    window.open(url, "_blank");
+                }
+
+            </script>
+            <div class="footer_banner">
+                <div class="center">
+                    <p>배너모음</p>
+                    <div class="f_b_btn">
+                        <a href="javascript:void(0);" title="일시정지" class="f_b_btn_stop"></a>
+                        <a href="javascript:void(0);" title="재생" class="f_b_btn_play"></a>
+                    </div>
+                    <div class="f_b_wrap">
+                        <div class="f_b_slide slick-initialized slick-slider"><button class="slick-prev slick-arrow" aria-label="Previous" type="button" style="">Previous</button>
+                            <div class="slick-list draggable">
+                                <div class="slick-track" style="opacity: 1; width: 25000px; transform: translate3d(-621px, 0px, 0px);">
+                                    <div class="slick-slide slick-cloned" data-slick-index="-4" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://www.kobaco.co.kr/site/adstat/home');" tabindex="-1">
+                                                    kobaco
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="-3" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('http://www.index.go.kr/main.do');" tabindex="-1">
+                                                    e-나라지표
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="-2" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('http://kosis.kr/index/index.do');" tabindex="-1">
+                                                    KOSIS 국가통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="-1" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://www.racoi.or.kr/kobaco/main.do?racoi');" tabindex="-1">
+                                                    RACOI
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-current slick-active" data-slick-index="0" aria-hidden="false">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://stat.kisdi.re.kr');" tabindex="0">
+                                                    미디어통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-active" data-slick-index="1" aria-hidden="false">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://www.kobaco.co.kr/site/adstat/home');" tabindex="0">
+                                                    kobaco
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-active" data-slick-index="2" aria-hidden="false">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('http://www.index.go.kr/main.do');" tabindex="0">
+                                                    e-나라지표
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-active" data-slick-index="3" aria-hidden="false">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('http://kosis.kr/index/index.do');" tabindex="0">
+                                                    KOSIS 국가통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide" data-slick-index="4" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://www.racoi.or.kr/kobaco/main.do?racoi');" tabindex="-1">
+                                                    RACOI
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="5" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://stat.kisdi.re.kr');" tabindex="-1">
+                                                    미디어통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="6" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://www.kobaco.co.kr/site/adstat/home');" tabindex="-1">
+                                                    kobaco
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="7" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('http://www.index.go.kr/main.do');" tabindex="-1">
+                                                    e-나라지표
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="8" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('http://kosis.kr/index/index.do');" tabindex="-1">
+                                                    KOSIS 국가통계포털
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slick-slide slick-cloned" data-slick-index="9" aria-hidden="true" tabindex="-1">
+                                        <div>
+                                            <div class="f_b_item" style="width: 100%; display: inline-block;">
+                                                <a href="javascript:;" onclick="javascript: windowOpen('https://www.racoi.or.kr/kobaco/main.do?racoi');" tabindex="-1">
+                                                    RACOI
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><button class="slick-next slick-arrow" aria-label="Next" type="button" style="">Next</button>
+                        </div>
+                    </div>
+                </div>
+                <!--center_end-->
+            </div>
+            <div class="footer_copyright">
+                <div class="center">
+                    <ul class="f_c_link">
+                        <li><a href="/kor/introduce/privacyPolicy.html?rootId=2007000&amp;menuId=2007105">개인정보처리방침</a></li>
+                        <li><a href="/kor/introduce/introduceLocation.html?rootId=2007000&amp;menuId=2007103">찾아오시는 길</a></li>
+                        <li><a href="http://www.kisdi.re.kr/kisdi/jsp/fp/kr/help/KK_79000.jsp?ordTxt=M001008" title="저작권정책" target="_blank">저작권정책</a></li>
+                    </ul>
+                    <p>(27872) 충청북도 진천군 덕산읍 정통로 18 정보통신정책연구원</p>
+                    <span>COPYRIGHT © 2020 KOREA COMMUNICATIONS COMMISSION. ALL RIGHTS RESERVED.</span>
+                    <a href="https://www.kogl.or.kr/info/license.do#01-tab" target="_blank" class="open_mark" title="공공누리 제1유형 인증마크"><img src="img/img_opentype01.png" alt="공공누리 제 1유형 인증마크"></a>
+
+                </div>
+                <!--center_end-->
+            </div>
+        </footer>
+
+    </div>
+
+
+</body>
+
+</html>
